@@ -370,9 +370,9 @@
 
   <!-- FOOTER -->
   <div class="footer">
-    <span>Pilot dataset · 1970–2025 · 7 subfields · 106 terms</span>
+    <span id="footer-meta">OpenAlex · 1990–2024 · 7 subfields · 98 terms</span>
     <span>·</span>
-    <span class="src">⚠ Seeded realistic trajectories — replace <code>words.json</code> with Scopus/OpenAlex extract for real data</span>
+    <span id="footer-src" style="color:var(--text-faint)">Social Sciences (C17744445) · title+abstract search · real data</span>
     <span style="margin-left:auto">URL state: <code id="url-hint">#m=g&y=2025</code></span>
   </div>
 
@@ -388,7 +388,7 @@
 
 const state = {
   data: null,
-  year: 2025,
+  year: 2024,
   metric: 'g',           // s, g, n, c
   scope: 'all',          // all, emerging, declining
   search: '',
@@ -417,7 +417,9 @@ async function boot() {
   bindEvents();
   applyAll();
   document.getElementById('meta-subtitle').textContent =
-    `${state.data.terms.length} terms · ${state.data.meta.year_min}–${state.data.meta.year_max} · pilot corpus (5 social-science journals)`;
+    `${state.data.terms.length} terms · ${state.data.meta.year_min}–${state.data.meta.year_max} · OpenAlex Social Sciences`;
+  const fm = document.getElementById('footer-meta');
+  if (fm) fm.textContent = `OpenAlex · ${state.data.meta.year_min}–${state.data.meta.year_max} · 7 subfields · ${state.data.terms.length} terms`;
   document.getElementById('legend-count').textContent = state.data.terms.length;
 }
 
@@ -471,8 +473,8 @@ function updateScrubberPosition() {
   document.getElementById('scrubber-handle').style.left = pct + '%';
   document.getElementById('scrubber-fill').style.width = pct + '%';
   document.getElementById('year-label').textContent = state.year;
-  const isNow = state.year >= 2025;
-  document.getElementById('year-tag').textContent = isNow ? 'NOW' : (state.year < 1990 ? 'EARLY' : (state.year < 2010 ? 'MID' : 'RECENT'));
+  const isNow = state.year >= state.data.meta.year_max;
+  document.getElementById('year-tag').textContent = isNow ? 'LATEST' : (state.year < 2000 ? 'EARLY' : (state.year < 2012 ? 'MID' : 'RECENT'));
 }
 
 // ---------- Metric pills ----------
