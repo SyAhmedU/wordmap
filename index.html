@@ -633,12 +633,11 @@ function renderScrubber() {
 }
 
 function updateScrubberPosition() {
-  const meta = state.data.meta;
-  const pct = ((state.year - meta.year_min) / (meta.year_max - meta.year_min)) * 100;
-  document.getElementById('scrubber-handle').style.left = pct + '%';
-  document.getElementById('scrubber-fill').style.width = pct + '%';
-  document.getElementById('year-label').textContent = state.year;
   const meta   = state.data.meta;
+  const pct    = ((state.year - meta.year_min) / (meta.year_max - meta.year_min)) * 100;
+  document.getElementById('scrubber-handle').style.left = pct + '%';
+  document.getElementById('scrubber-fill').style.width  = pct + '%';
+  document.getElementById('year-label').textContent     = state.year;
   const isProj = state.year >= meta.proj_year_min;
   const isNow  = state.year === meta.real_year_max;
   document.getElementById('year-label').style.color = isProj ? '#c084fc' : 'var(--text)';
