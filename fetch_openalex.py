@@ -1,34 +1,41 @@
 """
-fetch_openalex.py — Pull real bibliometric data from OpenAlex for Project 4 Word Map.
+fetch_openalex.py — Build the full 84-year + 30-year projection dataset.
 
-Uses the free OpenAlex API (no key needed).  Queries each term via
-title+abstract search scoped to Social-Science papers, then computes
-doc-frequency share, 5-yr CAGR growth, and novelty.
+Real data:   1970-2024  (OpenAlex Social Sciences, title+abstract search)
+Projected:   2025-2054  (logistic extrapolation per term)
 
 Usage:
     python fetch_openalex.py
 
-Outputs: words.json  +  data.js  (same schema as build_data.py)
-Cache:   openalex_cache.json (re-run safe — skips already-fetched terms)
+Outputs: words.json  +  data.js
+Cache:   openalex_cache.json  (stores ALL years returned by OpenAlex;
+          re-run safe — only re-fetches if a key is missing)
 """
 
-import json, time, sys, math
+import json, time, math
 from pathlib import Path
 import urllib.request, urllib.parse
 
 # ── Config ───────────────────────────────────────────────────────────────────
-YEAR_MIN    = 1990
-YEAR_MAX    = 2024
-EMAIL       = "asrarsaa@gmail.com"
-SLEEP       = 0.15          # seconds between requests (polite pool = 100 req/s, we stay gentle)
-CACHE_FILE  = Path(__file__).parent / "openalex_cache.json"
-OUT_JSON    = Path(__file__).parent / "words.json"
-OUT_JS      = Path(__file__).parent / "data.js"
+YEAR_REAL_MIN = 1970
+YEAR_REAL_MAX = 2024
+YEAR_PROJ_MIN = 2025
+YEAR_PROJ_MAX = 2054
 
-BASE_URL    = "https://api.openalex.org/works"
-SS_CONCEPT  = "C17744445"   # OpenAlex concept ID for "Social sciences"
+EMAIL      = "asrarsaa@gmail.com"
+SLEEP      = 0.15
+CACHE_FILE = Path(__file__).parent / "openalex_cache.json"
+OUT_JSON   = Path(__file__).parent / "words.json"
+OUT_JS     = Path(__file__).parent / "data.js"
 
-# ── Groups / subfields ───────────────────────────────────────────────────────
+BASE_URL   = "https://api.openalex.org/works"
+SS_CONCEPT = "C17744445"
+
+YEARS_REAL = list(range(YEAR_REAL_MIN, YEAR_REAL_MAX + 1))
+YEARS_PROJ = list(range(YEAR_PROJ_MIN, YEAR_PROJ_MAX + 1))
+YEARS_ALL  = YEARS_REAL + YEARS_PROJ
+
+# ── Groups ───────────────────────────────────────────────────────────────────
 GROUPS = [
     {"id": "sociology",         "label": "Sociology",         "color": "#e74c8e"},
     {"id": "political_science", "label": "Political Science", "color": "#5b8def"},
@@ -39,9 +46,7 @@ GROUPS = [
     {"id": "methods",           "label": "Methods",           "color": "#94a3b8"},
 ]
 
-# ── Term list: (display_name, search_query, group_id) ────────────────────────
-# search_query is sent to OpenAlex title+abstract search.
-# Disambiguated where plain words are too polysemous.
+# ── Terms ─────────────────────────────────────────────────────────────────────
 TERMS = [
     # SOCIOLOGY
     ("social capital",        "social capital",           "sociology"),
@@ -59,7 +64,6 @@ TERMS = [
     ("habitus",               "habitus",                  "sociology"),
     ("solidarity",            "solidarity",               "sociology"),
     ("migration",             "migration",                "sociology"),
-
     # POLITICAL SCIENCE
     ("neoliberalism",         "neoliberalism",            "political_science"),
     ("democracy",             "democracy",                "political_science"),
@@ -75,7 +79,6 @@ TERMS = [
     ("institutions",          "institutions",             "political_science"),
     ("populist",              "populist",                 "political_science"),
     ("brexit",                "brexit",                   "political_science"),
-
     # ECONOMICS
     ("economic growth",       "economic growth",          "economics"),
     ("inflation",             "inflation",                "economics"),
@@ -91,7 +94,6 @@ TERMS = [
     ("game theory",           "game theory",              "economics"),
     ("welfare state",         "welfare state",            "economics"),
     ("austerity",             "austerity",                "economics"),
-
     # PSYCHOLOGY
     ("cognitive",             "cognitive",                "psychology"),
     ("anxiety",               "anxiety",                  "psychology"),
@@ -108,7 +110,6 @@ TERMS = [
     ("therapy",               "therapy",                  "psychology"),
     ("cognitive bias",        "cognitive bias",           "psychology"),
     ("childhood",             "childhood",                "psychology"),
-
     # ANTHROPOLOGY
     ("kinship",               "kinship",                  "anthropology"),
     ("ritual",                "ritual",                   "anthropology"),
@@ -121,7 +122,6 @@ TERMS = [
     ("ethnicity",             "ethnicity",                "anthropology"),
     ("body",                  "body",                     "anthropology"),
     ("religion",              "religion",                 "anthropology"),
-
     # COMMUNICATION
     ("media",                 "media",                    "communication"),
     ("internet",              "internet",                 "communication"),
@@ -135,8 +135,7 @@ TERMS = [
     ("framing",               "framing",                  "communication"),
     ("propaganda",            "propaganda",               "communication"),
     ("twitter",               "twitter",                  "communication"),
-
-    # METHODS / CROSS-CUTTING
+    # METHODS
     ("qualitative",           "qualitative research",     "methods"),
     ("quantitative",          "quantitative research",    "methods"),
     ("regression",            "regression analysis",      "methods"),
@@ -156,21 +155,12 @@ TERMS = [
     ("artificial intelligence","artificial intelligence", "methods"),
 ]
 
-YEARS = list(range(YEAR_MIN, YEAR_MAX + 1))
-
-
-# ── HTTP helper ───────────────────────────────────────────────────────────────
-def openalex_group_by_year(search_query=None):
-    """
-    Return {year: count} for papers matching search_query (optional),
-    scoped to social-science concept, grouped by publication_year.
-    """
+# ── OpenAlex fetch (stores ALL years — no year filter) ────────────────────────
+def fetch_all_years(search_query=None):
     filter_parts = [f"concepts.id:{SS_CONCEPT}"]
     if search_query:
-        # Escape quotes in the search string
         safe = search_query.replace('"', '')
         filter_parts.append(f'title_and_abstract.search:"{safe}"')
-
     params = {
         "filter":   ",".join(filter_parts),
         "group_by": "publication_year",
@@ -178,167 +168,256 @@ def openalex_group_by_year(search_query=None):
         "mailto":   EMAIL,
     }
     url = BASE_URL + "?" + urllib.parse.urlencode(params)
-
     for attempt in range(3):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": f"WordMap/1.0 (mailto:{EMAIL})"})
+            req = urllib.request.Request(url, headers={"User-Agent": f"WordMap/2.0 (mailto:{EMAIL})"})
             with urllib.request.urlopen(req, timeout=30) as resp:
                 data = json.loads(resp.read())
-            by_year = {}
+            result = {}
             for g in data.get("group_by", []):
                 try:
-                    y = int(g["key"])
-                    if YEAR_MIN <= y <= YEAR_MAX:
-                        by_year[y] = g["count"]
+                    result[int(g["key"])] = g["count"]
                 except (ValueError, KeyError):
                     pass
-            return by_year
+            return result
         except Exception as exc:
             print(f"  [retry {attempt+1}/3] {exc}")
             time.sleep(2 ** attempt)
-
-    print(f"  FAILED after 3 attempts — returning zeros")
+    print("  FAILED — returning empty")
     return {}
-
 
 # ── Cache ─────────────────────────────────────────────────────────────────────
 def load_cache():
     if CACHE_FILE.exists():
-        return json.loads(CACHE_FILE.read_text())
+        raw = json.loads(CACHE_FILE.read_text())
+        # Convert string keys to int (JSON serializes int keys as strings)
+        return {k: {int(yr): cnt for yr, cnt in v.items()} for k, v in raw.items()}
     return {}
 
 def save_cache(cache):
-    CACHE_FILE.write_text(json.dumps(cache, separators=(",", ":")))
+    # Store with string keys for JSON compatibility
+    serialisable = {k: {str(yr): cnt for yr, cnt in v.items()} for k, v in cache.items()}
+    CACHE_FILE.write_text(json.dumps(serialisable, separators=(",", ":")))
 
+# ── Projection ────────────────────────────────────────────────────────────────
+def project_shares(real_counts, baseline_proj):
+    """
+    Logistic / decay extrapolation for YEARS_PROJ based on YEARS_REAL trend.
+
+    Returns {year: projected_share} for YEARS_PROJ.
+
+    Method:
+      - Use last 7 years of real data to estimate CAGR
+      - Growing terms  (CAGR > 2%): logistic growth toward a cap
+      - Declining terms(CAGR < -2%): exponential decay toward a floor
+      - Stable terms              : gradual mean-reversion
+    """
+    WINDOW = 7
+    recent_real = YEARS_REAL[-WINDOW:]
+
+    # Get shares for recent real years
+    real_shares = []
+    for y in recent_real:
+        base = 1
+        cnt  = real_counts.get(y, 0)
+        # We need baseline to compute share — use a flat reference since
+        # we already have share stored; here we just use raw counts with
+        # relative comparison (absolute scale corrected later by caller)
+        real_shares.append(cnt)
+
+    # Remove zero prefix
+    nonzero = [(y, s) for y, s in zip(recent_real, real_shares) if s > 0]
+    if len(nonzero) < 2:
+        return {y: 0 for y in YEARS_PROJ}
+
+    s0 = nonzero[0][1]
+    s1 = nonzero[-1][1]
+    span = nonzero[-1][0] - nonzero[0][0]
+    cagr = (s1 / s0) ** (1 / span) - 1 if span > 0 and s0 > 0 else 0.0
+
+    current_count = real_counts.get(YEAR_REAL_MAX, s1)
+
+    projected = {}
+    for i, y in enumerate(YEARS_PROJ):
+        t = i + 1
+        base_proj = baseline_proj.get(y, 1)
+
+        if cagr > 0.02:
+            # Logistic: grows toward cap, slowing as it approaches
+            K_count = current_count * min((1 + cagr) ** 20, 8)
+            proj_count = K_count / (1 + (K_count / max(current_count, 1) - 1) * math.exp(-cagr * 0.6 * t))
+        elif cagr < -0.02:
+            # Exponential decay toward a floor (5% of current)
+            floor = max(current_count * 0.05, 1)
+            proj_count = floor + (current_count - floor) * math.exp(cagr * t)
+        else:
+            # Stable: tiny drift toward 95% of current
+            proj_count = current_count * (1 + (0.95 - 1) * t / 30)
+
+        proj_count = max(proj_count, 0)
+        projected[y] = proj_count / base_proj if base_proj > 0 else 0.0
+
+    return projected
+
+# ── Baseline projection (total SS papers 2025-2054) ──────────────────────────
+def project_baseline(real_baseline):
+    """Project total SS papers per year for the forecast window."""
+    WINDOW = 7
+    recent = [(y, real_baseline.get(y, 0)) for y in YEARS_REAL[-WINDOW:] if real_baseline.get(y, 0) > 0]
+    if len(recent) < 2:
+        last = real_baseline.get(YEAR_REAL_MAX, 1_000_000)
+        return {y: last for y in YEARS_PROJ}
+
+    s0, s1 = recent[0][1], recent[-1][1]
+    span   = recent[-1][0] - recent[0][0]
+    cagr   = (s1 / s0) ** (1 / span) - 1 if span > 0 and s0 > 0 else 0.03
+    # Cap SS growth at 5%/yr — digitisation and scope will slow it
+    cagr   = min(cagr, 0.05)
+
+    current = real_baseline.get(YEAR_REAL_MAX, s1)
+    result  = {}
+    for i, y in enumerate(YEARS_PROJ):
+        t = i + 1
+        K = current * 4
+        result[y] = int(K / (1 + (K / current - 1) * math.exp(-cagr * t)))
+    return result
 
 # ── Metric helpers ────────────────────────────────────────────────────────────
 def compute_growth(by_year_counts, window=5):
-    """5-yr CAGR of doc-frequency share per year."""
     result = {}
-    for y in YEARS:
+    for y in YEARS_ALL:
         past = y - window
-        if past in by_year_counts and y in by_year_counts:
-            p = by_year_counts[past]
-            c = by_year_counts[y]
-            if p > 0:
-                result[y] = round((c / p) ** (1 / window) - 1, 4)
-            else:
-                result[y] = 2.0 if c > 0 else 0.0
+        c = by_year_counts.get(y, 0)
+        p = by_year_counts.get(past, 0)
+        if p > 0 and c >= 0:
+            result[y] = round((max(c, 0) / p) ** (1 / window) - 1, 4)
         else:
-            result[y] = 0.0
+            result[y] = 2.0 if c > 0 else 0.0
     return result
 
 def compute_novelty(by_year_counts, last_n=5):
-    """Fraction of all-time mentions in the last N years."""
-    total = sum(by_year_counts.get(y, 0) for y in YEARS) or 1
-    recent = sum(by_year_counts.get(y, 0) for y in YEARS[-last_n:])
+    total  = sum(by_year_counts.get(y, 0) for y in YEARS_REAL) or 1
+    recent = sum(by_year_counts.get(y, 0) for y in YEARS_REAL[-last_n:])
     return round(recent / total, 4)
-
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     cache = load_cache()
     n = len(TERMS)
 
-    # 1. Fetch baseline (total SS articles per year)
+    # 1. Baseline
     BASELINE_KEY = "__baseline__"
-    if BASELINE_KEY not in cache:
-        print("Fetching SS baseline (total articles per year)…")
-        cache[BASELINE_KEY] = openalex_group_by_year(search_query=None)
+    if BASELINE_KEY not in cache or max(cache[BASELINE_KEY]) < 1975:
+        print("Fetching SS baseline (all years)...")
+        cache[BASELINE_KEY] = fetch_all_years(search_query=None)
         save_cache(cache)
         time.sleep(SLEEP)
     else:
-        print("Baseline already cached.")
+        print("Baseline cached.")
 
-    baseline = {int(k): v for k, v in cache[BASELINE_KEY].items()} if isinstance(
-        next(iter(cache[BASELINE_KEY]), 0), str) else cache[BASELINE_KEY]
-    # Ensure all years present (fill zeros for missing years)
-    for y in YEARS:
-        baseline.setdefault(y, 1)
+    real_baseline = {y: cache[BASELINE_KEY].get(y, 0) for y in YEARS_REAL}
+    baseline_proj = project_baseline(real_baseline)
+    baseline_all  = {**real_baseline, **{y: baseline_proj[y] for y in YEARS_PROJ}}
+    for y in YEARS_ALL:
+        baseline_all.setdefault(y, 1)
 
-    print(f"Baseline SS papers — sample: {baseline.get(2020, '?')} in 2020, {baseline.get(2024, '?')} in 2024")
+    print(f"Baseline 1970:{real_baseline.get(1970,'?'):,}  1990:{real_baseline.get(1990,'?'):,}  2024:{real_baseline.get(2024,'?'):,}")
 
     # 2. Fetch each term
     terms_out = []
     for i, (display, query, group) in enumerate(TERMS):
         cache_key = query
-        if cache_key not in cache:
-            print(f"[{i+1}/{n}] {display!r} -> searching '{query}'...", end=" ", flush=True)
-            counts = openalex_group_by_year(search_query=query)
-            cache[cache_key] = counts
+        # Re-fetch if cache only has post-1989 data (old format)
+        cached = cache.get(cache_key, {})
+        if not cached or max((k for k in cached if isinstance(k, int)), default=1990) < 1975:
+            print(f"[{i+1}/{n}] {display!r} -> '{query}'...", end=" ", flush=True)
+            cached = fetch_all_years(search_query=query)
+            cache[cache_key] = cached
             save_cache(cache)
             time.sleep(SLEEP)
-            total_in_range = sum(counts.get(y, 0) for y in YEARS)
-            print(f"{total_in_range:,} papers")
+            total = sum(cached.get(y, 0) for y in YEARS_REAL)
+            print(f"{total:,} papers (real)")
         else:
-            counts = cache[cache_key]
-            print(f"[{i+1}/{n}] {display!r} — cached")
+            print(f"[{i+1}/{n}] {display!r} -- cached ({max(k for k in cached if isinstance(k,int))} max yr)")
 
-        # Normalise year keys to int
-        counts_int = {}
-        for k, v in counts.items():
-            try:
-                counts_int[int(k)] = v
-            except ValueError:
-                pass
+        real_counts = {y: cached.get(y, 0) for y in YEARS_REAL}
 
-        growth  = compute_growth(counts_int)
-        novelty = compute_novelty(counts_int)
+        # Project forward
+        proj_shares = project_shares(real_counts, baseline_proj)
+
+        growth  = compute_growth({**real_counts, **{y: int(proj_shares[y] * baseline_all.get(y,1)) for y in YEARS_PROJ}})
+        novelty = compute_novelty(real_counts)
 
         by_year = {}
-        for y in YEARS:
-            raw   = counts_int.get(y, 0)
-            base  = baseline.get(y, 1)
+
+        # Real years
+        for y in YEARS_REAL:
+            raw   = real_counts.get(y, 0)
+            base  = baseline_all.get(y, 1)
             share = raw / base if base > 0 else 0.0
             by_year[str(y)] = {
                 "c": raw,
                 "s": round(share, 6),
-                "g": growth[y],
+                "g": growth.get(y, 0.0),
                 "n": novelty,
             }
 
-        terms_out.append({
-            "term":    display,
-            "group":   group,
-            "by_year": by_year,
-        })
+        # Projected years
+        for y in YEARS_PROJ:
+            share = proj_shares.get(y, 0.0)
+            base  = baseline_all.get(y, 1)
+            raw   = int(share * base)
+            by_year[str(y)] = {
+                "c": raw,
+                "s": round(share, 6),
+                "g": growth.get(y, 0.0),
+                "n": novelty,
+                "p": 1,            # p=1 flags this as a projection
+            }
 
-    # 3. Build annual_volume from baseline
-    annual_volume = {str(y): baseline.get(y, 0) for y in YEARS}
+        terms_out.append({"term": display, "group": group, "by_year": by_year})
 
-    # 4. Assemble payload
+    # 3. Annual volume
+    annual_volume = {}
+    for y in YEARS_REAL:
+        annual_volume[str(y)] = real_baseline.get(y, 0)
+    for y in YEARS_PROJ:
+        annual_volume[str(y)] = baseline_proj.get(y, 0)
+
+    # 4. Payload
     payload = {
         "meta": {
-            "year_min":      YEAR_MIN,
-            "year_max":      YEAR_MAX,
-            "groups":        GROUPS,
+            "year_min":       YEAR_REAL_MIN,
+            "year_max":       YEAR_PROJ_MAX,
+            "real_year_min":  YEAR_REAL_MIN,
+            "real_year_max":  YEAR_REAL_MAX,
+            "proj_year_min":  YEAR_PROJ_MIN,
+            "proj_year_max":  YEAR_PROJ_MAX,
+            "groups":         GROUPS,
             "metrics": [
-                {"id": "s", "label": "Doc-frequency share", "unit": "%",     "fmt": "pct",
-                 "desc": "Fraction of that year's SS papers mentioning the term"},
-                {"id": "g", "label": "5-yr growth (CAGR)",  "unit": "%/yr",  "fmt": "pct_signed",
-                 "desc": "Compound annual growth rate of mention share over 5 years"},
-                {"id": "n", "label": "Novelty",             "unit": "",      "fmt": "pct",
-                 "desc": "Share of all-time mentions occurring in the last 5 years"},
-                {"id": "c", "label": "Raw count",           "unit": "",      "fmt": "int",
-                 "desc": "Number of SS papers in that year mentioning the term"},
+                {"id": "s", "label": "Doc-frequency share", "unit": "%",    "fmt": "pct",
+                 "desc": "Fraction of SS papers mentioning the term"},
+                {"id": "g", "label": "5-yr growth (CAGR)",  "unit": "%/yr", "fmt": "pct_signed",
+                 "desc": "Compound annual growth rate over 5 years"},
+                {"id": "n", "label": "Novelty",             "unit": "",     "fmt": "pct",
+                 "desc": "Share of all-time mentions in last 5 real years"},
+                {"id": "c", "label": "Raw count",           "unit": "",     "fmt": "int",
+                 "desc": "Papers mentioning the term in that year"},
             ],
-            "n_terms":       len(terms_out),
-            "annual_volume": annual_volume,
-            "source_note":   f"OpenAlex API · Social Sciences concept (C17744445) · {YEAR_MIN}–{YEAR_MAX} · fetched 2026",
+            "n_terms":        len(terms_out),
+            "annual_volume":  annual_volume,
+            "source_note":    f"Real: OpenAlex Social Sciences {YEAR_REAL_MIN}-{YEAR_REAL_MAX} | Projected: logistic extrapolation {YEAR_PROJ_MIN}-{YEAR_PROJ_MAX}",
         },
         "terms": terms_out,
     }
 
-    # 5. Write output
     compact = json.dumps(payload, separators=(",", ":"))
     OUT_JSON.write_text(compact, encoding="utf-8")
     OUT_JS.write_text("window.__WORDS_DATA__ = " + compact + ";", encoding="utf-8")
 
-    print()
-    print(f"Wrote {OUT_JSON}  ({OUT_JSON.stat().st_size:,} bytes)")
+    print(f"\nWrote {OUT_JSON}  ({OUT_JSON.stat().st_size:,} bytes)")
     print(f"Wrote {OUT_JS}    ({OUT_JS.stat().st_size:,} bytes)")
-    print(f"  {len(terms_out)} terms × {len(YEARS)} years")
-
+    print(f"  {len(terms_out)} terms x {len(YEARS_ALL)} years ({len(YEARS_REAL)} real + {len(YEARS_PROJ)} projected)")
 
 if __name__ == "__main__":
     main()

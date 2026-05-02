@@ -172,6 +172,34 @@
     color: var(--accent-2); font-size: 12px; font-weight: 500;
     display: flex; align-items: center; gap: 6px;
   }
+  .proj-tag {
+    flex: 0 0 auto; padding: 8px 14px; border-radius: 999px;
+    background: rgba(168,85,247,.15); border: 1px solid rgba(168,85,247,.5);
+    color: #c084fc; font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+    animation: pulse-proj 2s infinite;
+  }
+  @keyframes pulse-proj {
+    0%,100% { border-color: rgba(168,85,247,.5); }
+    50%      { border-color: rgba(168,85,247,.9); }
+  }
+  /* projected-year scrubber zone */
+  .scrubber-proj-zone {
+    position: absolute; top: 50%; height: 3px; transform: translateY(-50%);
+    background: repeating-linear-gradient(90deg,#a855f7 0,#a855f7 4px,transparent 4px,transparent 8px);
+    border-radius: 2px; pointer-events: none;
+  }
+  .scrubber-divider {
+    position: absolute; top: 0; bottom: 0; width: 2px;
+    background: var(--accent); opacity: .6; pointer-events: none;
+    transform: translateX(-50%);
+  }
+  /* projected stats bar */
+  .proj-badge {
+    font-size: 10px; font-weight: 700; color: #c084fc;
+    background: rgba(168,85,247,.15); border: 1px solid rgba(168,85,247,.4);
+    border-radius: 4px; padding: 2px 6px; margin-left: 6px;
+  }
 
   /* STATS BAR */
   .stats {
@@ -411,7 +439,7 @@
       <!-- ticks/labels injected by JS -->
       <div class="scrubber-handle" id="scrubber-handle"></div>
     </div>
-    <div class="disruption-tag">⚡ Discourse Tracker</div>
+    <div id="mode-tag" class="disruption-tag">⚡ Discourse Tracker</div>
   </div>
 
   <!-- STATS -->
@@ -499,7 +527,7 @@
 
 const state = {
   data: null,
-  year: 2024,
+  year: 2024,   // default to latest real year
   metric: 'g',           // s, g, n, c
   scope: 'all',          // all, emerging, declining
   search: '',
@@ -564,21 +592,41 @@ function renderScrubber() {
   const wrap = document.getElementById('scrubber');
   const meta = state.data.meta;
   const span = meta.year_max - meta.year_min;
-  // Inject ticks for each decade
+  const pctOf = y => ((y - meta.year_min) / span) * 100;
+
+  // Projected zone (dashed purple strip)
+  const projPct  = pctOf(meta.proj_year_min);
+  const projZone = document.createElement('div');
+  projZone.className = 'scrubber-proj-zone';
+  projZone.style.left  = projPct + '%';
+  projZone.style.width = (100 - projPct) + '%';
+  wrap.appendChild(projZone);
+
+  // Divider at real/proj boundary
+  const div = document.createElement('div');
+  div.className = 'scrubber-divider';
+  div.style.left = projPct + '%';
+  div.title = `${meta.real_year_max} · end of real data`;
+  wrap.appendChild(div);
+
+  // Ticks
   for (let y = meta.year_min; y <= meta.year_max; y++) {
     const isDecade = (y % 10 === 0);
-    const isMajor = (y === meta.year_min || y === meta.year_max || isDecade);
+    const isMajor  = (y === meta.year_min || y === meta.year_max || isDecade);
     if (!isMajor && y % 5 !== 0) continue;
-    const pct = ((y - meta.year_min) / span) * 100;
+    const pct  = pctOf(y);
     const tick = document.createElement('div');
-    tick.className = 'scrubber-tick' + (isDecade ? ' major' : '');
+    const isProj = y >= meta.proj_year_min;
+    tick.className = 'scrubber-tick' + (isDecade && !isProj ? ' major' : '');
     tick.style.left = pct + '%';
+    if (isProj) tick.style.background = '#a855f7';
     wrap.appendChild(tick);
-    if (isDecade) {
+    if (isDecade || y === meta.proj_year_min) {
       const lbl = document.createElement('div');
       lbl.className = 'scrubber-label';
       lbl.textContent = y;
-      lbl.style.left = pct + '%';
+      lbl.style.left  = pct + '%';
+      if (isProj) lbl.style.color = '#a855f7';
       wrap.appendChild(lbl);
     }
   }
@@ -590,8 +638,22 @@ function updateScrubberPosition() {
   document.getElementById('scrubber-handle').style.left = pct + '%';
   document.getElementById('scrubber-fill').style.width = pct + '%';
   document.getElementById('year-label').textContent = state.year;
-  const isNow = state.year >= state.data.meta.year_max;
-  document.getElementById('year-tag').textContent = isNow ? 'LATEST' : (state.year < 2000 ? 'EARLY' : (state.year < 2012 ? 'MID' : 'RECENT'));
+  const meta   = state.data.meta;
+  const isProj = state.year >= meta.proj_year_min;
+  const isNow  = state.year === meta.real_year_max;
+  document.getElementById('year-label').style.color = isProj ? '#c084fc' : 'var(--text)';
+  document.getElementById('year-tag').textContent =
+    isProj ? 'PROJECTED' : isNow ? 'LATEST' : state.year < 2000 ? 'EARLY' : state.year < 2012 ? 'MID' : 'RECENT';
+  document.getElementById('year-tag').style.color = isProj ? '#c084fc' : 'var(--text-faint)';
+
+  const modeTag = document.getElementById('mode-tag');
+  if (isProj) {
+    modeTag.className = 'proj-tag';
+    modeTag.innerHTML = '&#x2B50; Projected ' + state.year;
+  } else {
+    modeTag.className = 'disruption-tag';
+    modeTag.innerHTML = '&#x26A1; Discourse Tracker';
+  }
 }
 
 // ---------- Metric pills ----------
@@ -873,6 +935,18 @@ function updateStats() {
   const fastest = candidates[0];
   document.getElementById('stat-fastest').textContent =
     fastest ? `${fastest.term} ${FMT.pct_signed(fastest.by_year[yKey].g)}` : '—';
+
+  // Projected badge
+  const isProj = state.year >= state.data.meta.proj_year_min;
+  let pb = document.getElementById('proj-badge');
+  if (isProj && !pb) {
+    pb = document.createElement('span');
+    pb.id = 'proj-badge'; pb.className = 'proj-badge';
+    pb.textContent = 'PROJECTED';
+    document.querySelector('.stats').prepend(pb);
+  } else if (!isProj && pb) {
+    pb.remove();
+  }
 }
 
 function updateBadge() {
@@ -1065,52 +1139,81 @@ function closePanel() {
 
 function renderHistoryChart(termRef, groupColor) {
   const svgEl = document.getElementById('panel-chart');
-  const W = svgEl.parentElement.clientWidth - 32;  // 16px padding each side
+  const W = svgEl.parentElement.clientWidth - 32;
   const H = 90;
-  const meta = state.data.meta;
+  const meta  = state.data.meta;
   const years = Array.from({length: meta.year_max - meta.year_min + 1}, (_, i) => meta.year_min + i);
 
   const pts = years.map(y => ({
     y,
     s: (termRef.by_year[String(y)] || {}).s || 0,
+    proj: y >= meta.proj_year_min,
   }));
 
-  const maxS = Math.max(...pts.map(p => p.s), 0.0001);
-  const PAD  = { t: 6, b: 20, l: 0, r: 0 };
-  const cw   = W - PAD.l - PAD.r;
-  const ch   = H - PAD.t - PAD.b;
+  const maxS  = Math.max(...pts.map(p => p.s), 0.0001);
+  const PAD   = { t: 6, b: 20, l: 0, r: 0 };
+  const cw    = W - PAD.l - PAD.r;
+  const ch    = H - PAD.t - PAD.b;
+  const xOf   = i => PAD.l + (i / (pts.length - 1)) * cw;
+  const yOf   = s => PAD.t + ch - (s / maxS) * ch;
 
-  const xOf = i => PAD.l + (i / (pts.length - 1)) * cw;
-  const yOf = s => PAD.t + ch - (s / maxS) * ch;
+  // Split into real and projected segments
+  const realPts = pts.filter(p => !p.proj);
+  const projPts = pts.filter(p => p.proj);
+  // Include last real point at start of proj path for continuity
+  const joinPt  = realPts[realPts.length - 1];
 
-  // Build path
-  const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${xOf(i).toFixed(1)},${yOf(p.s).toFixed(1)}`).join(' ');
+  const toPath = (arr) => arr.map((p, i) =>
+    `${i === 0 ? 'M' : 'L'}${xOf(pts.indexOf(p)).toFixed(1)},${yOf(p.s).toFixed(1)}`
+  ).join(' ');
+
+  const realPath = toPath(realPts);
+  const projPath = (joinPt ? `M${xOf(pts.indexOf(joinPt)).toFixed(1)},${yOf(joinPt.s).toFixed(1)} ` : '') +
+    projPts.map(p => `L${xOf(pts.indexOf(p)).toFixed(1)},${yOf(p.s).toFixed(1)}`).join(' ');
+
+  // Divider x position
+  const divX = joinPt ? xOf(pts.indexOf(joinPt)) : cw;
 
   // Year marker
   const selIdx = state.year - meta.year_min;
-  const mx = xOf(selIdx), my = yOf(pts[selIdx]?.s || 0);
+  const mx = xOf(selIdx);
+  const my = yOf(pts[selIdx]?.s || 0);
+  const markerColor = state.year >= meta.proj_year_min ? '#c084fc' : 'var(--accent)';
 
-  // Axis labels (every 5 years)
+  // Axis labels (decades)
   const axisLabels = years
     .map((y, i) => ({ y, i }))
-    .filter(({y}) => y % 5 === 0)
-    .map(({y, i}) => `<text x="${xOf(i).toFixed(1)}" y="${H}" text-anchor="middle" font-size="9" fill="var(--text-faint)">${y}</text>`)
-    .join('');
+    .filter(({y}) => y % 10 === 0 || y === meta.proj_year_min)
+    .map(({y, i}) => {
+      const isProj = y >= meta.proj_year_min;
+      return `<text x="${xOf(i).toFixed(1)}" y="${H}" text-anchor="middle" font-size="9"
+        fill="${isProj ? '#a855f7' : 'var(--text-faint)'}">${y}</text>`;
+    }).join('');
 
   svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
   svgEl.innerHTML = `
     <defs>
       <linearGradient id="pcg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${groupColor}" stop-opacity=".35"/>
+        <stop offset="0%" stop-color="${groupColor}" stop-opacity=".3"/>
         <stop offset="100%" stop-color="${groupColor}" stop-opacity="0"/>
       </linearGradient>
     </defs>
-    <path d="${path} L${xOf(pts.length-1)},${yOf(0)} L${xOf(0)},${yOf(0)} Z"
+    <!-- Real area fill -->
+    <path d="${realPath} L${xOf(realPts.length-1)},${yOf(0)} L${xOf(0)},${yOf(0)} Z"
           fill="url(#pcg)"/>
-    <path d="${path}" stroke="${groupColor}" stroke-width="2" fill="none" stroke-linejoin="round"/>
-    <line x1="${mx}" y1="${PAD.t}" x2="${mx}" y2="${ch + PAD.t}"
-          stroke="var(--accent)" stroke-width="1" stroke-dasharray="3,2"/>
-    <circle cx="${mx}" cy="${my}" r="4" fill="var(--accent)" stroke="#fff" stroke-width="1.5"/>
+    <!-- Real line -->
+    <path d="${realPath}" stroke="${groupColor}" stroke-width="2" fill="none" stroke-linejoin="round"/>
+    <!-- Projected line (dashed) -->
+    <path d="${projPath}" stroke="#a855f7" stroke-width="1.5" fill="none"
+          stroke-dasharray="5,3" stroke-linejoin="round" opacity=".8"/>
+    <!-- Real/proj divider -->
+    <line x1="${divX.toFixed(1)}" y1="${PAD.t}" x2="${divX.toFixed(1)}" y2="${ch+PAD.t}"
+          stroke="var(--accent)" stroke-width="1" opacity=".4"/>
+    <!-- Year scrubber marker -->
+    <line x1="${mx.toFixed(1)}" y1="${PAD.t}" x2="${mx.toFixed(1)}" y2="${ch+PAD.t}"
+          stroke="${markerColor}" stroke-width="1" stroke-dasharray="3,2"/>
+    <circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="4"
+            fill="${markerColor}" stroke="#fff" stroke-width="1.5"/>
     ${axisLabels}
   `;
 }
