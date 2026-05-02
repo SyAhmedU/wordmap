@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Social Science Research — Word Map</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --bg-2: #111726;
+    --bg-3: #1a2235;
+    --line: #243049;
+    --text: #e8edf7;
+    --text-dim: #8d99b3;
+    --text-faint: #5a657f;
+    --accent: #ff7a1a;
+    --accent-2: #5b8def;
+    --good: #22c55e;
+    --bad: #ef4444;
+    --warn: #f59e0b;
+    --pill: #182238;
+    --pill-active: #ff7a1a;
+    --shadow: 0 6px 28px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    font-size: 14px; overflow: hidden; height: 100%; }
+
+  /* HEADER */
+  .top {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 18px 10px; border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .logo {
+    width: 32px; height: 32px; border-radius: 8px; background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: #1a0f00; font-size: 16px;
+  }
+  .title-block { flex: 0 0 auto; }
+  .title { font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
+  .subtitle { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  .search {
+    background: var(--bg-2); border: 1px solid var(--line); color: var(--text);
+    padding: 8px 12px; border-radius: 999px; font-size: 13px;
+    width: 200px; outline: none;
+  }
+  .search:focus { border-color: var(--accent); }
+  .search::placeholder { color: var(--text-faint); }
+
+  .pills { display: flex; gap: 6px; align-items: center; }
+  .pill {
+    padding: 7px 12px; border-radius: 999px; background: var(--pill);
+    border: 1px solid var(--line); color: var(--text);
+    font-size: 12px; cursor: pointer; user-select: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all .12s ease;
+  }
+  .pill:hover { background: #1f2a44; }
+  .pill.active { background: var(--pill-active); color: #1a0f00; border-color: var(--pill-active); font-weight: 600; }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .spacer { flex: 1; }
+
+  /* VIEW-BY ROW */
+  .viewby {
+    display: flex; gap: 8px; align-items: center;
+    padding: 12px 18px; border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    overflow-x: auto;
+  }
+  .viewby-label {
+    font-size: 10px; letter-spacing: .12em; color: var(--text-faint);
+    margin-right: 6px; flex: 0 0 auto;
+  }
+  .metric-pill {
+    padding: 9px 14px; border-radius: 10px; background: var(--bg-2);
+    border: 1px solid var(--line); cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    flex: 0 0 auto; transition: all .14s ease;
+  }
+  .metric-pill:hover { background: var(--bg-3); border-color: #2e3b5a; }
+  .metric-pill.active {
+    background: linear-gradient(180deg, #1c2842 0%, #131c30 100%);
+    border-color: var(--accent);
+  }
+  .metric-pill .icon {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--bg-3); display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .metric-pill .label { font-size: 13px; font-weight: 500; }
+  .metric-pill .unit { font-size: 11px; color: var(--text-faint); margin-left: 2px; }
+
+  /* COLOR LEGEND */
+  .legend {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 18px; border-bottom: 1px solid var(--line);
+    font-size: 11px; color: var(--text-dim);
+  }
+  .legend-name { letter-spacing: .08em; flex: 0 0 auto; text-transform: uppercase; font-size: 10px; }
+  .legend-bar {
+    flex: 1; height: 6px; border-radius: 3px;
+    background: linear-gradient(90deg, var(--bad) 0%, #4a3a3a 50%, var(--good) 100%);
+    max-width: 600px;
+  }
+  .legend-end { font-size: 11px; color: var(--text-dim); flex: 0 0 auto; }
+  .legend-meta { color: var(--text-faint); margin-left: auto; flex: 0 0 auto; font-size: 11px; }
+
+  /* TIMELINE */
+  .timeline {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px 10px; border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .play {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg-2); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex: 0 0 auto;
+    transition: all .14s ease;
+  }
+  .play:hover { background: var(--bg-3); border-color: var(--accent); }
+  .play svg { fill: var(--text); width: 14px; height: 14px; }
+
+  .year-label {
+    font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1;
+    flex: 0 0 auto; min-width: 78px;
+  }
+  .year-tag {
+    font-size: 9px; color: var(--text-faint); letter-spacing: .15em;
+    text-transform: uppercase; margin-top: 4px;
+  }
+
+  .scrubber-wrap { flex: 1; position: relative; height: 36px; cursor: pointer; }
+  .scrubber-track {
+    position: absolute; top: 50%; left: 0; right: 0; height: 3px;
+    transform: translateY(-50%); background: var(--bg-3); border-radius: 2px;
+  }
+  .scrubber-fill {
+    position: absolute; top: 50%; left: 0; height: 3px;
+    transform: translateY(-50%); background: var(--accent-2); border-radius: 2px;
+    pointer-events: none;
+  }
+  .scrubber-tick {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--bg-3); border: 1px solid var(--line);
+    pointer-events: none;
+  }
+  .scrubber-tick.major { background: var(--accent-2); border-color: var(--accent-2); }
+  .scrubber-label {
+    position: absolute; top: 100%; transform: translateX(-50%);
+    font-size: 10px; color: var(--text-faint); margin-top: 6px;
+    pointer-events: none;
+  }
+  .scrubber-handle {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent); border: 3px solid #fff;
+    box-shadow: 0 0 0 3px rgba(255,122,26,.25), var(--shadow);
+    pointer-events: none;
+    transition: left .15s ease-out;
+  }
+
+  .disruption-tag {
+    flex: 0 0 auto; padding: 8px 14px; border-radius: 999px;
+    background: rgba(91,141,239,.12); border: 1px solid rgba(91,141,239,.4);
+    color: var(--accent-2); font-size: 12px; font-weight: 500;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* STATS BAR */
+  .stats {
+    display: flex; align-items: center; gap: 18px;
+    padding: 10px 18px; border-bottom: 1px solid var(--line);
+    font-size: 12px; color: var(--text-dim);
+  }
+  .stats .big { font-size: 14px; color: var(--text); font-weight: 600; }
+  .stats .sep { width: 1px; height: 14px; background: var(--line); }
+  .stats .high { color: var(--bad); font-weight: 600; margin-left: auto; }
+  .stats .high .high-label { color: var(--text-faint); font-weight: 400; margin-right: 6px; }
+
+  /* TREEMAP */
+  #map {
+    position: relative; width: 100%; height: 100%;
+    background: var(--bg);
+  }
+  .map-wrap {
+    flex: 1 1 auto; min-height: 0; position: relative;
+    overflow: hidden;
+  }
+
+  .group-label {
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--text-dim); pointer-events: none;
+    text-shadow: 0 0 8px rgba(0,0,0,.6);
+  }
+  .group-zoom { font-size: 9px; color: var(--text-faint); margin-left: 4px; }
+
+  .cell {
+    cursor: pointer;
+    transition: opacity .15s ease;
+  }
+  .cell rect { stroke: var(--bg); stroke-width: 1; }
+  .cell:hover rect { stroke: #fff; stroke-width: 2; }
+  .cell.dim { opacity: .25; }
+  .cell text {
+    pointer-events: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+    fill: var(--text);
+    text-shadow: 0 0 4px rgba(0,0,0,.5);
+  }
+  .cell .term-name { font-weight: 600; font-size: 13px; }
+  .cell .term-val { font-size: 11px; opacity: .85; }
+  .cell .term-count { font-size: 10px; opacity: .65; }
+
+  /* TOOLTIP */
+  #tooltip {
+    position: absolute; pointer-events: none; opacity: 0;
+    background: rgba(15,20,35,.96); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px 14px;
+    font-size: 12px; color: var(--text);
+    box-shadow: var(--shadow); backdrop-filter: blur(8px);
+    transition: opacity .12s ease;
+    min-width: 220px; max-width: 280px; z-index: 10;
+  }
+  #tooltip h4 {
+    margin: 0 0 4px; font-size: 14px; font-weight: 600;
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 10px;
+  }
+  #tooltip h4 .group {
+    font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 500;
+  }
+  #tooltip .row {
+    display: flex; justify-content: space-between; padding: 3px 0;
+    color: var(--text-dim);
+  }
+  #tooltip .row span:last-child { color: var(--text); font-variant-numeric: tabular-nums; }
+  #tooltip .spark {
+    margin-top: 8px; height: 36px; width: 100%;
+  }
+
+  /* APP LAYOUT */
+  .app { display: flex; flex-direction: column; height: 100vh; }
+
+  /* Footer */
+  .footer {
+    padding: 6px 18px; font-size: 10px; color: var(--text-faint);
+    border-top: 1px solid var(--line); background: var(--bg);
+    display: flex; gap: 14px; align-items: center;
+  }
+  .footer .src { color: var(--warn); }
+
+  /* Highlight badge for fastest-growing */
+  .badge {
+    position: absolute; bottom: 18px; right: 18px;
+    background: var(--bg-2); border: 1px solid var(--accent-2);
+    border-radius: 12px; padding: 10px 14px;
+    font-size: 12px; color: var(--text-dim);
+    box-shadow: var(--shadow);
+    z-index: 5;
+  }
+  .badge .b-label {
+    font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--accent-2); margin-bottom: 4px;
+  }
+  .badge .b-term { font-size: 14px; color: var(--text); font-weight: 600; }
+  .badge .b-val { font-size: 11px; color: var(--good); margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="top">
+    <div class="logo">S</div>
+    <div class="title-block">
+      <div class="title">Social Science Research — Word Map</div>
+      <div class="subtitle" id="meta-subtitle">Loading…</div>
+    </div>
+    <div class="spacer"></div>
+    <input class="search" id="search" placeholder="Search terms…" />
+    <div class="pills">
+      <button class="pill active" data-scope="all">All Subfields</button>
+      <button class="pill" data-scope="emerging">Emerging only</button>
+      <button class="pill" data-scope="declining">Declining only</button>
+    </div>
+  </header>
+
+  <!-- VIEW BY -->
+  <div class="viewby">
+    <div class="viewby-label">VIEW BY</div>
+    <div class="metric-pill active" data-metric="g">
+      <div class="icon">↗</div>
+      <div class="label">5-yr Growth</div>
+      <div class="unit">%/yr</div>
+    </div>
+    <div class="metric-pill" data-metric="s">
+      <div class="icon">▣</div>
+      <div class="label">Doc-frequency</div>
+      <div class="unit">% articles</div>
+    </div>
+    <div class="metric-pill" data-metric="n">
+      <div class="icon">★</div>
+      <div class="label">Novelty</div>
+      <div class="unit">recency</div>
+    </div>
+    <div class="metric-pill" data-metric="c">
+      <div class="icon">#</div>
+      <div class="label">Raw count</div>
+      <div class="unit">articles</div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="font-size: 10px; color: var(--text-faint); letter-spacing: .12em;">AREA &prop; DOC-FREQ. SHARE</div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-name" id="legend-name">5-YR GROWTH</div>
+    <div class="legend-end" id="legend-low">–50% declining</div>
+    <div class="legend-bar" id="legend-bar"></div>
+    <div class="legend-end" id="legend-high">+200% booming</div>
+    <div class="legend-meta">7 subfields · <span id="legend-count">106</span> terms</div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    <div class="play" id="play" title="Play / Pause">
+      <svg viewBox="0 0 12 14"><path id="play-icon" d="M0 0 L12 7 L0 14 Z"/></svg>
+    </div>
+    <div>
+      <div class="year-label" id="year-label">2025</div>
+      <div class="year-tag" id="year-tag">NOW</div>
+    </div>
+    <div class="scrubber-wrap" id="scrubber">
+      <div class="scrubber-track"></div>
+      <div class="scrubber-fill" id="scrubber-fill"></div>
+      <!-- ticks/labels injected by JS -->
+      <div class="scrubber-handle" id="scrubber-handle"></div>
+    </div>
+    <div class="disruption-tag">⚡ Discourse Tracker</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div><span class="big" id="stat-mentions">—</span> articles in <span id="stat-year">—</span></div>
+    <div class="sep"></div>
+    <div><span class="big" id="stat-terms">—</span> terms tracked</div>
+    <div class="sep"></div>
+    <div><span class="big" id="stat-top-share">—</span> top-term share</div>
+    <div class="high"><span class="high-label">FASTEST GROWING</span><span id="stat-fastest">—</span></div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-wrap">
+    <svg id="map"></svg>
+    <div id="tooltip"></div>
+    <div class="badge" id="badge">
+      <div class="b-label">Selected term</div>
+      <div class="b-term" id="b-term">—</div>
+      <div class="b-val" id="b-val">click any cell</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Pilot dataset · 1970–2025 · 7 subfields · 106 terms</span>
+    <span>·</span>
+    <span class="src">⚠ Seeded realistic trajectories — replace <code>words.json</code> with Scopus/OpenAlex extract for real data</span>
+    <span style="margin-left:auto">URL state: <code id="url-hint">#m=g&y=2025</code></span>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="data.js"></script>
+<script>
+/* ============================================================
+   Social Science Research Word-Map
+   Treemap visualization, modeled on karmamap interaction model
+   ============================================================ */
+
+const state = {
+  data: null,
+  year: 2025,
+  metric: 'g',           // s, g, n, c
+  scope: 'all',          // all, emerging, declining
+  search: '',
+  selectedTerm: null,
+  playing: false,
+  playTimer: null,
+};
+
+const FMT = {
+  pct: v => (v * 100).toFixed(2) + '%',
+  pct_signed: v => (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%/yr',
+  int: v => v >= 1000 ? (v / 1000).toFixed(1) + 'k' : Math.round(v).toString(),
+};
+
+// ---------- Boot ----------
+async function boot() {
+  // Prefer inlined data (works via file://), fall back to fetch
+  if (window.__WORDS_DATA__) {
+    state.data = window.__WORDS_DATA__;
+  } else {
+    state.data = await fetch('words.json').then(r => r.json());
+  }
+  initFromHash();
+  renderMetricBar();
+  renderScrubber();
+  bindEvents();
+  applyAll();
+  document.getElementById('meta-subtitle').textContent =
+    `${state.data.terms.length} terms · ${state.data.meta.year_min}–${state.data.meta.year_max} · pilot corpus (5 social-science journals)`;
+  document.getElementById('legend-count').textContent = state.data.terms.length;
+}
+
+function initFromHash() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (h.get('m')) state.metric = h.get('m');
+  if (h.get('y')) state.year = +h.get('y');
+  if (h.get('t')) state.selectedTerm = h.get('t');
+  if (h.get('scope')) state.scope = h.get('scope');
+  if (h.get('q')) state.search = h.get('q');
+}
+function writeHash() {
+  const p = new URLSearchParams();
+  p.set('m', state.metric);
+  p.set('y', state.year);
+  if (state.selectedTerm) p.set('t', state.selectedTerm);
+  if (state.scope !== 'all') p.set('scope', state.scope);
+  if (state.search) p.set('q', state.search);
+  location.hash = p.toString();
+  document.getElementById('url-hint').textContent = '#' + p.toString();
+}
+
+// ---------- Scrubber ----------
+function renderScrubber() {
+  const wrap = document.getElementById('scrubber');
+  const meta = state.data.meta;
+  const span = meta.year_max - meta.year_min;
+  // Inject ticks for each decade
+  for (let y = meta.year_min; y <= meta.year_max; y++) {
+    const isDecade = (y % 10 === 0);
+    const isMajor = (y === meta.year_min || y === meta.year_max || isDecade);
+    if (!isMajor && y % 5 !== 0) continue;
+    const pct = ((y - meta.year_min) / span) * 100;
+    const tick = document.createElement('div');
+    tick.className = 'scrubber-tick' + (isDecade ? ' major' : '');
+    tick.style.left = pct + '%';
+    wrap.appendChild(tick);
+    if (isDecade) {
+      const lbl = document.createElement('div');
+      lbl.className = 'scrubber-label';
+      lbl.textContent = y;
+      lbl.style.left = pct + '%';
+      wrap.appendChild(lbl);
+    }
+  }
+}
+
+function updateScrubberPosition() {
+  const meta = state.data.meta;
+  const pct = ((state.year - meta.year_min) / (meta.year_max - meta.year_min)) * 100;
+  document.getElementById('scrubber-handle').style.left = pct + '%';
+  document.getElementById('scrubber-fill').style.width = pct + '%';
+  document.getElementById('year-label').textContent = state.year;
+  const isNow = state.year >= 2025;
+  document.getElementById('year-tag').textContent = isNow ? 'NOW' : (state.year < 1990 ? 'EARLY' : (state.year < 2010 ? 'MID' : 'RECENT'));
+}
+
+// ---------- Metric pills ----------
+function renderMetricBar() {
+  document.querySelectorAll('.metric-pill').forEach(el => {
+    el.classList.toggle('active', el.dataset.metric === state.metric);
+  });
+}
+
+function updateLegend() {
+  const m = state.data.meta.metrics.find(x => x.id === state.metric);
+  document.getElementById('legend-name').textContent = m.label.toUpperCase();
+  const bar = document.getElementById('legend-bar');
+  const lo = document.getElementById('legend-low');
+  const hi = document.getElementById('legend-high');
+  if (state.metric === 'g') {
+    bar.style.background = 'linear-gradient(90deg, #ef4444 0%, #3a3138 50%, #22c55e 100%)';
+    lo.textContent = '–50% declining';
+    hi.textContent = '+200% booming';
+  } else if (state.metric === 's' || state.metric === 'c') {
+    bar.style.background = 'linear-gradient(90deg, #1a2235 0%, #5b8def 50%, #c4d3f7 100%)';
+    lo.textContent = 'rare';
+    hi.textContent = 'dominant';
+  } else if (state.metric === 'n') {
+    bar.style.background = 'linear-gradient(90deg, #1a2235 0%, #f59e0b 100%)';
+    lo.textContent = 'long-established';
+    hi.textContent = 'newly emerging';
+  }
+}
+
+// ---------- Color scale ----------
+function colorFor(v, metric) {
+  if (metric === 'g') {
+    // diverging red→green centered at 0
+    // domain effectively [-0.5, +2.0] for CAGR
+    const t = Math.max(-1, Math.min(1, v / 1.0));
+    if (t < 0) return d3.interpolateRgb('#3a3138', '#ef4444')(-t);
+    return d3.interpolateRgb('#3a3138', '#22c55e')(t);
+  }
+  if (metric === 's' || metric === 'c') {
+    const ref = metric === 's' ? 0.08 : 200;
+    const t = Math.min(1, v / ref);
+    return d3.interpolateRgb('#1a2235', '#5b8def')(Math.sqrt(t));
+  }
+  if (metric === 'n') {
+    return d3.interpolateRgb('#1a2235', '#f59e0b')(Math.min(1, v / 0.6));
+  }
+  return '#888';
+}
+
+// ---------- Build hierarchy for treemap ----------
+function buildHierarchy() {
+  const yKey = String(state.year);
+  const terms = state.data.terms;
+  const groupsMeta = state.data.meta.groups;
+  const groupMap = Object.fromEntries(groupsMeta.map(g => [g.id, g]));
+
+  const filteredTerms = terms.filter(t => {
+    const v = t.by_year[yKey];
+    if (!v || v.s <= 0) return false;
+    if (state.search) {
+      if (!t.term.toLowerCase().includes(state.search.toLowerCase())) return false;
+    }
+    if (state.scope === 'emerging') {
+      if (!(v.g > 0.05)) return false;
+    } else if (state.scope === 'declining') {
+      if (!(v.g < -0.02)) return false;
+    }
+    return true;
+  });
+
+  // Group terms by subfield
+  const byGroup = {};
+  for (const t of filteredTerms) {
+    if (!byGroup[t.group]) byGroup[t.group] = [];
+    const v = t.by_year[yKey];
+    byGroup[t.group].push({
+      term: t.term,
+      group: t.group,
+      groupLabel: groupMap[t.group]?.label || t.group,
+      groupColor: groupMap[t.group]?.color || '#888',
+      vals: v,
+      sizeVal: v.s,                       // size by share
+      colorVal: v[state.metric],          // color by selected metric
+      ref: t,
+    });
+  }
+
+  const children = Object.entries(byGroup).map(([gid, kids]) => ({
+    name: groupMap[gid]?.label || gid,
+    groupId: gid,
+    color: groupMap[gid]?.color || '#888',
+    children: kids.map(k => ({ ...k, value: Math.max(k.sizeVal, 0.0005) })),
+  }));
+
+  return { name: 'root', children };
+}
+
+// ---------- Render treemap ----------
+function renderTreemap() {
+  const root = d3.hierarchy(buildHierarchy())
+    .sum(d => d.value || 0)
+    .sort((a, b) => b.value - a.value);
+
+  const svg = d3.select('#map');
+  const wrap = document.querySelector('.map-wrap');
+  const W = wrap.clientWidth;
+  const H = wrap.clientHeight;
+  svg.attr('width', W).attr('height', H).attr('viewBox', `0 0 ${W} ${H}`);
+
+  d3.treemap()
+    .size([W, H])
+    .paddingInner(2)
+    .paddingTop(d => d.depth === 1 ? 22 : 0)
+    .paddingOuter(2)
+    .round(true)(root);
+
+  // Clear & redraw
+  svg.selectAll('*').remove();
+
+  // Group labels (parent rectangles)
+  const groups = svg.selectAll('g.group')
+    .data(root.children || [])
+    .join('g')
+    .attr('class', 'group')
+    .attr('transform', d => `translate(${d.x0},${d.y0})`);
+
+  groups.append('text')
+    .attr('class', 'group-label')
+    .attr('x', 6).attr('y', 14)
+    .attr('fill', d => d.data.color)
+    .text(d => d.data.name);
+
+  // Term cells
+  const cells = svg.selectAll('g.cell')
+    .data(root.leaves())
+    .join('g')
+    .attr('class', 'cell')
+    .attr('transform', d => `translate(${d.x0},${d.y0})`)
+    .on('mouseenter', (e, d) => showTip(e, d))
+    .on('mousemove', moveTip)
+    .on('mouseleave', hideTip)
+    .on('click', (e, d) => {
+      state.selectedTerm = d.data.term;
+      writeHash();
+      updateBadge();
+      d3.selectAll('g.cell').classed('dim', x => x.data.term !== state.selectedTerm);
+    });
+
+  cells.append('rect')
+    .attr('width', d => Math.max(0, d.x1 - d.x0))
+    .attr('height', d => Math.max(0, d.y1 - d.y0))
+    .attr('fill', d => colorFor(d.data.colorVal, state.metric))
+    .attr('rx', 2);
+
+  // Term name
+  cells.append('text')
+    .attr('class', 'term-name')
+    .attr('x', 6).attr('y', 16)
+    .text(d => d.data.term)
+    .each(function(d) {
+      const w = d.x1 - d.x0;
+      const h = d.y1 - d.y0;
+      if (w < 40 || h < 22) { this.textContent = ''; return; }
+      const charBudget = Math.floor((w - 10) / 7); // ~7px per char
+      if (this.textContent.length > charBudget) {
+        this.textContent = this.textContent.slice(0, Math.max(1, charBudget - 1)) + '…';
+      }
+    });
+
+  // Term value (the colored metric)
+  cells.append('text')
+    .attr('class', 'term-val')
+    .attr('x', 6).attr('y', 30)
+    .text(d => formatMetric(d.data.colorVal, state.metric))
+    .each(function(d) {
+      const w = d.x1 - d.x0;
+      const h = d.y1 - d.y0;
+      if (w < 60 || h < 38) this.textContent = '';
+    });
+
+  // Article count (small footnote)
+  cells.append('text')
+    .attr('class', 'term-count')
+    .attr('x', 6)
+    .attr('y', d => Math.max(0, d.y1 - d.y0) - 6)
+    .text(d => d.data.vals.c + ' articles')
+    .each(function(d) {
+      const w = d.x1 - d.x0;
+      const h = d.y1 - d.y0;
+      if (w < 80 || h < 56) this.textContent = '';
+    });
+
+  // Reapply selection dimming
+  if (state.selectedTerm) {
+    d3.selectAll('g.cell').classed('dim', x => x.data.term !== state.selectedTerm);
+  }
+}
+
+function formatMetric(v, m) {
+  if (m === 'g') return FMT.pct_signed(v);
+  if (m === 's' || m === 'n') return FMT.pct(v);
+  if (m === 'c') return FMT.int(v);
+  return v;
+}
+
+// ---------- Tooltip ----------
+function showTip(event, d) {
+  const tip = document.getElementById('tooltip');
+  const v = d.data.vals;
+  tip.style.opacity = 1;
+  tip.innerHTML = `
+    <h4>${d.data.term}<span class="group">${d.data.groupLabel}</span></h4>
+    <div class="row"><span>Doc-frequency share</span><span>${FMT.pct(v.s)}</span></div>
+    <div class="row"><span>5-yr growth</span><span style="color:${v.g >= 0 ? 'var(--good)' : 'var(--bad)'}">${FMT.pct_signed(v.g)}</span></div>
+    <div class="row"><span>Novelty (last 5y share)</span><span>${FMT.pct(v.n)}</span></div>
+    <div class="row"><span>Articles in ${state.year}</span><span>${v.c}</span></div>
+    <svg class="spark" viewBox="0 0 220 36" preserveAspectRatio="none">${sparkPath(d.data.ref)}</svg>
+  `;
+  moveTip(event);
+}
+function moveTip(event) {
+  const tip = document.getElementById('tooltip');
+  const wrap = document.querySelector('.map-wrap').getBoundingClientRect();
+  const x = event.clientX - wrap.left + 14;
+  const y = event.clientY - wrap.top + 14;
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let lx = x, ly = y;
+  if (lx + tw > wrap.width - 8) lx = event.clientX - wrap.left - tw - 14;
+  if (ly + th > wrap.height - 8) ly = event.clientY - wrap.top - th - 14;
+  tip.style.left = lx + 'px';
+  tip.style.top = ly + 'px';
+}
+function hideTip() {
+  document.getElementById('tooltip').style.opacity = 0;
+}
+function sparkPath(termRef) {
+  const meta = state.data.meta;
+  const W = 220, H = 36;
+  const ys = [];
+  for (let y = meta.year_min; y <= meta.year_max; y++) {
+    ys.push({ y, s: termRef.by_year[String(y)].s });
+  }
+  const max = Math.max(...ys.map(d => d.s)) || 1;
+  const xs = ys.map((d, i) => i / (ys.length - 1) * W);
+  const yp = ys.map(d => H - (d.s / max) * (H - 2) - 1);
+  let path = '';
+  for (let i = 0; i < xs.length; i++) {
+    path += (i === 0 ? 'M' : 'L') + xs[i].toFixed(1) + ',' + yp[i].toFixed(1);
+  }
+  // marker for selected year
+  const idx = state.year - meta.year_min;
+  const cx = xs[idx], cy = yp[idx];
+  const groupMeta = state.data.meta.groups.find(g => g.id === termRef.group);
+  const stroke = groupMeta ? groupMeta.color : '#5b8def';
+  return `<path d="${path}" stroke="${stroke}" stroke-width="1.5" fill="none" opacity=".75"/>
+          <circle cx="${cx}" cy="${cy}" r="3" fill="#ff7a1a" stroke="#fff" stroke-width="1.2"/>`;
+}
+
+// ---------- Stats bar ----------
+function updateStats() {
+  const yKey = String(state.year);
+  const totalArticles = state.data.meta.annual_volume[yKey];
+  document.getElementById('stat-mentions').textContent = totalArticles.toLocaleString();
+  document.getElementById('stat-year').textContent = state.year;
+
+  const visibleTerms = state.data.terms.filter(t => (t.by_year[yKey]?.s || 0) > 0);
+  document.getElementById('stat-terms').textContent = visibleTerms.length;
+
+  const topShare = Math.max(...visibleTerms.map(t => t.by_year[yKey].s));
+  const topTerm = visibleTerms.find(t => t.by_year[yKey].s === topShare);
+  document.getElementById('stat-top-share').textContent =
+    topTerm ? `${topTerm.term} (${FMT.pct(topShare)})` : '—';
+
+  // fastest growing
+  const candidates = visibleTerms.filter(t => t.by_year[yKey].s > 0.005);
+  candidates.sort((a, b) => (b.by_year[yKey].g || 0) - (a.by_year[yKey].g || 0));
+  const fastest = candidates[0];
+  document.getElementById('stat-fastest').textContent =
+    fastest ? `${fastest.term} ${FMT.pct_signed(fastest.by_year[yKey].g)}` : '—';
+}
+
+function updateBadge() {
+  const yKey = String(state.year);
+  const t = state.data.terms.find(x => x.term === state.selectedTerm);
+  if (!t) {
+    document.getElementById('b-term').textContent = '—';
+    document.getElementById('b-val').textContent = 'click any cell';
+    return;
+  }
+  const v = t.by_year[yKey];
+  document.getElementById('b-term').textContent = t.term;
+  document.getElementById('b-val').textContent =
+    `${FMT.pct(v.s)} share · ${FMT.pct_signed(v.g)} growth`;
+}
+
+// ---------- Apply / re-render ----------
+function applyAll() {
+  updateScrubberPosition();
+  updateLegend();
+  updateStats();
+  updateBadge();
+  renderTreemap();
+  writeHash();
+}
+
+// ---------- Events ----------
+function bindEvents() {
+  // Metric pills
+  document.querySelectorAll('.metric-pill').forEach(el => {
+    el.addEventListener('click', () => {
+      state.metric = el.dataset.metric;
+      renderMetricBar();
+      applyAll();
+    });
+  });
+  // Scope pills
+  document.querySelectorAll('.pill[data-scope]').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.pill[data-scope]').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      state.scope = el.dataset.scope;
+      applyAll();
+    });
+  });
+  // Search
+  document.getElementById('search').addEventListener('input', (e) => {
+    state.search = e.target.value;
+    applyAll();
+  });
+  document.getElementById('search').value = state.search;
+  // Scrubber drag/click
+  const scrub = document.getElementById('scrubber');
+  function setYearFromX(clientX) {
+    const r = scrub.getBoundingClientRect();
+    const t = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+    const meta = state.data.meta;
+    state.year = meta.year_min + Math.round(t * (meta.year_max - meta.year_min));
+    applyAll();
+  }
+  let dragging = false;
+  scrub.addEventListener('mousedown', e => { dragging = true; setYearFromX(e.clientX); });
+  window.addEventListener('mousemove', e => { if (dragging) setYearFromX(e.clientX); });
+  window.addEventListener('mouseup', () => { dragging = false; });
+  scrub.addEventListener('click', e => setYearFromX(e.clientX));
+
+  // Play/pause
+  document.getElementById('play').addEventListener('click', togglePlay);
+  // Resize
+  window.addEventListener('resize', renderTreemap);
+  // Hash navigation (back button)
+  window.addEventListener('hashchange', () => {
+    initFromHash();
+    document.getElementById('search').value = state.search;
+    renderMetricBar();
+    document.querySelectorAll('.pill[data-scope]').forEach(p =>
+      p.classList.toggle('active', p.dataset.scope === state.scope));
+    applyAll();
+  });
+}
+
+function togglePlay() {
+  state.playing = !state.playing;
+  const icon = document.getElementById('play-icon');
+  if (state.playing) {
+    icon.setAttribute('d', 'M0 0 H4 V14 H0 Z M8 0 H12 V14 H8 Z');
+    state.playTimer = setInterval(() => {
+      state.year += 1;
+      if (state.year > state.data.meta.year_max) state.year = state.data.meta.year_min;
+      applyAll();
+    }, 380);
+  } else {
+    icon.setAttribute('d', 'M0 0 L12 7 L0 14 Z');
+    clearInterval(state.playTimer);
+  }
+}
+
+boot();
+</script>
+</body>
+</html>
