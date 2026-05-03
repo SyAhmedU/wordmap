@@ -21,6 +21,15 @@
     --pill: #182238;
     --pill-active: #ff7a1a;
     --shadow: 0 6px 28px rgba(0,0,0,.35);
+    /* Journal palette (research paper) */
+    --jp-page:   #f7f5f0;
+    --jp-bg:     #ffffff;
+    --jp-sidebar:#efece5;
+    --jp-body:   #1a1918;
+    --jp-muted:  #5c5752;
+    --jp-faint:  #9a948c;
+    --jp-border: #ddd8ce;
+    --jp-active: #e3ddd4;
   }
 
   * { box-sizing: border-box; }
@@ -288,120 +297,199 @@
   /* ── RESEARCH PAPER OVERLAY ── */
   .rp-overlay {
     position: fixed; inset: 0; z-index: 100;
-    background: rgba(5,8,18,.92); backdrop-filter: blur(6px);
+    background: rgba(0,0,0,.55); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center;
     opacity: 0; pointer-events: none; transition: opacity .2s ease;
   }
   .rp-overlay.open { opacity: 1; pointer-events: all; }
   .rp-modal {
-    width: min(960px, 96vw); height: 88vh;
-    background: #0f172a; border: 1px solid #243049;
-    border-radius: 16px; display: flex; overflow: hidden;
-    box-shadow: 0 32px 80px rgba(0,0,0,.6);
+    width: min(1020px, 96vw); height: 90vh;
+    background: var(--jp-page);
+    border-radius: 12px; display: flex; overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,.4);
   }
+
   /* TOC sidebar */
   .rp-toc {
-    width: 220px; flex-shrink: 0; overflow-y: auto;
-    background: #0b1120; border-right: 1px solid #1a2640;
-    padding: 20px 0;
+    width: 240px; flex-shrink: 0; overflow-y: auto;
+    background: var(--jp-sidebar);
+    border-right: 1px solid var(--jp-border);
+    padding: 24px 0;
   }
   .rp-toc-title {
     font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
-    color: #5a657f; padding: 0 18px 14px; font-weight: 600;
+    color: var(--jp-faint); padding: 0 20px 16px; font-weight: 700;
+    font-family: system-ui, sans-serif;
   }
   .rp-toc a {
-    display: block; padding: 5px 18px; font-size: 11.5px;
-    color: #8d99b3; text-decoration: none; line-height: 1.4;
+    display: block; padding: 5px 20px; font-size: 11.5px;
+    color: var(--jp-muted); text-decoration: none; line-height: 1.5;
     transition: color .12s, background .12s; border-left: 2px solid transparent;
+    font-family: system-ui, sans-serif;
   }
-  .rp-toc a:hover  { color: #e8edf7; background: rgba(255,255,255,.04); }
-  .rp-toc a.active { color: #ff7a1a; border-left-color: #ff7a1a; }
-  .rp-toc a.indent { padding-left: 30px; font-size: 11px; }
+  .rp-toc a:hover  { color: var(--jp-body); background: var(--jp-active); }
+  .rp-toc a.active { color: #2563eb; border-left-color: #2563eb; background: var(--jp-active); }
+  .rp-toc a.indent { padding-left: 32px; font-size: 11px; }
+
   /* Content area */
   .rp-content {
-    flex: 1; overflow-y: auto; padding: 48px 52px;
+    flex: 1; overflow-y: auto;
+    background: var(--jp-bg);
     scroll-behavior: smooth;
   }
+  .rp-paper-inner {
+    max-width: 720px; margin: 0 auto; padding: 48px 44px 96px;
+  }
+
+  /* Close button */
   .rp-close {
     position: absolute; top: 16px; right: 20px;
-    background: #1a2235; border: 1px solid #243049;
-    color: #8d99b3; border-radius: 8px; padding: 6px 12px;
+    background: var(--jp-sidebar); border: 1px solid var(--jp-border);
+    color: var(--jp-muted); border-radius: 8px; padding: 6px 14px;
     font-size: 12px; cursor: pointer; z-index: 10;
+    font-family: system-ui, sans-serif;
     transition: all .12s;
   }
-  .rp-close:hover { background: #243049; color: #e8edf7; }
+  .rp-close:hover { background: var(--jp-active); color: var(--jp-body); }
+
   /* Paper typography */
-  .rp-content h1 {
-    font-size: 22px; font-weight: 800; color: #e8edf7;
-    letter-spacing: -.02em; line-height: 1.25; margin: 0 0 6px;
-  }
-  .rp-content .rp-authors {
-    font-size: 13px; color: #ff7a1a; margin-bottom: 4px;
-  }
-  .rp-content .rp-meta {
-    font-size: 11px; color: #5a657f; margin-bottom: 28px;
-    padding-bottom: 24px; border-bottom: 1px solid #1a2640;
-  }
-  .rp-content h2 {
-    font-size: 15px; font-weight: 700; color: #e8edf7;
-    margin: 36px 0 10px; padding-top: 8px;
-    border-top: 1px solid #1a2640;
-  }
-  .rp-content h3 {
-    font-size: 13px; font-weight: 600; color: #c8d4e8;
-    margin: 22px 0 8px;
-  }
-  .rp-content p {
-    font-size: 13.5px; line-height: 1.78; color: #a8b4cc;
+  .rp-paper-inner .rp-title-tag {
+    font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+    color: #2563eb; font-family: system-ui, sans-serif; font-weight: 700;
     margin: 0 0 14px;
   }
-  .rp-content strong { color: #e8edf7; }
-  .rp-content em { color: #ff7a1a; font-style: normal; font-weight: 500; }
+  .rp-paper-inner h1 {
+    font-size: 26px; font-weight: 700; color: var(--jp-body);
+    font-family: Georgia, "Times New Roman", serif;
+    letter-spacing: -.01em; line-height: 1.25; margin: 0 0 16px;
+  }
+  .rp-paper-inner .rp-authors {
+    font-size: 13px; color: var(--jp-muted);
+    font-family: Georgia, serif; margin-bottom: 6px;
+  }
+  .rp-paper-inner .rp-meta {
+    font-size: 11px; color: var(--jp-faint);
+    font-family: system-ui, sans-serif; margin-bottom: 20px;
+    padding-bottom: 24px; border-bottom: 2px solid var(--jp-border);
+  }
+  .rp-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 32px; }
+  .rp-tag {
+    font-size: 10px; padding: 4px 10px; border-radius: 999px;
+    background: var(--jp-sidebar); color: var(--jp-muted);
+    border: 1px solid var(--jp-border); font-family: system-ui, sans-serif;
+  }
+  .rp-paper-inner h2 {
+    font-size: 19px; font-weight: 700; color: var(--jp-body);
+    font-family: Georgia, "Times New Roman", serif;
+    margin: 40px 0 12px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--jp-border); letter-spacing: -.01em;
+  }
+  .rp-paper-inner h3 {
+    font-size: 15px; font-weight: 700; color: var(--jp-body);
+    font-family: Georgia, "Times New Roman", serif;
+    margin: 28px 0 8px; letter-spacing: -.01em;
+  }
+  .rp-paper-inner p {
+    font-size: 14px; line-height: 1.85; color: #2c2926;
+    font-family: Georgia, "Times New Roman", serif;
+    margin: 0 0 16px;
+  }
+  .rp-paper-inner strong { color: var(--jp-body); }
+  .rp-paper-inner em { color: #b45309; font-style: italic; }
+  .rp-paper-inner code {
+    font-family: "Courier New", monospace; font-size: 13px;
+    background: var(--jp-sidebar); padding: 1px 5px;
+    border-radius: 3px; color: var(--jp-body);
+  }
+
+  /* Abstract box */
   .rp-abstract {
-    background: #111b2e; border-left: 3px solid #ff7a1a;
-    border-radius: 0 8px 8px 0; padding: 16px 20px; margin-bottom: 28px;
+    background: var(--jp-sidebar); border: 1px solid var(--jp-border);
+    border-radius: 8px; padding: 20px 24px; margin-bottom: 36px;
   }
-  .rp-abstract p { font-size: 13px; margin: 0; }
-  .rp-kw {
-    font-size: 11px; color: #5a657f; margin-top: 10px;
+  .rp-abstract-label {
+    font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--jp-faint); font-family: system-ui, sans-serif;
+    font-weight: 800; margin-bottom: 12px;
   }
-  .rp-kw span { color: #8d99b3; }
+  .rp-abstract p { font-size: 13.5px; margin: 0 0 12px; }
+  .rp-abstract p:last-of-type { margin-bottom: 0; }
+  .rp-kw { font-size: 11px; color: var(--jp-faint); margin-top: 14px; font-family: system-ui, sans-serif; }
+  .rp-kw span { color: var(--jp-muted); }
+
+  /* Formula block */
+  .rp-formula {
+    background: var(--jp-sidebar); border: 1px solid var(--jp-border);
+    border-radius: 8px; padding: 14px 20px; margin: 16px 0; text-align: center;
+  }
+  .rp-formula-label {
+    font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--jp-faint); font-family: system-ui, sans-serif;
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .rp-formula code {
+    font-size: 14px; font-weight: 700; background: none; padding: 0;
+    color: var(--jp-body); letter-spacing: .01em;
+  }
+
+  /* Table */
   .rp-table {
-    width: 100%; border-collapse: collapse; font-size: 12px;
-    margin: 16px 0;
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+    margin: 20px 0; border: 1px solid var(--jp-border);
   }
   .rp-table th {
-    text-align: left; padding: 8px 12px;
-    background: #111b2e; color: #8d99b3;
+    text-align: left; padding: 10px 12px;
+    background: var(--jp-sidebar); color: var(--jp-body);
     font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-    border-bottom: 1px solid #1a2640;
+    font-family: system-ui, sans-serif; font-weight: 700;
+    border-bottom: 2px solid var(--jp-border);
+    border-right: 1px solid var(--jp-border);
   }
   .rp-table td {
-    padding: 7px 12px; border-bottom: 1px solid #1a2640;
-    color: #a8b4cc; vertical-align: top;
+    padding: 8px 12px; border-bottom: 1px solid var(--jp-border);
+    color: var(--jp-muted); vertical-align: top;
+    font-family: system-ui, sans-serif;
+    border-right: 1px solid var(--jp-border);
   }
   .rp-table tr:last-child td { border-bottom: none; }
-  .rp-table td:first-child { color: #e8edf7; font-weight: 600; }
-  .rp-formula {
-    background: #0b1120; border: 1px solid #1a2640; border-radius: 8px;
-    padding: 12px 18px; margin: 14px 0; font-family: monospace;
-    font-size: 13px; color: #5b8def;
+  .rp-table td:first-child { color: var(--jp-body); font-weight: 600; font-family: Georgia, serif; }
+  .rp-table tr:nth-child(even) { background: #faf9f6; }
+
+  /* Callout boxes (findings) */
+  .rp-callout {
+    border-left-width: 4px; border-left-style: solid;
+    border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 20px 0;
   }
-  .rp-ref { font-size: 12px; color: #8d99b3; line-height: 1.7; margin: 0 0 8px; }
-  .rp-ref strong { color: #a8b4cc; }
-  .rp-finding {
-    background: #0d1929; border: 1px solid #1e3050; border-radius: 8px;
-    padding: 12px 16px; margin: 10px 0; display: flex; gap: 12px; align-items: flex-start;
+  .rp-callout-label {
+    font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+    font-family: system-ui, sans-serif; font-weight: 900; margin-bottom: 8px;
   }
-  .rp-finding .rp-badge {
-    font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-    padding: 3px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;
+  .rp-callout p { margin: 0; font-size: 13.5px; line-height: 1.75; }
+  .rp-callout.rise  { background: #f0fdf4; border-color: #16a34a; }
+  .rp-callout.rise  .rp-callout-label { color: #16a34a; }
+  .rp-callout.rise  p { color: #14532d; }
+  .rp-callout.fall  { background: #fff1f2; border-color: #f43f5e; }
+  .rp-callout.fall  .rp-callout-label { color: #be123c; }
+  .rp-callout.fall  p { color: #4c0519; }
+  .rp-callout.emrg  { background: #f5f3ff; border-color: #7c3aed; }
+  .rp-callout.emrg  .rp-callout-label { color: #6d28d9; }
+  .rp-callout.emrg  p { color: #2e1065; }
+  .rp-callout.blue  { background: #eff6ff; border-color: #3b82f6; }
+  .rp-callout.blue  .rp-callout-label { color: #2563eb; }
+  .rp-callout.blue  p { color: #1e3a5f; }
+  .rp-callout.amber { background: #fffbeb; border-color: #f59e0b; }
+  .rp-callout.amber .rp-callout-label { color: #b45309; }
+  .rp-callout.amber p { color: #451a03; }
+
+  /* References */
+  .rp-ref {
+    font-size: 13px; color: var(--jp-muted); line-height: 1.75;
+    font-family: Georgia, serif; margin: 0 0 10px;
   }
-  .rp-badge.rise  { background: rgba(34,197,94,.15); color: #22c55e; }
-  .rp-badge.fall  { background: rgba(239,68,68,.15);  color: #ef4444; }
-  .rp-badge.stbl  { background: rgba(148,163,184,.12);color: #94a3b8; }
-  .rp-badge.emrg  { background: rgba(168,85,247,.15); color: #c084fc; }
-  .rp-finding p   { margin: 0; font-size: 12.5px; }
+  .rp-ref strong { color: var(--jp-body); }
+
+  /* Section scroll anchors */
+  .rp-anchor { display: block; margin-top: -72px; padding-top: 72px; visibility: hidden; }
 
   /* CONTENT ROW — map + detail panel side-by-side */
   .content-row { flex: 1; display: flex; overflow: hidden; }
@@ -667,45 +755,72 @@
 
       <!-- PAPER BODY -->
       <div class="rp-content" id="rp-content">
+      <div class="rp-paper-inner">
 
-        <h1>Mapping Social Science Discourse:<br>A Bibliometric Visualization of Research Trends, 1970–2054</h1>
-        <div class="rp-authors">Syed Asrar Ahmed U &nbsp;·&nbsp; Project 4 Research Document</div>
-        <div class="rp-meta">Social Science Word Map &nbsp;·&nbsp; OpenAlex Bibliometric Analysis &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; 98 terms · 7 subfields · 85-year window</div>
+        <!-- Title block -->
+        <div style="border-bottom: 2px solid var(--jp-border); margin-bottom: 32px; padding-bottom: 28px;">
+          <p class="rp-title-tag">Social Science Word Map &nbsp;·&nbsp; Bibliometric Analysis &nbsp;·&nbsp; OpenAlex &nbsp;·&nbsp; May 2026</p>
+          <h1>Mapping Social Science Discourse:<br>A Bibliometric Visualization of Research Trends, 1970–2054</h1>
+          <p class="rp-authors">Syed Asrar Ahmed U &nbsp;·&nbsp; Independent Research &nbsp;·&nbsp; <em style="font-style:normal;color:#b45309">asrarsaa@gmail.com</em></p>
+          <p class="rp-meta">98 terms · 7 subfields · 85-year window &nbsp;·&nbsp; OpenAlex Social Sciences corpus &nbsp;·&nbsp; Not yet peer-reviewed</p>
+          <div class="rp-tags">
+            <span class="rp-tag">Bibliometrics</span>
+            <span class="rp-tag">Scientometrics</span>
+            <span class="rp-tag">Social Science Discourse</span>
+            <span class="rp-tag">OpenAlex</span>
+            <span class="rp-tag">D3 Treemap</span>
+            <span class="rp-tag">Logistic Projection</span>
+            <span class="rp-tag">Research Trends</span>
+            <span class="rp-tag">Knowledge Mapping</span>
+          </div>
+        </div>
 
-        <div class="rp-abstract" id="rp-abstract">
-          <p>This paper presents <strong>Social Science Word Map</strong>, an interactive bibliometric visualization tracking the rise, fall, and emergence of 98 research terms across seven social-science subfields from 1970 to 2054. Drawing on the OpenAlex open-access scholarly database — covering over 250 million works — we compute doc-frequency share, five-year compound annual growth rates (CAGR), and a novelty index for each term across 55 years of real publication data (1970–2024). A logistic extrapolation extends trajectories through 2054, modelling saturation dynamics for growing terms and asymptotic floors for declining ones. Key findings include the dramatic acceleration of <em>intersectionality</em>, <em>mental health</em>, <em>artificial intelligence</em>, and <em>decolonial</em> discourse, alongside the measurable retreat of <em>structuralism</em>, <em>cold war</em>, and <em>propaganda</em> as active research vocabularies. The visualization embeds these findings in an interactive D3.js treemap with year-scrubbing, metric layers, and a click-through detail panel designed for exploratory research.</p>
+        <span class="rp-anchor" id="rp-abstract"></span>
+        <div class="rp-abstract">
+          <div class="rp-abstract-label">Abstract</div>
+          <p>This paper presents <strong>Social Science Word Map</strong>, an interactive bibliometric visualization tracking the rise, fall, and emergence of 98 research terms across seven social-science subfields from 1970 to 2054. Drawing on the OpenAlex open-access scholarly database — covering over 250 million works — we compute doc-frequency share, five-year compound annual growth rates (CAGR), and a novelty index for each term across 55 years of real publication data (1970–2024). A logistic extrapolation extends trajectories through 2054, modelling saturation dynamics for growing terms and asymptotic floors for declining ones.</p>
+          <p>Key findings include the dramatic acceleration of <em>intersectionality</em>, <em>mental health</em>, <em>artificial intelligence</em>, and <em>decolonial</em> discourse, alongside the measurable retreat of <em>structuralism</em>, <em>cold war</em>, and <em>propaganda</em> as active research vocabularies. The visualization embeds these findings in an interactive D3.js treemap with year-scrubbing, metric layers, and a click-through detail panel designed for exploratory research.</p>
           <div class="rp-kw">Keywords: <span>bibliometrics · scientometrics · social science discourse · OpenAlex · treemap visualization · logistic projection · research trends · knowledge mapping</span></div>
         </div>
 
-        <h2 id="rp-s1">1 &nbsp; Introduction</h2>
+        <span class="rp-anchor" id="rp-s1"></span>
+        <h2>1 &nbsp; Introduction</h2>
         <p>The vocabulary of academic research is not static. Concepts rise into prominence, circulate widely, peak, and then recede — replaced by newer frameworks that recast old questions or open genuinely new ones. Tracking this conceptual metabolism is not merely an exercise in academic bookkeeping; it reveals the shifting priorities, political pressures, and intellectual fashions that shape how entire disciplines understand the social world.</p>
         <p>Bibliometrics — the quantitative study of scholarly publications — offers a principled window into this process. By treating the presence of a search term in an article's title or abstract as evidence of that concept's salience, we can construct time-series of intellectual attention. Aggregated across hundreds of thousands of papers, these series trace the arc of ideas: slow gestation in specialist subfields, explosive diffusion into mainstream discourse, eventual routinization, and, in some cases, displacement by successor concepts.</p>
         <p>This paper documents the design, data pipeline, and empirical findings of <strong>Social Science Word Map</strong> — an open-access interactive visualization built for the web. The tool covers 98 canonical social-science terms across seven subfields (Sociology, Political Science, Economics, Psychology, Anthropology, Communication, and Methods), spanning 1970–2024 with real data and 2025–2054 with logistic projections. It is designed to be usable by researchers, students, journalists, and policy audiences who want an at-a-glance picture of where social-science attention has been and where it is plausibly headed.</p>
 
-        <h2 id="rp-s2">2 &nbsp; Theoretical Framework</h2>
+        <span class="rp-anchor" id="rp-s2"></span>
+        <h2>2 &nbsp; Theoretical Framework</h2>
 
-        <h3 id="rp-s2-1">2.1 &nbsp; Scientometrics and Bibliometrics</h3>
+        <span class="rp-anchor" id="rp-s2-1"></span>
+        <h3>2.1 &nbsp; Scientometrics and Bibliometrics</h3>
         <p>The quantitative study of science has a long history, beginning with Derek de Solla Price's <em>Little Science, Big Science</em> (1963), which identified exponential growth in scientific literature as a structural feature of modern knowledge production. Garfield's development of citation indexing (1955) and Broadus's (1987) systematic survey of "bibliometrics" as a term established the field's methodological core: publication counts, citation networks, and co-occurrence matrices as proxies for intellectual influence.</p>
         <p>More recent work — including the development of the h-index (Hirsch, 2005), co-citation analysis (Small, 1973), and tools such as VOSviewer (van Eck & Waltman, 2010) and CiteSpace (Chen, 2006) — has extended bibliometric methods to map entire knowledge domains and detect emerging research fronts. The present project applies the most accessible of these methods (term frequency in titles and abstracts) at scale, using a modern open-access data infrastructure unavailable to earlier researchers.</p>
 
-        <h3 id="rp-s2-2">2.2 &nbsp; Knowledge Field Theory</h3>
+        <span class="rp-anchor" id="rp-s2-2"></span>
+        <h3>2.2 &nbsp; Knowledge Field Theory</h3>
         <p>Bourdieu's (1975) theory of the scientific field provides a sociological counterpoint to purely quantitative bibliometrics. In Bourdieu's account, disciplines are structured social spaces in which agents compete for symbolic capital — the authority to define what counts as legitimate knowledge. Terms that gain wide adoption represent not only intellectual advances but also political victories within these fields: the rise of <em>intersectionality</em> in sociology, for example, reflects decades of sustained advocacy by feminist scholars of colour alongside genuine analytical utility.</p>
         <p>Collins's (1998) <em>The Sociology of Philosophies</em> similarly demonstrates that intellectual movements require social infrastructure — chains of interaction ritual, networks of teachers and students, institutional niches — to sustain conceptual momentum. This project's data can be read as an indirect trace of such infrastructures: rapid growth in a term's doc-frequency share typically corresponds to the consolidation of a research community around it.</p>
 
-        <h3 id="rp-s2-3">2.3 &nbsp; Discourse as Data</h3>
+        <span class="rp-anchor" id="rp-s2-3"></span>
+        <h3>2.3 &nbsp; Discourse as Data</h3>
         <p>Foucault's (1969) <em>The Archaeology of Knowledge</em> argues that discourses are not simply collections of statements but structured systems that determine what can be said, by whom, and in what context. Bibliometric methods provide an empirical complement to Foucault's genealogical approach: rather than close reading of canonical texts, we aggregate the statistical footprint of concepts across entire corpora, detecting the moments at which discourses crystallize (rapid growth), plateau (stable share), or fragment (declining share). The two approaches are not in competition — bibliometrics identifies the <em>when</em> and <em>how fast</em>; genealogy illuminates the <em>why</em>.</p>
 
-        <h2 id="rp-s3">3 &nbsp; Contributions to the Literature</h2>
+        <span class="rp-anchor" id="rp-s3"></span>
+        <h2>3 &nbsp; Contributions to the Literature</h2>
         <p>Existing bibliometric dashboards — including Web of Science's analytics, Scopus's trend tools, and the Lens.org platform — typically require institutional subscriptions and present results at the level of journals or citation networks rather than individual conceptual terms. Tools like VOSviewer and CiteSpace produce rich static maps but require specialist expertise and local data exports.</p>
         <p>Social Science Word Map contributes the following to this landscape: <strong>(1)</strong> a freely accessible, interactive web interface requiring no installation or login; <strong>(2)</strong> a curated cross-disciplinary term vocabulary spanning seven subfields; <strong>(3)</strong> a 55-year longitudinal window using real publication data; <strong>(4)</strong> a 30-year forward projection using logistic modelling, making future discourse trajectories exploratively visible; and <strong>(5)</strong> a design optimized for non-specialist audiences, embedding contextual metrics (share, growth, novelty) directly in the visualization.</p>
 
-        <h2 id="rp-s4">4 &nbsp; Data & Sources</h2>
+        <span class="rp-anchor" id="rp-s4"></span>
+        <h2>4 &nbsp; Data &amp; Sources</h2>
 
-        <h3 id="rp-s4-1">4.1 &nbsp; OpenAlex</h3>
+        <span class="rp-anchor" id="rp-s4-1"></span>
+        <h3>4.1 &nbsp; OpenAlex</h3>
         <p>All publication counts are drawn from <strong>OpenAlex</strong> (Priem et al., 2022), a free and open catalog of scholarly works maintained by OurResearch. As of 2026, OpenAlex indexes over 250 million works, 243 million authors, and 20,000 venues, making it the largest open-access bibliographic database available. Unlike Scopus or Web of Science, OpenAlex is fully accessible via a public REST API without subscription or authentication, enabling reproducible, large-scale bibliometric queries.</p>
         <p>Queries are scoped to works tagged with the OpenAlex concept <strong>Social sciences (C17744445)</strong> — a hierarchical concept derived from the Microsoft Academic Graph taxonomy and applied to works via an automated machine-learning classifier. This scoping is imperfect (the classifier occasionally mis-tags or omits works at disciplinary margins) but provides a principled and consistent definition of the social-science corpus across all 85 years of the dataset.</p>
 
-        <h3 id="rp-s4-2">4.2 &nbsp; Term Selection</h3>
+        <span class="rp-anchor" id="rp-s4-2"></span>
+        <h3>4.2 &nbsp; Term Selection</h3>
         <p>The 98 terms were selected through an iterative process anchored in four criteria: <strong>(a)</strong> disciplinary canonicity (the term appears prominently in major textbooks or handbooks of the subfield); <strong>(b)</strong> temporal variation (the term is known to have risen or fallen significantly since 1970); <strong>(c)</strong> searchability (the term is sufficiently distinctive to yield a meaningful signal in title+abstract search, with disambiguation applied where necessary — e.g., "social class" rather than "class," "labor market" rather than "labor"); and <strong>(d)</strong> cross-subfield balance (approximately 11–18 terms per subfield).</p>
 
         <table class="rp-table">
@@ -721,119 +836,159 @@
           </tbody>
         </table>
 
-        <h3 id="rp-s4-3">4.3 &nbsp; Scope & Coverage</h3>
+        <span class="rp-anchor" id="rp-s4-3"></span>
+        <h3>4.3 &nbsp; Scope &amp; Coverage</h3>
         <p>The real-data window runs from <strong>1970 to 2024</strong>. Coverage before 1990 is materially sparser — OpenAlex's indexing of social-science journals improves steadily as digitisation programmes expanded through the 1990s. The 1970 start date was chosen for conceptual rather than purely statistical reasons: it marks the approximate crystallization of the modern social-science vocabulary captured in this dataset, with many of our terms (intersectionality, neoliberalism, postcolonial) either absent or marginal before that decade. Users should interpret pre-1990 data as directionally informative but subject to significant undercount bias.</p>
         <p>The baseline for share computation — total social-science papers per year — grew from approximately <strong>98,771 papers in 1970</strong> to <strong>1,777,647 in 2020</strong>, reflecting both genuine growth in social-science output and the progressive digitisation of older literature into OpenAlex.</p>
 
-        <h2 id="rp-s5">5 &nbsp; Methodology</h2>
+        <span class="rp-anchor" id="rp-s5"></span>
+        <h2>5 &nbsp; Methodology</h2>
 
-        <h3 id="rp-s5-1">5.1 &nbsp; Doc-Frequency Share</h3>
+        <span class="rp-anchor" id="rp-s5-1"></span>
+        <h3>5.1 &nbsp; Doc-Frequency Share</h3>
         <p>For each term <em>t</em> and year <em>y</em>, the doc-frequency share is defined as the fraction of all social-science papers in that year whose title or abstract contains the search query associated with <em>t</em>:</p>
-        <div class="rp-formula">s(t, y) = count(t, y) / total_SS(y)</div>
+        <div class="rp-formula">
+          <div class="rp-formula-label">Doc-frequency share</div>
+          <code>s(t, y) = count(t, y) / total_SS(y)</code>
+        </div>
         <p>where <code>count(t, y)</code> is returned by the OpenAlex group-by-publication-year endpoint and <code>total_SS(y)</code> is the analogous count without a term filter. This normalisation is essential: raw counts grow simply because total social-science output grows. Doc-frequency share isolates the concept's salience relative to the field's overall production at each point in time.</p>
 
-        <h3 id="rp-s5-2">5.2 &nbsp; Growth (5-yr CAGR)</h3>
+        <span class="rp-anchor" id="rp-s5-2"></span>
+        <h3>5.2 &nbsp; Growth (5-yr CAGR)</h3>
         <p>The five-year compound annual growth rate of share captures the momentum of a term's trajectory:</p>
-        <div class="rp-formula">g(t, y) = ( s(t, y) / s(t, y−5) )^(1/5) − 1</div>
+        <div class="rp-formula">
+          <div class="rp-formula-label">5-yr CAGR</div>
+          <code>g(t, y) = ( s(t, y) / s(t, y−5) )^(1/5) − 1</code>
+        </div>
         <p>A five-year window smooths year-to-year publication noise (conference proceedings, funding cycles, one-off special issues) while remaining responsive to genuine trend shifts. Terms with CAGR above +5%/yr are classified as <em>rising</em>; below −2%/yr as <em>declining</em>; within that band as <em>stable</em>. For terms emerging from near-zero share, CAGR is capped at +200%/yr to avoid arithmetic distortions.</p>
 
-        <h3 id="rp-s5-3">5.3 &nbsp; Novelty Index</h3>
+        <span class="rp-anchor" id="rp-s5-3"></span>
+        <h3>5.3 &nbsp; Novelty Index</h3>
         <p>The novelty index measures what fraction of a term's total real-data mentions occurred in the most recent five years:</p>
-        <div class="rp-formula">n(t) = Σ count(t, y) for y ∈ [2020,2024] / Σ count(t, y) for y ∈ [1970,2024]</div>
+        <div class="rp-formula">
+          <div class="rp-formula-label">Novelty Index</div>
+          <code>n(t) = Σ count(t, y) for y ∈ [2020,2024] / Σ count(t, y) for y ∈ [1970,2024]</code>
+        </div>
         <p>A high novelty score (approaching 1.0) indicates a term that is essentially a product of the last five years — either a genuinely new concept (e.g., <em>decolonial</em>) or a term propelled by a recent exogenous shock (<em>covid</em>, <em>pandemic</em>). A low novelty score indicates an established term with a long publication history. Novelty is a static property of the term, not year-dependent, and is displayed as a contextual metric in the detail panel.</p>
 
-        <h2 id="rp-s6">6 &nbsp; Projection Methodology</h2>
+        <span class="rp-anchor" id="rp-s6"></span>
+        <h2>6 &nbsp; Projection Methodology</h2>
 
-        <h3 id="rp-s6-1">6.1 &nbsp; Logistic Growth for Rising Terms</h3>
+        <span class="rp-anchor" id="rp-s6-1"></span>
+        <h3>6.1 &nbsp; Logistic Growth for Rising Terms</h3>
         <p>For terms with a recent CAGR exceeding +2%/yr, the projection uses a discrete logistic model. The carrying capacity <em>K</em> is estimated as a multiple of the 2024 share, capped to prevent implausible concentrations of attention:</p>
-        <div class="rp-formula">K = min( s(t, 2024) × (1 + CAGR)^20 , 8 × s(t, 2024) )</div>
-        <div class="rp-formula">s_proj(t, y) = K / ( 1 + (K/s(t,2024) − 1) × exp(−r × 0.6 × τ) )</div>
+        <div class="rp-formula">
+          <div class="rp-formula-label">Carrying capacity</div>
+          <code>K = min( s(t, 2024) × (1 + CAGR)^20 , 8 × s(t, 2024) )</code>
+        </div>
+        <div class="rp-formula">
+          <div class="rp-formula-label">Logistic projection</div>
+          <code>s_proj(t, y) = K / ( 1 + (K/s(t,2024) − 1) × exp(−r × 0.6 × τ) )</code>
+        </div>
         <p>where τ = y − 2024 and r is the estimated CAGR. The 0.6 damping factor reflects the empirical observation that growth rates in academic discourse rarely sustain at their recent peak: as a concept matures, it becomes the assumed background rather than the explicit foreground, and its measured frequency plateaus or declines even as its influence persists.</p>
 
-        <h3 id="rp-s6-2">6.2 &nbsp; Decay and Stability</h3>
+        <span class="rp-anchor" id="rp-s6-2"></span>
+        <h3>6.2 &nbsp; Decay and Stability</h3>
         <p>For declining terms (CAGR below −2%/yr), the projection applies an exponential decay toward a positive floor — the share at which a term persists as a latent vocabulary even when it is no longer a growth area:</p>
-        <div class="rp-formula">floor = max( s(t, 2024) × 0.05 , 0.00003 )</div>
-        <div class="rp-formula">s_proj(t, y) = floor + (s(t, 2024) − floor) × exp(CAGR × τ)</div>
+        <div class="rp-formula">
+          <div class="rp-formula-label">Decay floor</div>
+          <code>floor = max( s(t, 2024) × 0.05 , 0.00003 )</code>
+        </div>
+        <div class="rp-formula">
+          <div class="rp-formula-label">Decay projection</div>
+          <code>s_proj(t, y) = floor + (s(t, 2024) − floor) × exp(CAGR × τ)</code>
+        </div>
         <p>This prevents terms from projecting to zero — no concept disappears entirely from academic discourse; it may simply migrate to specialist or historical niches. For stable terms, the projection applies a gentle mean-reversion toward 95% of the 2024 share over the thirty-year window, reflecting the long-run drift of even stable vocabularies.</p>
 
-        <h3 id="rp-s6-3">6.3 &nbsp; Baseline Projection</h3>
+        <span class="rp-anchor" id="rp-s6-3"></span>
+        <h3>6.3 &nbsp; Baseline Projection</h3>
         <p>The total social-science publication volume for 2025–2054 is itself projected using a logistic model fitted to the 2017–2024 growth rate of the OpenAlex SS baseline, capped at 5%/yr to reflect the slowing of global journal expansion as open-access mandates mature and institutional budgets stabilize. Projected shares are computed as projected raw counts divided by this projected baseline, maintaining the normalisation consistent with the real-data methodology.</p>
 
-        <h2 id="rp-s7">7 &nbsp; Visualization Design</h2>
+        <span class="rp-anchor" id="rp-s7"></span>
+        <h2>7 &nbsp; Visualization Design</h2>
         <p>The visualization is implemented as a single-file HTML application using <strong>D3.js v7</strong> for layout and rendering. This architectural choice — no build step, no server requirement — ensures the tool is deployable on any static host (GitHub Pages in the current deployment) and can be opened directly from a local file system for offline use.</p>
         <p><strong>Treemap layout.</strong> Block area is proportional to doc-frequency share, implementing Shneiderman's (1992) original treemap principle: the visual weight of each cell directly encodes the concept's relative prominence in the selected year. Sectors (subfields) are rendered as parent rectangles with colored headers; occupations (terms) are leaves. Padding between cells is kept minimal to maximize information density. A double-click on a sector zooms into that subfield.</p>
         <p><strong>Color layers.</strong> The visualization supports four metric layers selectable via the VIEW BY bar: 5-yr Growth (diverging red–grey–green scale centered at zero), Doc-frequency share (blue gradient), Novelty (amber gradient), and Raw count (blue gradient). Each layer reveals a different facet of the data, and the combination of size (share) with color (any metric) enables bivariate reading of the treemap without additional visual channels.</p>
         <p><strong>Temporal dimension.</strong> The year scrubber encodes the full 85-year window. Real data years (1970–2024) are displayed with a solid blue fill track; the projected zone (2025–2054) is rendered with a purple dashed overlay and separated by a vertical divider. Animating through time via the play button reveals the temporal dynamics that static cross-sections cannot capture. The UI shifts mode — color, labels, indicator tags — to clearly communicate when the user has entered projected territory.</p>
         <p><strong>Detail panel.</strong> Clicking any treemap cell opens a 300px right panel showing: the term's four metrics for the selected year; a full history chart (solid line for real data, dashed purple for projected) with a moving year marker; peak and first-seen years; and related terms in the same subfield ranked by current share, each clickable for pivoting.</p>
 
-        <h2 id="rp-s8">8 &nbsp; Empirical Findings</h2>
+        <span class="rp-anchor" id="rp-s8"></span>
+        <h2>8 &nbsp; Empirical Findings</h2>
 
-        <h3 id="rp-s8-1">8.1 &nbsp; Rising Discourses</h3>
+        <span class="rp-anchor" id="rp-s8-1"></span>
+        <h3>8.1 &nbsp; Rising Discourses</h3>
 
-        <div class="rp-finding">
-          <span class="rp-badge rise">RISING</span>
+        <div class="rp-callout rise">
+          <div class="rp-callout-label">Rising</div>
           <p><strong>Mental health</strong> (206,204 papers in real window) has shown the steepest sustained growth in the Psychology subfield. Its rise tracks the deinstitutionalisation movement of the 1980s, the DSM-III's proliferation of diagnostic categories, and — most dramatically — the COVID-19 pandemic's acceleration of population-level psychological research from 2020 onward.</p>
         </div>
-        <div class="rp-finding">
-          <span class="rp-badge rise">RISING</span>
+        <div class="rp-callout rise">
+          <div class="rp-callout-label">Rising</div>
           <p><strong>Intersectionality</strong> (118,325 papers) traces a trajectory characteristic of theoretical innovations originating at disciplinary margins: near-zero presence through the 1990s, followed by exponential growth from approximately 2010 as the concept — introduced by Kimberlé Crenshaw in 1989 — diffused from legal studies and Black feminist scholarship into mainstream sociology, political science, and education research.</p>
         </div>
-        <div class="rp-finding">
-          <span class="rp-badge rise">RISING</span>
+        <div class="rp-callout rise">
+          <div class="rp-callout-label">Rising</div>
           <p><strong>Artificial intelligence</strong> (81,531 papers) and <strong>machine learning</strong> (60,793 papers) display the steepest growth curves in the Methods subfield since 2018, reflecting the rapid adoption of computational methods across social-science disciplines — from computational social science and NLP-based content analysis to AI-assisted survey design and algorithmic fairness research.</p>
         </div>
-        <div class="rp-finding">
-          <span class="rp-badge rise">RISING</span>
+        <div class="rp-callout rise">
+          <div class="rp-callout-label">Rising</div>
           <p><strong>Climate change</strong> (188,027 papers) has grown rapidly within the social-science corpus, reflecting the field's engagement with climate governance, environmental justice, climate communication, and the socioeconomic dimensions of decarbonization — distinct from, but increasingly entangled with, natural-science climate research.</p>
         </div>
 
-        <h3 id="rp-s8-2">8.2 &nbsp; Declining Discourses</h3>
+        <span class="rp-anchor" id="rp-s8-2"></span>
+        <h3>8.2 &nbsp; Declining Discourses</h3>
 
-        <div class="rp-finding">
-          <span class="rp-badge fall">DECLINING</span>
+        <div class="rp-callout fall">
+          <div class="rp-callout-label">Declining</div>
           <p><strong>Cold war</strong> (109,805 papers) shows a sharp and historically legible decline: high through the 1980s as Cold War tensions and area studies dominated political science and sociology, dropping steeply after 1989 and continuing to fall as the geopolitical frame recedes from active research vocabulary. The 2022 Russian invasion of Ukraine has produced a minor uptick but not a reversal.</p>
         </div>
-        <div class="rp-finding">
-          <span class="rp-badge fall">DECLINING</span>
+        <div class="rp-callout fall">
+          <div class="rp-callout-label">Declining</div>
           <p><strong>Structuralism</strong> (424,809 papers — high total, but declining share) peaked in the 1970s–80s as Lévi-Straussian analysis and Althusserian Marxism shaped anthropology, sociology, and literary studies. Its gradual displacement by poststructuralism, cultural studies, and practice theory is visible in the share data as a slow but consistent decline from the mid-1980s onward.</p>
         </div>
-        <div class="rp-finding">
-          <span class="rp-badge fall">DECLINING</span>
+        <div class="rp-callout fall">
+          <div class="rp-callout-label">Declining</div>
           <p><strong>Propaganda</strong> (68,397 papers) has declined as an active research vocabulary even as the phenomena it described — state manipulation of information — have intensified. Its conceptual successor terms, <em>misinformation</em> and <em>disinformation</em>, show dramatic post-2015 growth, illustrating how disciplines rename and reframe persistent phenomena rather than simply abandoning the underlying questions.</p>
         </div>
 
-        <h3 id="rp-s8-3">8.3 &nbsp; Emergent Terms</h3>
+        <span class="rp-anchor" id="rp-s8-3"></span>
+        <h3>8.3 &nbsp; Emergent Terms</h3>
 
-        <div class="rp-finding">
-          <span class="rp-badge emrg">EMERGENT</span>
+        <div class="rp-callout emrg">
+          <div class="rp-callout-label">Emergent</div>
           <p><strong>Decolonial</strong> (13,640 papers) and <strong>misinformation</strong> (23,217 papers) represent terms that were essentially absent from the corpus before 2015 and have since grown explosively. Decolonial thought — building on postcolonial theory but with a stronger emphasis on structural transformation — has spread from Latin American philosophy into anthropology, education, and development studies. Misinformation research has been propelled by the 2016 US election, Brexit, and COVID-19 infodemic.</p>
         </div>
-        <div class="rp-finding">
-          <span class="rp-badge emrg">EMERGENT</span>
+        <div class="rp-callout emrg">
+          <div class="rp-callout-label">Emergent</div>
           <p><strong>Burnout</strong> (31,732 papers) and <strong>mindfulness</strong> (22,196 papers) emerged as significant research terms only in the 2010s, reflecting the intersection of occupational health psychology with organizational management research, and the growing academic legitimacy of contemplative practice as both a research topic and an evidence-based intervention.</p>
         </div>
 
-        <h3 id="rp-s8-4">8.4 &nbsp; Cross-Subfield Patterns</h3>
+        <span class="rp-anchor" id="rp-s8-4"></span>
+        <h3>8.4 &nbsp; Cross-Subfield Patterns</h3>
         <p>Several structural patterns emerge from a cross-subfield reading of the data. First, <strong>psychologisation of social problems</strong>: concepts previously theorized at the structural level (inequality, poverty, precarity) increasingly appear alongside psychological vocabulary (trauma, wellbeing, burnout), reflecting the disciplinary expansion of psychology into domains historically occupied by sociology and political economy.</p>
         <p>Second, <strong>the digital turn's uneven diffusion</strong>: digital and computational terms (algorithm, social media, machine learning, big data) have grown most rapidly in Communication and Methods, but their uptake in Anthropology and Political Science has been slower, reflecting different methodological traditions and epistemic cultures.</p>
         <p>Third, <strong>the temporal compression of emergence</strong>: comparing the arc of <em>neoliberalism</em> (which took roughly 20 years from coinage to mainstream prominence) with <em>misinformation</em> or <em>decolonial</em> (which achieved comparable share within 5–7 years) suggests that concepts now diffuse faster — plausibly due to social media, open-access publishing, and the acceleration of academic citation cycles.</p>
 
-        <h2 id="rp-s9">9 &nbsp; Limitations</h2>
+        <span class="rp-anchor" id="rp-s9"></span>
+        <h2>9 &nbsp; Limitations</h2>
         <p><strong>OpenAlex coverage bias.</strong> Pre-1990 data is subject to significant undercount as older journals are progressively but incompletely digitised. The social sciences concept tag (C17744445) relies on automated classification that may systematically under-tag interdisciplinary or non-anglophone work. Results should be interpreted as reflecting primarily anglophone, journal-based social science.</p>
         <p><strong>Term ambiguity.</strong> Title and abstract search is a coarse instrument. The term <em>body</em> retrieves papers about embodiment, body politics, and the phenomenology of the body — but also papers where "body" appears incidentally ("body of evidence," "governing body"). Disambiguation queries reduce but cannot eliminate this noise. For the most ambiguous terms, the absolute share values are less reliable than the trend direction.</p>
         <p><strong>Projection uncertainty.</strong> The logistic extrapolation to 2054 is a statistical model, not a forecast. It cannot anticipate genuinely new concepts, paradigm shifts, disciplinary crises, or exogenous shocks (wars, pandemics, technological discontinuities). The further the projection extends from the data anchor (2024), the wider its implicit confidence interval. Projections should be read as <em>what the recent trend implies if it continues at a damped rate</em>, not as predictions.</p>
         <p><strong>Scope of coverage.</strong> 98 terms across seven subfields is a curated sample, not an exhaustive inventory. Important terms — particularly in area studies, science and technology studies, and interdisciplinary fields — are absent. The selection reflects the judgment of the authors and should be treated as a starting point for exploration rather than a definitive map.</p>
 
-        <h2 id="rp-s10">10 &nbsp; Future Research Directions</h2>
+        <span class="rp-anchor" id="rp-s10"></span>
+        <h2>10 &nbsp; Future Research Directions</h2>
         <p>Several extensions are feasible within the existing architecture. <strong>Real-time updating</strong> via scheduled OpenAlex API calls would keep the dataset current without manual intervention. <strong>Citation-weighted share</strong> — weighting papers by their forward citation counts — would distinguish widely-cited conceptual contributions from lower-impact uses of the same terms. <strong>Language extension</strong> using OpenAlex's multilingual abstract indexing would allow non-anglophone discourse trajectories to be compared with anglophone ones.</p>
         <p>At the visualization layer, a <strong>co-occurrence network view</strong> — showing which terms tend to appear in the same paper — would reveal the conceptual neighborhoods and interdependencies invisible in the current term-by-term analysis. An <strong>LLM-assisted term scorer</strong>, similar to the "Score a Job" feature in the companion KarmaMap project, could allow users to enter any research concept and receive an estimated discourse trajectory and peer-comparison score.</p>
 
-        <h2 id="rp-conclusion">Conclusion</h2>
+        <span class="rp-anchor" id="rp-conclusion"></span>
+        <h2>Conclusion</h2>
         <p>Social science is not a fixed body of knowledge but a living conversation, shaped by the political urgencies, institutional incentives, and intellectual fashions of each era. The Social Science Word Map makes this conversation visible — not as a static snapshot but as an 85-year film, from the structuralist debates of the 1970s through the digital revolutions of the 2010s and the projected futures of the 2040s and 2050s.</p>
         <p>The findings confirm what intellectual historians have documented through close reading: the rise of identity-centered frameworks, the computational turn in methods, the psychologisation of social problems, and the rapid emergence of concepts tied to digital media and global crisis. The visualization adds quantitative precision and interactivity to these observations, enabling researchers to explore the data themselves rather than accepting a single authoritative narrative.</p>
         <p>The dataset, code, and methodology are fully open. We invite researchers to build on this foundation — correcting the term list, extending the subfields, improving the projection model, or integrating richer data sources — in the spirit of cumulative, collaborative science that the tool itself documents.</p>
 
-        <h2 id="rp-references">References</h2>
+        <span class="rp-anchor" id="rp-references"></span>
+        <h2>References</h2>
         <p class="rp-ref"><strong>Bourdieu, P.</strong> (1975). The specificity of the scientific field and the social conditions of the progress of reason. <em>Social Science Information, 14</em>(6), 19–47.</p>
         <p class="rp-ref"><strong>Broadus, R. N.</strong> (1987). Toward a definition of "bibliometrics." <em>Scientometrics, 12</em>(5–6), 373–379.</p>
         <p class="rp-ref"><strong>Chen, C.</strong> (2006). CiteSpace II: Detecting and visualizing emerging trends and transient patterns in scientific literature. <em>Journal of the American Society for Information Science and Technology, 57</em>(3), 359–377.</p>
@@ -849,13 +1004,14 @@
         <p class="rp-ref"><strong>Small, H.</strong> (1973). Co-citation in the scientific literature: A new measure of the relationship between two documents. <em>Journal of the American Society for Information Science, 24</em>(4), 265–269.</p>
         <p class="rp-ref"><strong>van Eck, N. J., & Waltman, L.</strong> (2010). Software survey: VOSviewer, a computer program for bibliometric mapping. <em>Scientometrics, 84</em>(2), 523–538.</p>
 
+      </div><!-- /rp-paper-inner -->
       </div><!-- /rp-content -->
     </div><!-- /rp-modal -->
   </div><!-- /rp-overlay -->
 
   <!-- FOOTER -->
   <div class="footer">
-    <span id="footer-meta">OpenAlex · 1990–2024 · 7 subfields · 98 terms</span>
+    <span id="footer-meta">OpenAlex · 1970–2024 · 7 subfields · 98 terms</span>
     <span>·</span>
     <span id="footer-src" style="color:var(--text-faint)">Social Sciences (C17744445) · title+abstract search · real data</span>
     <span style="margin-left:auto">URL state: <code id="url-hint">#m=g&y=2025</code></span>
