@@ -589,6 +589,101 @@
   }
   .panel-papers-link:hover { background: var(--bg-3); }
 
+  /* Panel tabs */
+  .panel-tabs {
+    display: flex; border-bottom: 1px solid var(--line);
+    padding: 0 10px; gap: 2px; background: var(--bg); flex-shrink: 0;
+  }
+  .panel-tab {
+    padding: 8px 9px; font-size: 11px; font-weight: 500;
+    color: var(--text-dim); background: none; border: none;
+    border-bottom: 2px solid transparent; cursor: pointer;
+    transition: all .12s ease; white-space: nowrap;
+  }
+  .panel-tab:hover { color: var(--text); }
+  .panel-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .panel-tab-content { display: none; overflow-y: auto; flex: 1; flex-direction: column; }
+  .panel-tab-content.active { display: flex; }
+  #tab-overview { flex-direction: column; }
+
+  /* Authors / Journals rank list */
+  .rank-section-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--text-faint); padding: 12px 16px 6px; }
+  .rank-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border-bottom: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .rank-item:last-child { border-bottom: none; }
+  .rank-num { width: 16px; text-align: right; color: var(--text-faint); flex-shrink: 0; }
+  .rank-name { flex: 1; color: var(--text); }
+  .rank-val { color: var(--text-faint); font-size: 11px; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  .rank-note { font-size: 10px; color: var(--text-faint); padding: 8px 16px 12px; }
+
+  /* AI Brief */
+  .brief-btn {
+    margin: 12px 16px; padding: 9px 14px; border-radius: 8px;
+    background: linear-gradient(135deg, #1a2235, #1c2842);
+    border: 1px solid var(--accent); color: var(--accent);
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    transition: all .14s; text-align: center; flex-shrink: 0;
+  }
+  .brief-btn:hover { background: #1f2e4a; }
+  .brief-btn:disabled { opacity: .5; cursor: default; }
+  .brief-text { padding: 12px 16px; font-size: 12px; line-height: 1.7;
+    color: var(--text); white-space: pre-wrap; }
+  .brief-text p { margin: 0 0 10px; }
+  .brief-text p:last-child { margin-bottom: 0; }
+  .brief-notice { font-size: 10px; color: var(--text-faint); padding: 6px 16px 12px;
+    border-top: 1px solid var(--line); flex-shrink: 0; }
+
+  /* White Space modal */
+  .ws-overlay {
+    display: none; position: fixed; inset: 0; z-index: 900;
+    background: rgba(0,0,0,.65); align-items: center; justify-content: center;
+  }
+  .ws-overlay.open { display: flex; }
+  .ws-modal {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px;
+    width: 520px; max-width: 95vw; max-height: 80vh;
+    display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  }
+  .ws-header { display: flex; align-items: center; padding: 18px 20px 0; gap: 12px; }
+  .ws-title { font-size: 15px; font-weight: 700; flex: 1; }
+  .ws-close { background: none; border: none; color: var(--text-faint); font-size: 18px;
+    cursor: pointer; padding: 4px 8px; border-radius: 6px; }
+  .ws-close:hover { background: var(--bg-3); color: var(--text); }
+  .ws-body { padding: 14px 20px 20px; overflow-y: auto; flex: 1; }
+  .ws-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; }
+  .ws-selects { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .ws-select {
+    flex: 1; padding: 9px 12px; border-radius: 8px;
+    background: var(--bg-3); border: 1px solid var(--line); color: var(--text);
+    font-size: 12px; outline: none;
+  }
+  .ws-select:focus { border-color: var(--accent); }
+  .ws-x { color: var(--text-faint); font-size: 16px; flex-shrink: 0; }
+  .ws-btn {
+    width: 100%; padding: 10px; border-radius: 8px;
+    background: linear-gradient(135deg, #1c2842, #1a2235);
+    border: 1px solid var(--accent); color: var(--accent);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all .14s; margin-bottom: 16px;
+  }
+  .ws-btn:hover { background: #1f2e4a; }
+  .ws-btn:disabled { opacity: .5; cursor: default; }
+  .ws-result { font-size: 12px; line-height: 1.7; color: var(--text); white-space: pre-wrap; }
+  .ws-result p { margin: 0 0 10px; }
+
+  /* White Space toolbar button */
+  .ws-trigger {
+    padding: 7px 12px; border-radius: 8px; background: #1a2235;
+    border: 1px solid #243049; color: #8d99b3; font-size: 12px;
+    cursor: pointer; transition: all .12s; white-space: nowrap;
+  }
+  .ws-trigger:hover { color: var(--text); border-color: var(--accent); }
+
   /* Badge (kept for no-panel state) */
   .badge {
     position: absolute; bottom: 18px; right: 18px;
@@ -622,6 +717,7 @@
       <button class="pill" data-scope="emerging">Emerging only</button>
       <button class="pill" data-scope="declining">Declining only</button>
     </div>
+    <button class="ws-trigger" id="btn-whitespace">&#x26F6; White Space</button>
     <button id="btn-research" style="padding:7px 12px;border-radius:8px;background:#1a2235;border:1px solid #243049;color:#8d99b3;font-size:12px;cursor:pointer;transition:all .12s;" onmouseover="this.style.color='#e8edf7'" onmouseout="this.style.color='#8d99b3'">&#x1F4C4; Research</button>
   </header>
 
@@ -647,6 +743,11 @@
       <div class="icon">#</div>
       <div class="label">Raw count</div>
       <div class="unit">articles</div>
+    </div>
+    <div class="metric-pill" data-metric="o">
+      <div class="icon">⚡</div>
+      <div class="label">Opportunity</div>
+      <div class="unit">score</div>
     </div>
     <div style="flex:1"></div>
     <div style="font-size: 10px; color: var(--text-faint); letter-spacing: .12em;">AREA &prop; DOC-FREQ. SHARE</div>
@@ -727,24 +828,65 @@
           <div class="pm-sub">last-5y share</div>
         </div>
         <div class="panel-metric">
-          <div class="pm-label">Articles in year</div>
-          <div class="pm-val" id="pm-count">—</div>
-          <div class="pm-sub" id="pm-count-sub"></div>
+          <div class="pm-label">Opportunity</div>
+          <div class="pm-val" id="pm-opp">—</div>
+          <div class="pm-sub">growth × novelty</div>
         </div>
       </div>
-      <div class="panel-chart-area">
-        <div class="panel-section-label">Doc-frequency share · 1990–2024</div>
-        <svg id="panel-chart" width="100%" height="90" style="overflow:visible"></svg>
+
+      <!-- Tab navigation -->
+      <div class="panel-tabs">
+        <button class="panel-tab active" data-tab="overview">Overview</button>
+        <button class="panel-tab" data-tab="papers">Papers</button>
+        <button class="panel-tab" data-tab="authors">Authors</button>
+        <button class="panel-tab" data-tab="journals">Journals</button>
+        <button class="panel-tab" data-tab="brief">AI Brief</button>
       </div>
-      <div class="panel-peak" id="panel-peak"></div>
-      <div class="panel-related">
-        <div class="panel-section-label">Same subfield</div>
-        <div id="panel-related-list"></div>
-        <div class="panel-papers">
-          <div class="panel-section-label" style="margin-top:14px;">Top Papers · OpenAlex</div>
-          <div id="panel-papers-list"><div class="papers-status">Select a term to load papers.</div></div>
-          <a id="panel-papers-link" href="#" target="_blank" rel="noopener" class="panel-papers-link">Browse all on OpenAlex →</a>
+
+      <!-- Tab: Overview -->
+      <div class="panel-tab-content active" id="tab-overview">
+        <div class="panel-chart-area">
+          <div class="panel-section-label">Doc-frequency share · 1990–2024</div>
+          <svg id="panel-chart" width="100%" height="90" style="overflow:visible"></svg>
         </div>
+        <div class="panel-peak" id="panel-peak"></div>
+        <div class="panel-related" style="overflow-y:auto;flex:1;">
+          <div class="panel-section-label">Same subfield</div>
+          <div id="panel-related-list"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Papers -->
+      <div class="panel-tab-content" id="tab-papers">
+        <div id="panel-papers-list" style="flex:1;overflow-y:auto;">
+          <div class="papers-status" style="padding:12px 16px;">Select a term to load papers.</div>
+        </div>
+        <a id="panel-papers-link" href="#" target="_blank" rel="noopener" class="panel-papers-link" style="margin:0 16px 12px;flex-shrink:0;">Browse all on OpenAlex →</a>
+      </div>
+
+      <!-- Tab: Authors -->
+      <div class="panel-tab-content" id="tab-authors">
+        <div id="panel-authors-list" style="flex:1;">
+          <div class="papers-status" style="padding:12px 16px;">Select a term to load authors.</div>
+        </div>
+        <div class="rank-note">Source: OpenAlex · sorted by paper count in this field</div>
+      </div>
+
+      <!-- Tab: Journals -->
+      <div class="panel-tab-content" id="tab-journals">
+        <div id="panel-journals-list" style="flex:1;">
+          <div class="papers-status" style="padding:12px 16px;">Select a term to load journals.</div>
+        </div>
+        <div class="rank-note">Source: OpenAlex · sorted by paper count</div>
+      </div>
+
+      <!-- Tab: AI Brief -->
+      <div class="panel-tab-content" id="tab-brief">
+        <div id="panel-brief-content" style="flex:1;overflow-y:auto;">
+          <div class="papers-status" style="padding:12px 16px;">Click Generate to get a Claude-powered research opportunity brief for this term.</div>
+        </div>
+        <button class="brief-btn" id="panel-brief-btn">Generate Research Brief</button>
+        <div class="brief-notice">Powered by Claude · ~5 seconds · uses the current year's data</div>
       </div>
     </div>
   </div>
@@ -1111,6 +1253,28 @@
     </div><!-- /rp-modal -->
   </div><!-- /rp-overlay -->
 
+  <!-- WHITE SPACE FINDER MODAL -->
+  <div class="ws-overlay" id="ws-overlay">
+    <div class="ws-modal">
+      <div class="ws-header">
+        <div>
+          <div class="ws-title">&#x26F6; White Space Finder</div>
+        </div>
+        <button class="ws-close" id="ws-close">✕</button>
+      </div>
+      <div class="ws-body">
+        <div class="ws-desc">Pick two growing research terms. Claude will identify the underexplored gap at their intersection and suggest a concrete research direction.</div>
+        <div class="ws-selects">
+          <select id="ws-term1" class="ws-select"></select>
+          <div class="ws-x">×</div>
+          <select id="ws-term2" class="ws-select"></select>
+        </div>
+        <button class="ws-btn" id="ws-analyze">Analyze Gap</button>
+        <div id="ws-result" class="ws-result"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <div class="footer">
     <span id="footer-meta">OpenAlex · 1970–2024 · 7 subfields · 98 terms</span>
@@ -1159,6 +1323,7 @@ async function boot() {
   renderScrubber();
   bindEvents();
   applyAll();
+  populateWsSelects();
   // Re-open panel if URL had a selected term
   if (state.selectedTerm) {
     const t  = state.data.terms.find(x => x.term === state.selectedTerm);
@@ -1304,6 +1469,9 @@ function colorFor(v, metric) {
   if (metric === 'n') {
     return d3.interpolateRgb('#1a2235', '#f59e0b')(Math.min(1, v / 0.6));
   }
+  if (metric === 'o') {
+    return d3.interpolateRgb('#1a2235', '#a855f7')(Math.sqrt(Math.min(1, v / 0.3)));
+  }
   return '#888';
 }
 
@@ -1340,7 +1508,9 @@ function buildHierarchy() {
       groupColor: groupMap[t.group]?.color || '#888',
       vals: v,
       sizeVal: v.s,                       // size by share
-      colorVal: v[state.metric],          // color by selected metric
+      colorVal: state.metric === 'o'
+  ? Math.max(0, v.g || 0) * (v.n || 0)  // opportunity = growth × novelty
+  : v[state.metric],
       ref: t,
     });
   }
@@ -1461,6 +1631,7 @@ function formatMetric(v, m) {
   if (m === 'g') return FMT.pct_signed(v);
   if (m === 's' || m === 'n') return FMT.pct(v);
   if (m === 'c') return FMT.int(v);
+  if (m === 'o') return (v * 100).toFixed(1);
   return v;
 }
 
@@ -1711,9 +1882,11 @@ function openPanel(termRef, groupColor, groupLabel) {
   document.getElementById('pm-growth-sub').textContent = g >= 0.05 ? 'rising' : g <= -0.02 ? 'declining' : 'stable';
 
   document.getElementById('pm-novelty').textContent  = FMT.pct(v.n || 0);
-  const countEl = document.getElementById('pm-count');
-  countEl.textContent = FMT.int(v.c || 0);
-  document.getElementById('pm-count-sub').textContent = `in ${state.year}`;
+
+  const oppVal = Math.max(0, g) * (v.n || 0);
+  const oppEl  = document.getElementById('pm-opp');
+  oppEl.textContent = (oppVal * 100).toFixed(1);
+  oppEl.className   = 'pm-val ' + (oppVal > 0.05 ? 'good' : oppVal < 0.01 ? '' : '');
 
   // Peak year
   const years  = meta.year_min ? Array.from({length: meta.year_max - meta.year_min + 1}, (_, i) => meta.year_min + i) : [];
@@ -1760,9 +1933,20 @@ function openPanel(termRef, groupColor, groupLabel) {
     });
   });
 
+  // Reset AI brief for new term
+  _currentBriefRef = termRef;
+  document.getElementById('panel-brief-content').innerHTML =
+    '<div class="papers-status" style="padding:12px 16px;">Click Generate to get a Claude-powered research opportunity brief for this term.</div>';
+  document.getElementById('panel-brief-btn').textContent = 'Generate Research Brief';
+  document.getElementById('panel-brief-btn').disabled = false;
+
   panel.classList.add('open');
   renderTreemap();
+
+  // Fetch all tab data
   fetchPapers(termRef.term);
+  fetchAuthors(termRef.term);
+  fetchJournals(termRef.term);
 }
 
 function closePanel() {
@@ -1815,6 +1999,171 @@ async function fetchPapers(term) {
     listEl.innerHTML = '<div class="papers-error">Could not load papers. Check your connection.</div>';
   }
 }
+
+// ---------- Tab switching ----------
+function switchTab(tabId) {
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
+  document.querySelectorAll('.panel-tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tabId));
+}
+document.querySelectorAll('.panel-tab').forEach(t => {
+  t.addEventListener('click', () => switchTab(t.dataset.tab));
+});
+
+// ---------- Top Authors (OpenAlex group_by) ----------
+async function fetchAuthors(term) {
+  const listEl = document.getElementById('panel-authors-list');
+  listEl.innerHTML = '<div class="papers-status" style="padding:12px 16px;">Loading…</div>';
+  const q = encodeURIComponent(term);
+  try {
+    const res = await fetch(`https://api.openalex.org/works?search=${q}&filter=concepts.id:C17744445&group_by=authorships.author.id`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const groups = (data.group_by || []).filter(g => g.key_display_name).slice(0, 10);
+    if (!groups.length) { listEl.innerHTML = '<div class="papers-status" style="padding:12px 16px;">No author data found.</div>'; return; }
+    listEl.innerHTML = '<div class="rank-section-label">Top Authors · paper count in social sciences</div>' +
+      groups.map((g, i) => `<div class="rank-item">
+        <span class="rank-num">${i + 1}</span>
+        <span class="rank-name">${g.key_display_name}</span>
+        <span class="rank-val">${g.count} papers</span>
+      </div>`).join('');
+  } catch {
+    listEl.innerHTML = '<div class="papers-error" style="padding:12px 16px;">Could not load authors.</div>';
+  }
+}
+
+// ---------- Top Journals (OpenAlex group_by) ----------
+async function fetchJournals(term) {
+  const listEl = document.getElementById('panel-journals-list');
+  listEl.innerHTML = '<div class="papers-status" style="padding:12px 16px;">Loading…</div>';
+  const q = encodeURIComponent(term);
+  try {
+    const res = await fetch(`https://api.openalex.org/works?search=${q}&filter=concepts.id:C17744445&group_by=primary_location.source.id`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const groups = (data.group_by || []).filter(g => g.key_display_name).slice(0, 10);
+    if (!groups.length) { listEl.innerHTML = '<div class="papers-status" style="padding:12px 16px;">No journal data found.</div>'; return; }
+    listEl.innerHTML = '<div class="rank-section-label">Top Publishing Venues</div>' +
+      groups.map((g, i) => `<div class="rank-item">
+        <span class="rank-num">${i + 1}</span>
+        <span class="rank-name">${g.key_display_name}</span>
+        <span class="rank-val">${g.count} papers</span>
+      </div>`).join('');
+  } catch {
+    listEl.innerHTML = '<div class="papers-error" style="padding:12px 16px;">Could not load journals.</div>';
+  }
+}
+
+// ---------- AI Research Brief (Claude API) ----------
+let _currentBriefRef = null;
+async function generateBrief() {
+  const termRef = _currentBriefRef;
+  if (!termRef) return;
+  const el   = document.getElementById('panel-brief-content');
+  const btn  = document.getElementById('panel-brief-btn');
+  btn.disabled = true;
+  btn.textContent = 'Generating…';
+  el.innerHTML = '<div class="papers-status" style="padding:12px 16px;">Asking Claude to analyse this research area…</div>';
+
+  const meta  = state.data.meta;
+  const yKey  = String(state.year);
+  const v     = termRef.by_year[yKey] || {};
+  let peakYear = meta.year_min, peakShare = 0;
+  for (let y = meta.year_min; y <= 2024; y++) {
+    const s = (termRef.by_year[String(y)] || {}).s || 0;
+    if (s > peakShare) { peakShare = s; peakYear = y; }
+  }
+  const gm = (state.data.meta.groups || []).find(g => g.id === termRef.group);
+
+  try {
+    const res = await fetch('/api/brief', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        term: termRef.term, group: gm ? gm.label : termRef.group,
+        share: ((v.s || 0) * 100).toFixed(2),
+        growth: ((v.g || 0) * 100).toFixed(1),
+        novelty: ((v.n || 0) * 100).toFixed(0),
+        count: v.c || 0, peakYear
+      })
+    });
+    if (!res.ok) throw new Error('API ' + res.status);
+    const data = await res.json();
+    const html = data.brief.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+    el.innerHTML = `<div class="brief-text">${html}</div>`;
+  } catch (err) {
+    el.innerHTML = `<div class="papers-error" style="padding:12px 16px;">Could not generate brief — is the Vercel API deployed? (${err.message})</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Regenerate Brief';
+  }
+}
+document.getElementById('panel-brief-btn').addEventListener('click', generateBrief);
+
+// ---------- White Space Finder ----------
+function populateWsSelects() {
+  const terms = (state.data.terms || []).slice().sort((a, b) => a.term.localeCompare(b.term));
+  ['ws-term1', 'ws-term2'].forEach((id, idx) => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = terms.map((t, i) =>
+      `<option value="${t.term}" data-group="${t.group}">${t.term}</option>`
+    ).join('');
+    if (idx === 1 && terms.length > 1) sel.selectedIndex = 1;
+  });
+}
+
+document.getElementById('btn-whitespace').addEventListener('click', () => {
+  document.getElementById('ws-overlay').classList.add('open');
+});
+document.getElementById('ws-close').addEventListener('click', () => {
+  document.getElementById('ws-overlay').classList.remove('open');
+});
+document.getElementById('ws-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('ws-overlay'))
+    document.getElementById('ws-overlay').classList.remove('open');
+});
+
+document.getElementById('ws-analyze').addEventListener('click', async () => {
+  const sel1 = document.getElementById('ws-term1');
+  const sel2 = document.getElementById('ws-term2');
+  const term1 = sel1.value, term2 = sel2.value;
+  if (!term1 || !term2 || term1 === term2) {
+    document.getElementById('ws-result').textContent = 'Please select two different terms.';
+    return;
+  }
+  const t1 = state.data.terms.find(t => t.term === term1);
+  const t2 = state.data.terms.find(t => t.term === term2);
+  const yKey = String(state.year);
+  const g1 = ((t1 && t1.by_year[yKey] ? t1.by_year[yKey].g : 0) * 100).toFixed(1);
+  const g2 = ((t2 && t2.by_year[yKey] ? t2.by_year[yKey].g : 0) * 100).toFixed(1);
+  const gm1 = (state.data.meta.groups || []).find(g => g.id === (t1 && t1.group));
+  const gm2 = (state.data.meta.groups || []).find(g => g.id === (t2 && t2.group));
+
+  const btn = document.getElementById('ws-analyze');
+  const resultEl = document.getElementById('ws-result');
+  btn.disabled = true;
+  btn.textContent = 'Analysing…';
+  resultEl.innerHTML = '<em style="color:var(--text-faint)">Asking Claude to map the gap…</em>';
+
+  try {
+    const res = await fetch('/api/whitespace', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        term1, group1: gm1 ? gm1.label : (t1 && t1.group), growth1: g1,
+        term2, group2: gm2 ? gm2.label : (t2 && t2.group), growth2: g2
+      })
+    });
+    if (!res.ok) throw new Error('API ' + res.status);
+    const data = await res.json();
+    const html = data.analysis.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+    resultEl.innerHTML = html;
+  } catch (err) {
+    resultEl.innerHTML = `<span style="color:var(--bad)">Could not analyse — is the Vercel API deployed? (${err.message})</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Analyse Gap';
+  }
+});
 
 function renderHistoryChart(termRef, groupColor) {
   const svgEl = document.getElementById('panel-chart');
