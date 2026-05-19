@@ -1263,7 +1263,7 @@
         <button class="ws-close" id="ws-close">✕</button>
       </div>
       <div class="ws-body">
-        <div class="ws-desc">Pick two growing research terms. Claude will identify the underexplored gap at their intersection and suggest a concrete research direction.</div>
+        <div class="ws-desc">Pick two research terms. OpenAlex will show how many papers mention each term, how many mention both, and the most-cited papers bridging the two — revealing exactly how explored the intersection is.</div>
         <div class="ws-selects">
           <select id="ws-term1" class="ws-select"></select>
           <div class="ws-x">×</div>
@@ -2123,42 +2123,82 @@ document.getElementById('ws-overlay').addEventListener('click', e => {
 });
 
 document.getElementById('ws-analyze').addEventListener('click', async () => {
-  const sel1 = document.getElementById('ws-term1');
-  const sel2 = document.getElementById('ws-term2');
-  const term1 = sel1.value, term2 = sel2.value;
+  const term1 = document.getElementById('ws-term1').value;
+  const term2 = document.getElementById('ws-term2').value;
   if (!term1 || !term2 || term1 === term2) {
-    document.getElementById('ws-result').textContent = 'Please select two different terms.';
+    document.getElementById('ws-result').innerHTML = '<span style="color:var(--warn)">Please select two different terms.</span>';
     return;
   }
-  const t1 = state.data.terms.find(t => t.term === term1);
-  const t2 = state.data.terms.find(t => t.term === term2);
-  const yKey = String(state.year);
-  const g1 = ((t1 && t1.by_year[yKey] ? t1.by_year[yKey].g : 0) * 100).toFixed(1);
-  const g2 = ((t2 && t2.by_year[yKey] ? t2.by_year[yKey].g : 0) * 100).toFixed(1);
-  const gm1 = (state.data.meta.groups || []).find(g => g.id === (t1 && t1.group));
-  const gm2 = (state.data.meta.groups || []).find(g => g.id === (t2 && t2.group));
 
   const btn = document.getElementById('ws-analyze');
   const resultEl = document.getElementById('ws-result');
   btn.disabled = true;
-  btn.textContent = 'Analysing…';
-  resultEl.innerHTML = '<em style="color:var(--text-faint)">Asking Claude to map the gap…</em>';
+  btn.textContent = 'Fetching…';
+  resultEl.innerHTML = '<em style="color:var(--text-faint)">Querying OpenAlex…</em>';
+
+  const base = 'https://api.openalex.org/works';
+  const ss   = 'concepts.id:C17744445';
+  const q1   = encodeURIComponent(term1);
+  const q2   = encodeURIComponent(term2);
+  const qB   = encodeURIComponent(term1 + ' ' + term2);
 
   try {
-    const res = await fetch('/api/whitespace', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        term1, group1: gm1 ? gm1.label : (t1 && t1.group), growth1: g1,
-        term2, group2: gm2 ? gm2.label : (t2 && t2.group), growth2: g2
-      })
-    });
-    if (!res.ok) throw new Error('API ' + res.status);
-    const data = await res.json();
-    const html = data.analysis.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
-    resultEl.innerHTML = html;
+    const [r1, r2, rBoth] = await Promise.all([
+      fetch(`${base}?search=${q1}&filter=${ss}&per-page=1`).then(r => r.json()),
+      fetch(`${base}?search=${q2}&filter=${ss}&per-page=1`).then(r => r.json()),
+      fetch(`${base}?search=${qB}&filter=${ss}&sort=cited_by_count:desc&per-page=5&select=id,title,publication_year,cited_by_count,authorships,primary_location`).then(r => r.json())
+    ]);
+
+    const c1   = r1.meta?.count   || 0;
+    const c2   = r2.meta?.count   || 0;
+    const cB   = rBoth.meta?.count || 0;
+
+    // White space score: how sparse is the intersection relative to each term's size
+    const expected = Math.sqrt(c1 * c2);
+    const gapScore = Math.max(0, Math.min(100, Math.round(100 * (1 - cB / (expected + 1)))));
+    const gapColor = gapScore >= 70 ? 'var(--good)' : gapScore >= 40 ? 'var(--warn)' : 'var(--bad)';
+
+    const papers = (rBoth.results || []).filter(w => w.title);
+
+    resultEl.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:var(--bg-3);padding:10px;border-radius:8px;">
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">${term1}</div>
+          <div style="font-size:18px;font-weight:700;color:var(--accent-2);">${c1.toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--text-faint);">papers in SS</div>
+        </div>
+        <div style="background:var(--bg-3);padding:10px;border-radius:8px;">
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">${term2}</div>
+          <div style="font-size:18px;font-weight:700;color:var(--accent-2);">${c2.toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--text-faint);">papers in SS</div>
+        </div>
+      </div>
+      <div style="background:var(--bg-3);border:1px solid var(--line);padding:12px 14px;border-radius:8px;margin-bottom:14px;display:flex;align-items:center;gap:16px;">
+        <div>
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;">Papers at intersection</div>
+          <div style="font-size:22px;font-weight:700;color:var(--text);margin-top:2px;">${cB.toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--text-faint);">mention both terms</div>
+        </div>
+        <div style="flex:1;text-align:right;">
+          <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;">White Space Score</div>
+          <div style="font-size:32px;font-weight:700;color:${gapColor};margin-top:2px;">${gapScore}<span style="font-size:14px;font-weight:400">/100</span></div>
+          <div style="font-size:10px;color:var(--text-faint);">higher = less explored</div>
+        </div>
+      </div>
+      ${papers.length ? `
+        <div style="font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Bridging Papers · most cited</div>
+        ${papers.map(w => {
+          const auths = (w.authorships || []).slice(0, 2).map(a => a.author?.display_name || '').filter(Boolean).join(', ');
+          const etal  = (w.authorships || []).length > 2 ? ' et al.' : '';
+          return `<div class="panel-paper-item" style="margin:0;">
+            <div class="paper-title"><a href="${w.id || '#'}" target="_blank" rel="noopener">${w.title}</a></div>
+            <div class="paper-meta">${auths}${etal} · ${w.publication_year || '?'} · <span class="paper-citations">${(w.cited_by_count || 0).toLocaleString()} citations</span></div>
+          </div>`;
+        }).join('')}
+      ` : `<div class="papers-status" style="padding:6px 0;">No bridging papers found — this intersection is genuinely unexplored.</div>`}
+    `;
   } catch (err) {
-    resultEl.innerHTML = `<span style="color:var(--bad)">Could not analyse — is the Vercel API deployed? (${err.message})</span>`;
+    resultEl.innerHTML = `<span style="color:var(--bad)">OpenAlex query failed: ${err.message}</span>`;
   } finally {
     btn.disabled = false;
     btn.textContent = 'Analyse Gap';
