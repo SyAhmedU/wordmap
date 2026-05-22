@@ -739,7 +739,11 @@
       <div class="subtitle" id="meta-subtitle">Loading…</div>
     </div>
     <div class="spacer"></div>
-    <input class="search" id="search" placeholder="Search terms…" />
+    <div style="position:relative;display:inline-flex;align-items:center;">
+      <input class="search" id="search" placeholder="Search terms…" style="padding-right:28px;" />
+      <button id="search-clear" title="Clear" style="position:absolute;right:8px;background:none;border:none;color:var(--text-faint);font-size:16px;cursor:pointer;line-height:1;padding:0;display:none;" onclick="document.getElementById('search').value='';state.search='';document.getElementById('search-clear').style.display='none';document.getElementById('search-count').textContent='';applyAll();">×</button>
+    </div>
+    <span id="search-count" style="font-size:11px;color:var(--text-faint);margin-left:-4px;white-space:nowrap;"></span>
     <div class="pills">
       <button class="pill active" data-scope="all">All Subfields</button>
       <button class="pill" data-scope="emerging">Emerging only</button>
@@ -1774,6 +1778,14 @@ function applyAll() {
   renderTreemap();
   refreshPanelIfOpen();
   writeHash();
+  // Update search count label
+  const countEl = document.getElementById('search-count');
+  if (countEl && state.search) {
+    const n = document.querySelectorAll('g.cell').length;
+    countEl.textContent = n === 1 ? '1 match' : `${n} matches`;
+  } else if (countEl) {
+    countEl.textContent = '';
+  }
 }
 
 // ---------- Events ----------
@@ -1798,9 +1810,11 @@ function bindEvents() {
   // Search
   document.getElementById('search').addEventListener('input', (e) => {
     state.search = e.target.value;
+    document.getElementById('search-clear').style.display = state.search ? 'block' : 'none';
     applyAll();
   });
   document.getElementById('search').value = state.search;
+  document.getElementById('search-clear').style.display = state.search ? 'block' : 'none';
   // Scrubber drag/click
   const scrub = document.getElementById('scrubber');
   function setYearFromX(clientX) {
@@ -1828,6 +1842,7 @@ function bindEvents() {
   window.addEventListener('hashchange', () => {
     initFromHash();
     document.getElementById('search').value = state.search;
+    document.getElementById('search-clear').style.display = state.search ? 'block' : 'none';
     renderMetricBar();
     document.querySelectorAll('.pill[data-scope]').forEach(p =>
       p.classList.toggle('active', p.dataset.scope === state.scope));
