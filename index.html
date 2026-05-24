@@ -5,23 +5,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Word Map — Syed</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232563eb'/><text x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800' font-size='19' fill='white'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0b0f1a;
-    --bg-2: #111726;
-    --bg-3: #1a2235;
-    --line: #243049;
-    --text: #e8edf7;
-    --text-dim: #8d99b3;
-    --text-faint: #5a657f;
-    --accent: #ff7a1a;
-    --accent-2: #5b8def;
-    --good: #22c55e;
-    --bad: #ef4444;
-    --warn: #f59e0b;
-    --pill: #182238;
-    --pill-active: #ff7a1a;
-    --shadow: 0 6px 28px rgba(0,0,0,.35);
+    --bg: #FBF7EF;
+    --bg-2: #FFFFFF;
+    --bg-3: #F3EEE3;
+    --line: rgba(14,14,24,.08);
+    --text: #0E0E18;
+    --text-dim: #3C3C48;
+    --text-faint: #6F6F7E;
+    --accent: #F14575;
+    --accent-2: #9270F4;
+    --good: #22C58D;
+    --bad: #F14575;
+    --warn: #F17F3C;
+    --pill: #F3EEE3;
+    --pill-active: #F14575;
+    --shadow: 0 10px 30px -14px rgba(20,12,40,.12), 0 2px 6px rgba(20,12,40,.04);
+    --grad-warm: linear-gradient(135deg,#FF9656 0%,#F14575 55%,#9270F4 100%);
     /* Journal palette (research paper) */
     --jp-page:   #f7f5f0;
     --jp-bg:     #ffffff;
@@ -35,8 +39,9 @@
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
-    font-size: 14px; overflow: hidden; height: 100%; }
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px; overflow: hidden; height: 100%; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; letter-spacing: -.02em; }
 
   /* HEADER */
   .top {
@@ -45,9 +50,10 @@
     background: var(--bg);
   }
   .logo {
-    width: 32px; height: 32px; border-radius: 8px; background: var(--accent);
+    width: 32px; height: 32px; border-radius: 9px; background: var(--grad-warm);
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; color: #1a0f00; font-size: 16px;
+    font-weight: 800; color: #fff; font-size: 16px;
+    box-shadow: 0 4px 14px -4px rgba(241,69,117,.55);
   }
   .title-block { flex: 0 0 auto; }
   .title { font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
