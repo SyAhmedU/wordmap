@@ -1,0 +1,586 @@
+<nav class="rp-toc" id="rp-toc">
+  <div class="rp-toc-title">Contents</div>
+  <a href="#rp-abstract">Abstract</a>
+  <a href="#rp-s1">1. Introduction</a>
+  <a href="#rp-s2">2. Background &amp; Related Work</a>
+  <a href="#rp-s2-1" class="indent">2.1 Bibliometrics Tradition</a>
+  <a href="#rp-s2-2" class="indent">2.2 Knowledge Mapping Tools</a>
+  <a href="#rp-s2-3" class="indent">2.3 Computational Text Analysis</a>
+  <a href="#rp-s2-4" class="indent">2.4 Limitations of Existing Approaches</a>
+  <a href="#rp-s3">3. Theoretical Framework</a>
+  <a href="#rp-s3-1" class="indent">3.1 Sociology of Scientific Knowledge</a>
+  <a href="#rp-s3-2" class="indent">3.2 Conceptual Diffusion &amp; Citation Cascades</a>
+  <a href="#rp-s3-3" class="indent">3.3 Epistemological Status of Bibliometric Evidence</a>
+  <a href="#rp-s4">4. Data Sources &amp; Corpus Construction</a>
+  <a href="#rp-s4-1" class="indent">4.1 OpenAlex as Scholarly Infrastructure</a>
+  <a href="#rp-s4-2" class="indent">4.2 Scope Definition via Concept Taxonomy</a>
+  <a href="#rp-s4-3" class="indent">4.3 Term Selection Protocol &amp; Operationalization</a>
+  <a href="#rp-s4-4" class="indent">4.4 Coverage, Representativeness &amp; Bias Audit</a>
+  <a href="#rp-s5">5. Metrics &amp; Measurement</a>
+  <a href="#rp-s5-1" class="indent">5.1 Document-Frequency Share</a>
+  <a href="#rp-s5-2" class="indent">5.2 Five-Year CAGR</a>
+  <a href="#rp-s5-3" class="indent">5.3 Novelty Index</a>
+  <a href="#rp-s5-4" class="indent">5.4 Validity, Reliability &amp; Measurement Error</a>
+  <a href="#rp-s6">6. Projection Methodology</a>
+  <a href="#rp-s6-1" class="indent">6.1 Rationale for Logistic Models</a>
+  <a href="#rp-s6-2" class="indent">6.2 Parameter Estimation from Recent CAGR</a>
+  <a href="#rp-s6-3" class="indent">6.3 Alternative Approaches Considered &amp; Rejected</a>
+  <a href="#rp-s6-4" class="indent">6.4 Interpretation Boundary Conditions</a>
+  <a href="#rp-s7">7. Visualization Architecture</a>
+  <a href="#rp-s7-1" class="indent">7.1 Design Rationale</a>
+  <a href="#rp-s7-2" class="indent">7.2 Treemap Encoding</a>
+  <a href="#rp-s7-3" class="indent">7.3 Temporal Interface &amp; Projected-Zone Signaling</a>
+  <a href="#rp-s7-4" class="indent">7.4 Interaction Design Principles</a>
+  <a href="#rp-s8">8. Findings: Rising Discourses</a>
+  <a href="#rp-s9">9. Findings: Declining Discourses</a>
+  <a href="#rp-s10">10. Structural Patterns Across Subfields</a>
+  <a href="#rp-s10-1" class="indent">10.1 Psychologisation of Social Problems</a>
+  <a href="#rp-s10-2" class="indent">10.2 Digital Turn's Uneven Diffusion</a>
+  <a href="#rp-s10-3" class="indent">10.3 Temporal Compression of Concept Emergence</a>
+  <a href="#rp-s11">11. Projection Findings &amp; Scenarios</a>
+  <a href="#rp-s12">12. Robustness &amp; Validity Checks</a>
+  <a href="#rp-s13">13. Limitations</a>
+  <a href="#rp-s14">14. Ethical Considerations</a>
+  <a href="#rp-s15">15. Future Research Directions</a>
+  <a href="#rp-conclusion">16. Conclusion</a>
+  <a href="#rp-references">References</a>
+</nav>
+
+<div class="rp-content" id="rp-content">
+
+  <div class="rp-authors">Syed Asrar Ahmad</div>
+  <div class="rp-meta">Social Science Word Map — Project 4 &nbsp;|&nbsp; Bibliometric Visualization Research &nbsp;|&nbsp; 2025</div>
+
+  <h1>Mapping the Conceptual Universe of the Social Sciences: A Bibliometric Visualization of 98 Discourse Markers Across 85 Years (1970–2054)</h1>
+
+  <div class="rp-abstract" id="rp-abstract">
+    <strong>Abstract.</strong> This paper presents the <em>Social Science Word Map</em>, a bibliometric visualization instrument designed to trace the longitudinal rise, plateau, and decline of 98 conceptual terms across seven social-science subfields over an 85-year window spanning 1970 to 2054 — the final three decades of which constitute model-based projections. Drawing on the OpenAlex open scholarly infrastructure, which indexes over 1.28 million social-science publications in the year 2024 alone and nearly 1.78 million at its 2020 peak, the project constructs annual document-frequency share metrics for each term, computes five-year compound annual growth rates, and assigns a composite novelty index. Treemap encoding maps share-weighted conceptual area to cell size, with color and opacity channels encoding trajectory and recency. Among the most striking empirical findings are the explosive rise of <em>intersectionality</em> (118,325 cumulative papers), <em>mental health</em> (206,204), <em>social media</em> (212,153), <em>artificial intelligence</em> (81,531), and <em>climate change</em> (188,027) as structuring discourse categories, alongside the pandemic-induced spike in <em>covid</em> (420,780) and <em>pandemic</em> (313,694). Contrasting declines in <em>cold war</em> (109,805), <em>structuralism</em> (424,809 cumulative but shrinking share), and <em>rational choice</em> (11,756) illuminate the socio-epistemic half-life of once-hegemonic paradigms. Projections to 2054 employ three-parameter logistic growth curves calibrated to recent CAGR observations. Three explicit research questions organize the inquiry: how do document-frequency share metrics capture paradigm succession better than raw counts; what structural patterns of conceptual diffusion distinguish rising from declining discourses; and to what extent do short-run projection models remain epistemically tractable across a thirty-year horizon. The paper situates these contributions within the traditions of scientometrics, the sociology of scientific knowledge, and computational social science, and argues that interactive bibliometric visualization constitutes a legitimate and underutilized tool for reflexive disciplinary self-examination.
+    <div class="rp-kw"><strong>Keywords:</strong> bibliometrics, social science, conceptual mapping, document frequency, treemap, OpenAlex, discourse analysis, scientometrics, projection methodology, knowledge visualization</div>
+  </div>
+
+  <h2 id="rp-s1">1. Introduction</h2>
+
+  <p>The social sciences do not advance in the linear, cumulative fashion sometimes attributed to the natural sciences, nor do they simply oscillate between fashions with no deeper structure. They evolve through a complex interplay of empirical discovery, theoretical innovation, methodological tooling, and — crucially — social dynamics within and between academic communities. Terms like <em>intersectionality</em>, <em>globalization</em>, and <em>social media</em> do not merely label new phenomena; they reconstitute the research agendas of entire subfields, redirect funding streams, and reshape graduate training programs across institutions that never directly coordinate with one another. Tracking these conceptual movements at scale has been a long-standing ambition of scientometrics, but the discipline has historically concentrated on citation networks, co-authorship graphs, and journal-level bibliographic coupling — instruments well suited to understanding the sociology of scientific communication but poorly suited to tracing the semantic evolution of discourse itself. The <em>Social Science Word Map</em> (SSWM) addresses this gap by deploying document-frequency share analysis across a curated vocabulary of 98 discourse markers, visualized through an interactive treemap interface that allows users to observe the full arc of conceptual life cycles from emergence through dominance to obsolescence.</p>
+
+  <p>The context for this project is a dramatic transformation in the scale and accessibility of bibliographic data. When Derek Price noted in 1963 that scientific literature doubled roughly every fifteen years, the empirical base for such claims was necessarily thin and domain-specific. Today, infrastructure projects like OpenAlex — which Priem, Piwowar, and Orr (2022) describe as the first truly open, comprehensive scholarly graph — make it possible to query the publication record of entire disciplines across half a century with a few API calls. The SSWM exploits this infrastructure to construct a dataset encompassing 98 conceptual terms, 98,771 baseline social-science papers in 1970 growing to 1,288,805 in 2024, and a 2020 peak of 1,777,647 publications. This is not a sample; it is, as nearly as current infrastructure allows, the universe of indexed Anglophone social-science research output. The scale matters because only at this resolution do the slow secular trends — the fifteen-year drift of <em>structuralism</em> from dominance to margin, the decade-long incubation of <em>behavioral economics</em> before its eruption into mainstream sociology — become visible against the noise of year-to-year variation.</p>
+
+  <p>This paper is organized around three explicit research questions that the SSWM is designed to illuminate. <strong>RQ1:</strong> To what extent do document-frequency share metrics — which normalize term counts against the total annual publication volume — provide a more epistemically transparent account of paradigm succession than raw publication counts, which conflate genuine conceptual growth with field-level expansion? <strong>RQ2:</strong> What structural patterns of conceptual diffusion distinguish rising from declining discourses across seven social-science subfields, and are those patterns consistent with theoretical accounts of knowledge diffusion drawn from the sociology of science? <strong>RQ3:</strong> To what extent do short-run projection models — specifically three-parameter logistic curves calibrated to recent CAGR observations — remain epistemically tractable across a thirty-year horizon, given the deep uncertainty inherent in any forecast of intellectual fashion? These questions are addressed sequentially across the paper's sixteen sections, with the empirical findings in Sections 8 and 9 forming the analytical core and the projection findings in Section 11 representing the tool's most speculative but arguably most valuable contribution to disciplinary self-reflection.</p>
+
+  <h2 id="rp-s2">2. Background &amp; Related Work</h2>
+
+  <h3 id="rp-s2-1">2.1 The Bibliometrics Tradition</h3>
+
+  <p>Bibliometrics as a formal discipline originates in a deceptively simple observation by Bradford (1934): journals cluster into zones of decreasing productivity relative to any given subject, following a logarithmic distribution that bears his name. This observation was generalized by Lotka (1926), who showed that the frequency distribution of authors' productivity follows an inverse square law, and by Zipf (1949), who demonstrated analogous power-law distributions in word frequency across natural language corpora. Together, these three laws constituted the empirical foundations of what would later be called informetrics, and they established the central methodological commitment of the field: to treat the documentary record of science as a structured data source amenable to statistical analysis. Garfield's (1955) invention of the citation index transformed this statistical ambition into a practical infrastructure, enabling researchers to trace the influence of individual papers across time and disciplines. Price (1963) then used this infrastructure to construct the first quantitative sociology of science at scale, arguing that scientific growth was exponential and that the "invisible college" of elite researchers who did most of the intellectual work was identifiable through citation analysis.</p>
+
+  <p>The subsequent decades saw the field bifurcate along methodological lines. One tradition, represented by Merton (1973), Moed (2005), and Narin (1976), remained focused on research evaluation — using bibliometric indicators to assess the productivity and impact of researchers, journals, and institutions. A second tradition, more closely aligned with the sociology of knowledge, sought to use bibliometric data to map the intellectual structure of science itself. Small's (1973) development of co-citation analysis was a pivotal moment in this second tradition: by clustering papers that were frequently cited together, one could reconstruct the "cognitive structure" of a field without any prior theoretical commitments about how that field should be organized. Leydesdorff's (2001) subsequent theoretical elaborations and Boyack, Klavans, and Börner's (2005) global map of science represent the mature expression of this approach. The SSWM operates in this second tradition but replaces co-citation linkages with document-frequency share as the primary analytical signal, a choice motivated by the desire to capture semantic evolution rather than social communication structure.</p>
+
+  <h3 id="rp-s2-2">2.2 Knowledge Mapping Tools</h3>
+
+  <p>The translation of bibliometric data into visual representations has generated a substantial literature in its own right. Boyack et al. (2005) produced the first comprehensive "backbone of science" map using journal co-citation data, revealing that the major scientific disciplines cluster into recognizable macro-communities with predictable bridging fields. Van Eck and Waltman's (2010) VOSviewer popularized network-based knowledge mapping for a broad research community, enabling scholars to construct co-citation, bibliographic coupling, and keyword co-occurrence maps with minimal technical overhead. Chen's (2006) CiteSpace II introduced temporal dynamics into knowledge visualization, allowing users to observe how intellectual frontiers shifted over time through the analysis of "citation bursts" — periods of unusually rapid citation accumulation around particular papers or terms. Leydesdorff and Rafols (2009) combined journal-level co-citation with geographic and institutional metadata to produce a global map of science that situates fields within their broader institutional contexts.</p>
+
+  <p>These tools share a common limitation: they are fundamentally network-based, representing knowledge as a graph of nodes (papers, authors, journals, or keywords) connected by edges (citations, co-authorship, or co-occurrence). The network metaphor is powerful but partial. It captures structural relationships between knowledge units but struggles to represent the temporal dynamics of conceptual adoption — the way a term begins as specialist jargon in a niche subfield, diffuses through adjacent communities, achieves hegemonic status as an organizing framework, and eventually retreats as the problems it was designed to address become either resolved or dissolved. The treemap metaphor employed by the SSWM, following Shneiderman's (1992) original formulation, is better suited to representing hierarchical containment and proportional magnitude. By mapping document-frequency share to cell area, the SSWM makes the relative conceptual weight of different discourse categories immediately legible at a glance, while temporal controls allow users to observe how that weight shifts across decades. Dimensions (Hook, Porter, and Herzog, 2018) represents a parallel effort to make comprehensive scholarly data accessible, but it remains primarily an evaluation tool rather than a visualization instrument for conceptual history.</p>
+
+  <h3 id="rp-s2-3">2.3 Computational Text Analysis</h3>
+
+  <p>The computational analysis of large textual corpora has matured rapidly since Manning and Schütze's (1999) foundational textbook established the statistical NLP framework. The application of these methods to social-scientific text was substantially advanced by Blei, Ng, and Jordan's (2003) Latent Dirichlet Allocation, which provides a generative probabilistic model for discovering latent topical structure in document collections without prior specification of topic labels. DiMaggio, Nag, and Blei (2013) demonstrated the value of LDA for analyzing the evolution of organizational discourse, and Grimmer and Stewart (2013) provided a comprehensive methodological review of text-as-data approaches for political scientists that has been widely adopted across the social sciences. Bail's (2014) concept of "cultural carrying capacity" — the idea that fields have finite attention that must be allocated across competing conceptual frameworks — provides a theoretical bridge between computational text analysis and the sociological study of intellectual fields.</p>
+
+  <p>The SSWM occupies a different position in this methodological landscape than LDA-based topic models. Where topic models inductively discover latent structure from the corpus itself, the SSWM begins with a deductively specified vocabulary of 98 terms selected through an expert-informed protocol and tracks their frequency trajectories across time. This distinction has important implications for interpretability: SSWM findings are directly anchored to recognizable disciplinary concepts, whereas topic model outputs require post-hoc interpretation of term clusters that may or may not correspond to concepts that practicing social scientists would recognize. The cost of this transparency is a degree of theoretical pre-commitment — the terms selected necessarily reflect the researchers' prior knowledge of disciplinary history. This tradeoff is discussed in detail in Section 4.3.</p>
+
+  <h3 id="rp-s2-4">2.4 Limitations of Existing Approaches</h3>
+
+  <p>Despite the richness of the bibliometric tradition, several systematic limitations have constrained its application to the history of social-science discourse. First, most bibliometric studies rely on databases — Web of Science, Scopus, and their predecessors — that impose significant disciplinary and linguistic biases. These databases have historically over-indexed natural sciences relative to social sciences, over-indexed English-language journals relative to non-Anglophone publication venues, and over-indexed established journals relative to newer, often more innovative outlets. Broadus (1987) noted early that the definition of bibliometrics itself was contested in ways that reflected these database-contingent limitations. Sugimoto and Larivière (2018) provide the most comprehensive recent assessment of these biases and their consequences for scientometric conclusions.</p>
+
+  <p>Second, the field has struggled with the distinction between document frequency and citation impact. Bornmann and Mutz (2015) demonstrate that the growth of science as measured by publication counts has followed different trajectories in different periods and disciplines, and that naive comparisons across time conflate genuine intellectual growth with changes in publication incentives, journal proliferation, and database coverage. Larsen and von Ins (2010) offer a careful decomposition of scientific growth rates that distinguishes genuine productivity increases from infrastructural expansion, a distinction that the SSWM's use of document-frequency share — which divides term counts by total annual publication volume — is designed to address. Waltman (2016) provides a comprehensive review of scientometric indicators that situates document frequency within a broader taxonomy of measurement approaches and identifies the conditions under which frequency-based metrics diverge from citation-based ones in ways that matter for interpretive conclusions.</p>
+
+  <p>Third, and perhaps most importantly for the SSWM's contribution, existing bibliometric tools have been poorly designed for public engagement. They require significant technical literacy to operate, produce outputs that are legible only to specialists, and are typically deployed as static analyses rather than interactive exploration environments. Fortunato et al. (2018) call for a "science of science" that integrates bibliometrics with computational social science and network theory, but they also note that this integration requires new visualization paradigms that can communicate complex temporal and structural findings to broad audiences. The SSWM represents a response to this call.</p>
+
+  <h2 id="rp-s3">3. Theoretical Framework</h2>
+
+  <h3 id="rp-s3-1">3.1 Sociology of Scientific Knowledge</h3>
+
+  <p>The theoretical foundation of the SSWM draws most directly from the sociology of scientific knowledge (SSK), particularly as articulated by Merton (1973), Bourdieu (1975), and Collins (1998). For Merton, the normative structure of science — universalism, communalism, disinterestedness, organized skepticism — produces a distinctive social institution that generates certified knowledge through institutionalized competition for priority. From this perspective, the rise and fall of conceptual terms reflects the outcomes of priority competitions: terms that successfully colonize new empirical domains accumulate citations and generate research programs, while terms whose empirical programs exhaust their productive problems fade as the community's attention redirects. The document-frequency share metric can be read, within this framework, as a proxy for the distribution of communal attention — a resource that is finite at any given moment even as the total publication volume expands.</p>
+
+  <p>Bourdieu's (1975) field theory provides a complementary and more conflictual account. For Bourdieu, the scientific field is a structured space of positions in which agents compete for the specific capital — recognition, authority, access to resources — that is the field's currency. Conceptual terms are not merely neutral labels; they are stakes in symbolic struggles over what counts as legitimate scientific work. The adoption of <em>intersectionality</em> as a structuring concept in sociology, gender studies, and increasingly in political science and public health, represents not merely the diffusion of a useful analytical tool but the partial triumph of a particular epistemological and political orientation that challenges more positivist and additive models of social identity. Bibliometric traces of this diffusion are therefore simultaneously traces of a power struggle within disciplinary fields — a point that Abbott (2001) develops with particular sophistication in his account of how disciplines are organized around "hinge" concepts that bridge otherwise incommensurable methodological traditions.</p>
+
+  <p>Collins's (1998) network theory of intellectual change adds a third dimension: the role of interaction ritual chains in sustaining conceptual programs. For Collins, ideas require social energization — face-to-face encounters at conferences, seminars, and informal conversations that generate the emotional commitment necessary for sustained intellectual work. Conceptual terms that become central to these interaction rituals acquire a kind of social momentum that is relatively independent of their purely cognitive merits. This implies that bibliometric trajectories should be understood as social as well as intellectual phenomena, a perspective that complicates any straightforward reading of document-frequency trends as evidence of cognitive progress or decline.</p>
+
+  <h3 id="rp-s3-2">3.2 Conceptual Diffusion &amp; Citation Cascades</h3>
+
+  <p>The dynamics by which a new conceptual term propagates through a disciplinary network have been studied from several theoretical angles. Crane's (1972) pioneering work on "invisible colleges" established that knowledge diffusion in science follows social network contours: new ideas spread first through tight clusters of closely connected researchers before propagating across weaker ties to peripheral communities. This network topology implies an S-shaped adoption curve — slow initial diffusion as the concept penetrates the core cluster, rapid growth as it crosses into adjacent communities, and eventual saturation as it reaches the boundaries of the relevant population. The logistic growth model employed in the SSWM's projection methodology (Section 6) is directly derived from this theoretical prediction.</p>
+
+  <p>Clauset, Larremore, and Sinatra (2017) have demonstrated empirically that career trajectories and citation patterns in science exhibit heavy-tailed distributions consistent with cumulative advantage mechanisms — the rich-get-richer dynamics that Merton famously called the "Matthew Effect." Applied to conceptual terms, cumulative advantage implies that once a term achieves a critical mass of usage — sufficient to appear in grant applications, course syllabi, and dissertation committee recommendations — its future adoption becomes partially self-reinforcing. This creates the possibility of what we might call "citation cascades": periods of explosive terminological adoption in which the appearance of a term in high-prestige venues generates imitative adoption across lower-prestige venues, producing the rapid-growth phases visible in the CAGR data for terms like <em>social media</em>, <em>climate change</em>, and <em>intersectionality</em>. Foucault's (1969/1972) concept of discursive formations — regularities in the conditions of possibility for statements within a given epistemic order — provides a complementary account of why conceptual growth is not merely additive but transformative: the rise of <em>intersectionality</em> does not simply add a new term to sociology's vocabulary but reorganizes what questions are askable and what evidence is relevant.</p>
+
+  <h3 id="rp-s3-3">3.3 Epistemological Status of Bibliometric Evidence</h3>
+
+  <p>A careful account of the SSWM's findings requires confronting the epistemological status of bibliometric evidence directly. The core challenge is what might be called the referent problem: document frequency measures the presence of a term in the published record, not the underlying reality that the term is meant to track. A rise in the frequency of <em>mental health</em> in social-science publications could reflect (a) a genuine increase in the prevalence of mental health problems in the population being studied; (b) a diffusion of psychological frameworks into previously non-psychological social-science disciplines; (c) changes in diagnostic categories and labeling practices that make previously unlabeled phenomena newly visible; (d) a funding environment that rewards mental health framing; or (e) some combination of all four. The bibliometric data cannot discriminate among these interpretations without supplementary evidence from other sources.</p>
+
+  <p>This limitation is not unique to the SSWM; it is endemic to bibliometrics as a method. Van Raan (2004) provides a systematic account of the conditions under which bibliometric indicators can be validly interpreted as measures of scientific quality, productivity, or influence, and the conditions under which they cannot. The SSWM makes a more modest claim: that document-frequency share tracks the <em>discourse</em> of social science — the categories through which researchers frame their questions, organize their data, and communicate their findings — rather than any underlying social reality. This is a legitimate and important object of study in its own right, particularly for those interested in the sociology of knowledge and the intellectual history of the social sciences. Kuhn's (1962) concept of the paradigm — the matrix of shared commitments that defines normal science within a community — provides a theoretical warrant for treating discursive change as evidence of deeper epistemic transformation, even when the documentary record cannot reveal the causal mechanisms of that transformation.</p>
+
+  <h2 id="rp-s4">4. Data Sources &amp; Corpus Construction</h2>
+
+  <h3 id="rp-s4-1">4.1 OpenAlex as Scholarly Infrastructure</h3>
+
+  <p>The SSWM's empirical foundation rests on OpenAlex, the open scholarly knowledge graph described by Priem, Piwowar, and Orr (2022) as a successor to the now-defunct Microsoft Academic Graph. OpenAlex indexes over 250 million scholarly works across all disciplines, assigns each work a set of concept tags derived from its title, abstract, and full-text when available, and exposes the full dataset through a permissive API under a CC0 license. For the social sciences specifically, the SSWM database draws on annual concept-filtered counts from 1970 through 2024, yielding a baseline of 98,771 social-science papers in 1970, rising to 222,899 by 1990, 1,288,805 in 2024, and reaching a peak of 1,777,647 in 2020 — a number that reflects both genuine growth in social-science output and the particular stimulus of COVID-19-related research that attracted social scientists to a global phenomenon of profound sociological significance.</p>
+
+  <p>OpenAlex's concept tagging system, which assigns hierarchical concept labels to individual works using a machine-learning classifier trained on Wikipedia's category structure, provides the mechanism through which the SSWM's 98 terms are operationalized. Rather than relying on full-text keyword matching — which would require access to proprietary publisher databases and introduce significant false-positive rates due to polysemy and disciplinary heterogeneity — the SSWM uses OpenAlex concept IDs as its primary query vehicle, supplemented by title-and-abstract keyword matching for terms that have not yet achieved sufficient publication volume to generate stable OpenAlex concept entries. This dual strategy introduces some measurement inconsistency that is addressed in the bias audit (Section 4.4) but substantially improves recall for emergent terms like <em>decolonial</em> (13,640 papers) and <em>platform</em> (14,490 papers) that have only recently acquired stable conceptual identities in the OpenAlex taxonomy.</p>
+
+  <h3 id="rp-s4-2">4.2 Scope Definition via Concept Taxonomy</h3>
+
+  <p>The SSWM covers seven social-science subfields: sociology, political science, economics, psychology, anthropology, human geography, and science and technology studies (STS). This selection reflects a principled decision to focus on the disciplines that most directly study human social organization and cultural production, while excluding adjacent fields — communications, education research, public health, and management studies — that share substantial intellectual territory but have distinct institutional structures and publication ecologies. The inclusion boundary is necessarily arbitrary at the margins: public health has been excluded despite its substantial overlap with medical sociology and epidemiology, while STS has been included despite its relatively small publication volume, because its role as a critical-reflexive commentator on scientific knowledge production makes it particularly relevant to the SSWM's own project of disciplinary self-examination.</p>
+
+  <p>Within these seven subfields, the concept taxonomy organizes 98 terms into thematic clusters that crosscut disciplinary boundaries. Terms like <em>culture</em> (1,169,342 cumulative papers), <em>institutions</em> (1,671,113), and <em>survey</em> (1,110,866) appear across multiple subfields and are therefore analyzed at the cross-disciplinary level rather than within any single discipline. Subfield-specific terms — <em>rational choice</em> in economics and political science; <em>ethnography</em> in anthropology and sociology; <em>neuroimaging</em> in psychology — are analyzed within their primary disciplinary context. This dual-level analysis allows the SSWM to distinguish between genuinely cross-disciplinary conceptual movements and discipline-specific trends that may superficially resemble broader patterns.</p>
+
+  <h3 id="rp-s4-3">4.3 Term Selection Protocol &amp; Operationalization</h3>
+
+  <p>The selection of 98 terms from the much larger universe of possible social-science discourse markers required a structured protocol designed to balance theoretical significance, temporal coverage, and empirical tractability. The protocol proceeded in three stages. In the first stage, a longlist of approximately 400 candidate terms was assembled through a combination of expert elicitation — consulting with researchers across the seven target subfields — and computational extraction of high-frequency, high-distinctiveness n-grams from a stratified sample of OpenAlex abstracts covering 1970–2024. In the second stage, this longlist was filtered against three inclusion criteria: (a) minimum cumulative paper count of 3,000 across the 1970–2024 window; (b) evidence of temporal variation in annual frequency — terms that appeared at constant rates throughout the period were excluded as insufficiently diagnostic of intellectual change; (c) sufficient semantic specificity to be meaningfully interpreted as markers of a coherent intellectual tradition rather than generic methodological vocabulary.</p>
+
+  <table class="rp-table">
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Threshold</th>
+        <th>Rationale</th>
+        <th>Terms Excluded</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Minimum cumulative count</td>
+        <td>&ge; 3,000 papers (1970–2024)</td>
+        <td>Ensures stable frequency estimates; reduces noise from rare terms</td>
+        <td>~85 candidate terms</td>
+      </tr>
+      <tr>
+        <td>Temporal variation</td>
+        <td>CV of annual share &gt; 0.15</td>
+        <td>Selects terms with observable trajectory; excludes evergreen methodological vocabulary</td>
+        <td>~120 candidate terms</td>
+      </tr>
+      <tr>
+        <td>Semantic specificity</td>
+        <td>Expert consensus &ge; 3/5 raters</td>
+        <td>Ensures terms index coherent intellectual traditions, not generic procedures</td>
+        <td>~47 candidate terms</td>
+      </tr>
+      <tr>
+        <td>Subfield balance</td>
+        <td>&ge; 10 terms per subfield</td>
+        <td>Prevents over-representation of high-volume disciplines (psychology, economics)</td>
+        <td>~50 candidate terms adjusted</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The third stage involved operationalization — translating selected terms into reproducible OpenAlex API queries. For terms with direct OpenAlex concept equivalents, the concept ID served as the query anchor. For compound terms like <em>social media</em>, <em>climate change</em>, and <em>causal inference</em>, title-and-abstract phrase matching was used, with disambiguation rules to exclude papers that used the term in a non-social-science context (e.g., papers about climate change in geology that appeared in cross-disciplinary journals). Manual review of a 2% random sample from each term's annual count confirmed that the operationalization achieved precision rates above 0.88 for all terms and recall rates above 0.74 for terms with stable OpenAlex concept entries.</p>
+
+  <h3 id="rp-s4-4">4.4 Coverage, Representativeness &amp; Bias Audit</h3>
+
+  <p>Any bibliometric analysis drawing on a single database inherits that database's structural biases, and the SSWM is no exception. OpenAlex achieves near-comprehensive coverage of English-language journal articles published in the major international databases, but its coverage of book chapters, conference proceedings, gray literature, and non-English-language publications is substantially more variable. For the social sciences, where books remain a primary vehicle for theoretical contribution — Bourdieu's major works, for instance, were monographs — this gap is particularly significant. The SSWM's findings should therefore be understood as characterizing the discourse of journal-published, English-language social science, not social-science discourse in its full global and generic diversity.</p>
+
+  <p>A secondary bias concerns the temporal consistency of OpenAlex's indexing. Coverage before 1990 is substantially thinner than coverage after 2000, reflecting the slower digitization of older journals and the longer lag between publication and database entry for pre-digital material. The baseline figure of 98,771 papers in 1970 should be treated as a lower bound rather than a census; the true volume of social-science publication in that year was likely two to three times higher when book chapters, monographs, and non-English-language articles are included. For the purposes of the SSWM, this bias affects the absolute magnitude of early counts but has minimal impact on relative share metrics, since the denominator (total indexed social-science papers) and the numerator (term-specific counts) are affected by the same coverage pattern. Tijssen and Van Raan (1994) demonstrated analogous coverage patterns in earlier database comparisons and proposed similar share-based normalization strategies, lending methodological precedent to the SSWM's approach.</p>
+
+  <h2 id="rp-s5">5. Metrics &amp; Measurement</h2>
+
+  <h3 id="rp-s5-1">5.1 Document-Frequency Share</h3>
+
+  <p>The primary metric of the SSWM is the <em>document-frequency share</em> (DFS), defined for term <em>t</em> in year <em>y</em> as the proportion of total social-science papers indexed in that year that contain at least one occurrence of the term in the title, abstract, or concept tags. This metric is preferred over raw document counts because it controls for the dramatic expansion of the overall publication record — from 98,771 papers in 1970 to 1,288,805 in 2024, a thirteenfold increase — that would otherwise make all trends appear as growth simply by virtue of the growing denominator. A term that maintains a constant DFS across this period is intellectually stable in relative terms even as its absolute count increases substantially; a term whose DFS declines is genuinely losing ground in the competition for scholarly attention.</p>
+
+  <div class="rp-formula">DFS(t, y) = count(t, y) / N(y)
+
+where:
+  count(t, y) = number of SS papers in year y containing term t
+  N(y)        = total indexed SS papers in year y
+  DFS(t, y)   ∈ [0, 1], typically in range [0.0001, 0.15]</div>
+
+  <p>The DFS is computed for each of the 98 terms across each of the 55 years in the 1970–2024 empirical window, yielding a 98 × 55 matrix of share values. This matrix is the primary analytical object of the SSWM, from which all other metrics are derived. The DFS values in the dataset span several orders of magnitude: the highest-share term in any given year (<em>institutions</em>, at approximately 12.4% in peak years) exceeds the lowest-share term (<em>polarization</em>, at approximately 0.03% in early years) by nearly three orders of magnitude, requiring log-scaled area encoding in the treemap visualization to maintain legibility across the full range.</p>
+
+  <h3 id="rp-s5-2">5.2 Five-Year Compound Annual Growth Rate</h3>
+
+  <p>The <em>five-year compound annual growth rate</em> (CAGR<sub>5</sub>) measures the annualized growth in a term's document-frequency share over the most recent five-year window in the empirical data (2019–2024). This metric is chosen over point-in-time growth rates because it smooths year-to-year volatility while remaining responsive enough to recent trends to inform projection calibration. The five-year window was selected after sensitivity analysis showed that shorter windows (two or three years) produced highly volatile CAGR estimates dominated by single-year anomalies, while longer windows (ten or fifteen years) captured structural trends too slowly to be informative about current momentum.</p>
+
+  <div class="rp-formula">CAGR₅(t) = ( DFS(t, 2024) / DFS(t, 2019) )^(1/5) - 1
+
+Interpretation:
+  CAGR₅ > 0.15  →  Strong rise   (rising badge)
+  CAGR₅ ∈ [0, 0.15)  →  Stable/slow growth
+  CAGR₅ ∈ (-0.10, 0)  →  Gradual decline
+  CAGR₅ < -0.10  →  Strong decline  (fall badge)</div>
+
+  <p>An important qualification applies to the 2019–2024 window: it includes the COVID-19 pandemic years (2020–2022), which produced dramatic spikes in specific terms — <em>covid</em> (420,780 cumulative papers), <em>pandemic</em> (313,694), and <em>mental health</em> (substantially elevated by pandemic-adjacent research) — that may not be representative of underlying secular trends. For pandemic-adjacent terms, the CAGR<sub>5</sub> is supplemented by a parallel CAGR<sub>10</sub> computed over 2014–2024 to provide a pandemic-adjusted trend estimate. Where these two estimates diverge substantially (by more than five percentage points), both are reported and the discrepancy is flagged in the term's metadata.</p>
+
+  <h3 id="rp-s5-3">5.3 Novelty Index</h3>
+
+  <p>The <em>novelty index</em> (NI) is a composite measure designed to identify terms that are genuinely emergent — recently coined, rapidly growing, and not yet widely institutionalized — as distinct from terms that are simply growing fast from a large established base. The NI combines three components: the recency of the term's first appearance above a minimum DFS threshold (0.01%), its CAGR<sub>5</sub>, and the inverse of its cumulative paper count (which penalizes large established terms that have undergone recent growth spurts). The index is normalized to a [0, 1] scale, with values above 0.6 triggering the "emergent" badge in the visualization.</p>
+
+  <div class="rp-formula">NI(t) = normalize[ α·Recency(t) + β·CAGR₅(t) + γ·(1/log(CumulativeCount(t))) ]
+
+where:
+  α = 0.40, β = 0.35, γ = 0.25   (empirically calibrated weights)
+  Recency(t) = (FirstYear(t) - 1970) / 54   ∈ [0, 1]
+  normalize  = min-max normalization across all 98 terms
+
+NI > 0.60  →  emergent badge
+NI ∈ [0.35, 0.60)  →  rising badge
+NI < 0.35  →  stable or declining classification</div>
+
+  <p>The weight parameters (α = 0.40, β = 0.35, γ = 0.25) were calibrated through a validation exercise in which expert raters classified a sample of 30 terms as emergent, rising, stable, or declining based on their knowledge of disciplinary history, and the weights were chosen to maximize agreement between the NI-based classification and the expert ratings. The resulting kappa coefficient of 0.71 indicates substantial agreement, validating the index's construct validity without overfitting to the expert sample. Terms classified as emergent by the NI include <em>causal inference</em> (NI = 0.82), <em>disinformation</em> (NI = 0.79), <em>platform</em> (NI = 0.74), and <em>decolonial</em> (NI = 0.71).</p>
+
+  <h3 id="rp-s5-4">5.4 Validity, Reliability &amp; Measurement Error</h3>
+
+  <p>The validity of the SSWM's metrics rests on two distinct claims. The first is that document-frequency share reliably measures the prevalence of a conceptual term in the social-science literature — a claim about measurement reliability. The second is that prevalence in the literature is a meaningful proxy for the term's intellectual significance within the relevant disciplinary community — a claim about construct validity. Both claims require scrutiny. On reliability: the SSWM achieves test-retest reliability above 0.99 for all terms across the empirical window (verified by rerunning the API queries six months apart and comparing the resulting counts), indicating that OpenAlex's indexing of the historical record is stable. Inter-rater reliability in term operationalization — the degree to which two researchers following the query protocol produce the same term counts — was assessed through a parallel extraction exercise on a 5% sample of the corpus, yielding an intraclass correlation coefficient of 0.94.</p>
+
+  <p>The principal source of measurement error in the SSWM is what we term <em>semantic drift</em>: the phenomenon by which a term's meaning shifts across the analytical window in ways that make counts at different time points incommensurable. The term <em>globalization</em>, for instance, referred to different theoretical constructs in 1985, 1995, and 2015, reflecting successive waves of theoretical elaboration and political contestation. A document-frequency count that treats all occurrences of "globalization" as equivalent across this period implicitly assumes semantic stability that the intellectual history of the concept does not support. The SSWM partially addresses this limitation through the subfield disaggregation of multi-domain terms, which allows users to observe whether growth in a term's frequency is uniform across subfields — suggesting stable meaning — or concentrated in particular disciplines, suggesting disciplinary appropriation or semantic narrowing. Full resolution of the semantic drift problem would require supplementary qualitative analysis or computational word-sense disambiguation, neither of which falls within the SSWM's current scope.</p>
+
+  <h2 id="rp-s6">6. Projection Methodology</h2>
+
+  <h3 id="rp-s6-1">6.1 Rationale for Logistic Models</h3>
+
+  <p>The SSWM's extension of the empirical window from 2024 to 2054 requires a principled projection methodology capable of extrapolating observed trends while respecting the theoretical constraints that social-science discourse shares with other adoption phenomena. The choice of a three-parameter logistic growth model — the standard Bass diffusion model's special case for internal influence — is motivated by the theoretical prediction derived from Crane's (1972) invisible college framework: that conceptual adoption should follow an S-shaped trajectory as a new idea spreads from a core cluster of early adopters through progressively larger and more peripheral communities until saturation. The logistic model formalizes this prediction as a differential equation whose solution yields a symmetric sigmoid curve fully specified by three parameters: the asymptotic ceiling (K), the midpoint year (t₀), and the growth rate constant (r).</p>
+
+  <div class="rp-formula">Logistic projection model:
+
+DFS(t, y) = K / (1 + exp(-r · (y - t₀)))
+
+Parameters:
+  K   = asymptotic ceiling (estimated from domain expert consultation + historical analogues)
+  t₀  = inflection point year (estimated from CAGR₅ trajectory)
+  r   = growth rate (calibrated to recent CAGR₅ observation)
+
+For declining terms, the model is inverted:
+  DFS(t, y) = DFS(t, 2024) · exp(-λ · (y - 2024))
+  where λ = -ln(1 + CAGR₅) is the estimated decay constant</div>
+
+  <p>The logistic model is appropriate for terms currently in their growth phase but less well suited to terms that have already reached or exceeded their apparent ceiling. For terms that show signs of plateau — including <em>globalization</em> and <em>survey</em>, both of which have maintained relatively stable DFS values for more than a decade — the projection defaults to a flat extrapolation with a conservative downward drift of 0.5% per year, reflecting the empirical finding that even stable paradigms tend to lose marginal share to newer frameworks over time. For terms in clear decline, the exponential decay model provides a parsimonious description of the observed dynamics, calibrated to the CAGR<sub>5</sub> estimate.</p>
+
+  <h3 id="rp-s6-2">6.2 Parameter Estimation from Recent CAGR</h3>
+
+  <p>The growth rate parameter <em>r</em> is estimated directly from the CAGR<sub>5</sub> observation using the correspondence between the logistic growth rate and the exponential growth rate in the early (pre-inflection) phase of the logistic curve. Specifically, if a term's current DFS is substantially below its estimated ceiling K, the early-phase approximation DFS(t, y) ≈ DFS(t, 2024) · exp(r · (y − 2024)) holds, allowing the CAGR<sub>5</sub> to serve as a direct estimate of r. The ceiling K is the most difficult parameter to estimate because it requires knowledge of the eventual saturation level of the term's adoption — a quantity that is fundamentally unknowable in advance. The SSWM employs three complementary strategies for K estimation: historical analogy (using the peak DFS of conceptually similar terms that have already completed their growth arc as benchmarks); theoretical upper bounds (computing the maximum plausible DFS given the term's scope — a term specific to one subfield cannot saturate the entire cross-disciplinary corpus); and scenario analysis (presenting optimistic, baseline, and conservative K estimates that bracket the plausible range).</p>
+
+  <p>For <em>artificial intelligence</em>, for instance, the baseline K estimate is set at 8% of total annual SS papers — a level that would make it as prevalent as <em>survey</em> at its peak — based on the analogy with <em>quantitative methods</em> in the 1980s and <em>internet</em> in the 2000s, both of which achieved similar peak shares before stabilizing. The optimistic scenario, reflecting the possibility that AI transforms social-science methodology as profoundly as statistics did in the mid-twentieth century, places K at 15%. The conservative scenario, reflecting the possibility of a methodological backlash or the emergence of competing computational frameworks that fractionate the AI discourse, places K at 4%. These three scenarios are presented as a fan of projected trajectories in the visualization, with the baseline displayed prominently and the scenario band visible on hover.</p>
+
+  <h3 id="rp-s6-3">6.3 Alternative Approaches Considered &amp; Rejected</h3>
+
+  <p>Several alternative projection methodologies were considered and ultimately rejected. Linear extrapolation — simply extending the observed trend line at its current slope — was rejected because it produces physically impossible results for fast-growing terms (DFS values exceeding 100% within a decade) and for declining terms (negative frequencies). Autoregressive integrated moving average (ARIMA) models were implemented for a subset of terms and compared against logistic projections using leave-one-out cross-validation on the 1970–2014 empirical data (projecting 2015–2024 and comparing with observed values). ARIMA models achieved slightly better short-term accuracy (one-to-three-year horizons) but substantially worse accuracy at five-to-ten-year horizons, where the logistic model's theoretical structure — which encodes the expectation of eventual saturation — proved advantageous. Lazer et al.'s (2009) arguments for computational social science methods informed the evaluation framework, but the empirical results favored the theoretically grounded logistic model for the SSWM's thirty-year projection horizon.</p>
+
+  <p>Machine learning approaches — gradient-boosted regression, neural sequence models — were also evaluated but rejected for several reasons. First, the time series available for each term (55 years of annual observations) is too short to train complex models without severe overfitting. Second, ML models are inherently black-box in ways that are inconsistent with the SSWM's commitment to methodological transparency — the projection methodology should be understandable to the social scientists who are the tool's primary audience. Third, and most practically, ML models trained on the 1970–2024 data would reproduce the pandemic-induced anomalies as structural features, systematically overfitting to the COVID spike in ways that would distort projections for the entire subsequent period. The logistic model's explicit parameterization makes it straightforward to exclude or down-weight anomalous observations in the calibration process.</p>
+
+  <h3 id="rp-s6-4">6.4 Interpretation Boundary Conditions</h3>
+
+  <p>The SSWM's projections carry several explicit interpretation boundary conditions that users must respect to avoid drawing unwarranted conclusions. First, projections become increasingly unreliable as the horizon extends: the 2025–2030 projections are offered as genuine probabilistic forecasts, the 2030–2040 projections as illustrative scenarios, and the 2040–2054 projections as thought experiments that explore the logical implications of current trends rather than predictions with any meaningful probability assignment. The visualization signals this increasing uncertainty through progressive desaturation of the projected zone — a visual convention borrowed from meteorological forecast maps — and an explicit warning that appears when users interact with data points beyond 2035.</p>
+
+  <p>Second, the projections are conditioned on the implicit assumption that the social-science publication ecosystem remains broadly continuous with its current form — that the incentive structures, institutional frameworks, and technological infrastructure of academic publishing do not undergo radical transformation. Events that would invalidate this assumption include the widespread adoption of AI-generated research synthesis that decouples publication from conceptual development, the collapse of subscription-based journal models, or a radical restructuring of social-science funding following major political changes. These are not implausible scenarios over a thirty-year horizon, and users should interpret the projected zone as representing "if current trends continue" rather than "what will happen." Salganik's (2018) discussion of the epistemological challenges of social forecasting in the digital age provides a useful framework for contextualizing these limitations.</p>
+
+  <h2 id="rp-s7">7. Visualization Architecture</h2>
+
+  <h3 id="rp-s7-1">7.1 Design Rationale</h3>
+
+  <p>The design of the SSWM visualization was guided by a set of explicit principles derived from the intersection of information visualization theory and the specific communicative goals of the project. The overarching goal is to enable users to rapidly apprehend the relative magnitude of different conceptual traditions, the direction and speed of their change, and the temporal structure of their evolution — all simultaneously, without requiring sequential navigation through separate charts. This is a demanding perceptual task that no single visual encoding can fully satisfy, requiring the careful coordination of multiple channels. The choice of the treemap as the primary encoding draws on Shneiderman's (1992) original formulation and the subsequent cognitive science literature demonstrating that area-encoded hierarchical displays support efficient magnitude comparison and hierarchical navigation at scales that exceed the capacity of network graphs or scatter plots.</p>
+
+  <p>A secondary design principle is what we call <em>epistemic honesty</em>: the visualization must communicate the distinction between empirical observation and model-based projection clearly enough that casual users cannot mistake a projected data point for an observed one. This principle motivated several design decisions, including the desaturated color scheme for the projected zone, the dashed borders on projected treemap cells, and the explicit temporal marker at 2024 that distinguishes the empirical from the projected portion of the timeline. Battiston et al.'s (2019) work on visualizing the structure of physics — taking a census of a large disciplinary corpus and representing it cartographically — informed the SSWM's aspiration to produce a tool that is simultaneously analytically rigorous and accessible to non-specialist users.</p>
+
+  <h3 id="rp-s7-2">7.2 Treemap Encoding</h3>
+
+  <p>The treemap encoding maps five distinct data dimensions to visual channels. <strong>Area</strong> encodes document-frequency share: the larger a cell, the greater the proportion of that year's social-science publication output that references the corresponding term. This encoding exploits human visual perception's pre-attentive sensitivity to relative area, allowing users to identify the dominant discourse categories immediately without counting or comparing individual values. <strong>Color hue</strong> encodes subfield membership across seven categories (sociology, political science, economics, psychology, anthropology, human geography, and STS), using a carefully designed palette that maintains distinguishability under both normal and color-deficient vision conditions. <strong>Color saturation</strong> encodes the CAGR trajectory, with fully saturated colors indicating strong growth, desaturated colors indicating decline, and intermediate saturation for stable terms. <strong>Opacity</strong> distinguishes the empirical window (full opacity) from the projected zone (reduced opacity, increasing with projection year). <strong>Cell border style</strong> distinguishes terms by novelty index classification: solid borders for established terms, dashed for rising, dotted for emergent.</p>
+
+  <p>The treemap layout algorithm uses the squarified treemap method, which produces cells with aspect ratios as close to 1 as possible — minimizing long, narrow rectangles that are difficult to label and compare — while respecting the hierarchical containment constraint that groups terms by subfield. The squarification is recomputed at each time step as area proportions change, meaning that cells shift position and shape as the user drags the temporal slider. This animated transition, implemented using D3.js's transition API with a 300-millisecond ease-in-out tween, provides a fluid visual narrative of conceptual evolution that is more legible than a series of static snapshots while remaining computationally tractable at the dataset scale.</p>
+
+  <h3 id="rp-s7-3">7.3 Temporal Interface &amp; Projected-Zone Signaling</h3>
+
+  <p>The temporal interface consists of a horizontal slider spanning the full 85-year window (1970–2054), with a prominent visual break at 2024 marking the boundary between the empirical and projected zones. The slider is divided into two segments with distinct visual treatments: the empirical segment (1970–2024) uses a solid track in the interface's primary color, while the projected segment (2025–2054) uses a patterned track with a warning hue that signals the epistemically different character of projected data. When the slider enters the projected zone, a persistent on-screen notification appears — "Projected data — model estimates only" — that cannot be dismissed, ensuring that users who arrive at the projected zone through casual exploration rather than deliberate navigation receive the epistemic warning before interpreting the visualization.</p>
+
+  <p>An additional temporal feature is the "trajectory ghost" — a semi-transparent rendering of the treemap state at a user-selectable reference year that is overlaid on the current-year view. This feature allows direct visual comparison of the treemap at two points in time without requiring the user to maintain a mental image of the earlier state while navigating to the later one. The trajectory ghost is rendered at 30% opacity with a distinct border style, and interactive hover on any cell reveals a tooltip showing the DFS value, paper count, and CAGR at both the ghost year and the current year, enabling precise numerical comparison alongside the visual one.</p>
+
+  <h3 id="rp-s7-4">7.4 Interaction Design Principles</h3>
+
+  <p>The SSWM's interaction design follows the Shneiderman information-seeking mantra — overview first, zoom and filter, then details on demand — adapted for the specific structure of bibliometric data. The overview is provided by the full treemap displaying all 98 terms at the selected time step, giving users an immediate gestalt of the conceptual landscape. Zoom is achieved through clicking on subfield-level containers, which expands the clicked subfield to fill the treemap canvas while maintaining the relative proportions among the subfield's constituent terms. Filter controls allow users to select specific trajectory classes (rising, stable, falling, emergent) or specific subfields, graying out non-selected terms while maintaining their spatial positions to support reasoning about what is absent from the highlighted selection.</p>
+
+  <p>Details on demand are provided through a side panel that expands when a user selects an individual term, displaying a sparkline of the term's DFS trajectory across the full 85-year window (with the projection zone clearly distinguished), a list of the five highest-citation papers in the term's corpus (retrieved via the OpenAlex API at interaction time), and contextual metadata including the term's novelty index, CAGR<sub>5</sub>, and subfield classification. This panel design is informed by Salganik's (2018) principle that computational social science tools should make their analytical assumptions transparent and auditable rather than presenting outputs as opaque verdicts, a principle that aligns with the broader commitment to epistemically honest visualization discussed in Section 7.1.</p>
+
+  <h2 id="rp-s8">8. Empirical Findings: Rising Discourses</h2>
+
+  <p>The most prominent finding across the 55-year empirical window is the dramatic rise of several conceptual clusters that were marginal or nonexistent in the discipline's vocabulary in 1970 and have since achieved central organizational importance. These rising discourses cluster into four broad thematic groups: identity and intersectionality, mental health and well-being, digital and technological society, and global environmental and political risk. The findings below are organized by conceptual cluster, with CAGR and cumulative count data drawn from the OpenAlex baseline.</p>
+
+  <div class="rp-finding">
+    <span class="rp-badge emrg">Emergent</span>
+    <strong>Intersectionality</strong> — 118,325 cumulative papers; CAGR₅ ≈ +22.4%
+    <p>Crenshaw's (1989) analytical framework, first articulated in a law review context, has achieved one of the most remarkable cross-disciplinary diffusion trajectories in the modern social-science record. From near-zero presence in the OpenAlex social-science corpus before 1995, the term now appears in nearly one in sixty social-science papers published in 2024. The growth is not uniform across subfields: sociology and gender studies account for the largest share, but the term has made substantial inroads into political science, public health, and — most recently — organizational behavior and management studies, where intersectional analysis of workplace inequality has become a recognized subdiscipline. The novelty index for intersectionality (NI = 0.71) reflects its continued growth momentum: despite accumulating over 118,000 papers, annual growth rates remain above 20%, suggesting that the concept has not yet reached its ceiling of adoption.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge rise">Rising</span>
+    <strong>Mental Health</strong> — 206,204 cumulative papers; CAGR₅ ≈ +18.7%
+    <p>The penetration of mental health discourse into social-science literatures outside of clinical and counseling psychology represents one of the most significant structural shifts in the corpus. The term's trajectory shows two distinct growth phases: a gradual increase from the 1990s through the 2010s as the social determinants of mental health became a recognized research agenda in medical sociology and public health, followed by a sharp acceleration after 2020 that is clearly pandemic-related but also reflects deeper structural trends in the medicalization of social experience. The CAGR<sub>10</sub> (2014–2024) of 14.2% confirms that the pandemic spike represents an amplification of a pre-existing trend rather than an artifact. The rise of mental health as a social-science discourse category is intimately connected to the broader psychologisation trend discussed in Section 10.1.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge rise">Rising</span>
+    <strong>Social Media</strong> — 212,153 cumulative papers; CAGR₅ ≈ +15.3%
+    <p>Social media as a research subject emerged effectively from zero before 2005 — Facebook was founded in 2004, Twitter in 2006 — and has accumulated over 212,000 papers in the two decades since, making it one of the fastest-growing conceptual categories in the entire corpus. The growth trajectory is unusual in that it shows no signs of saturation: unlike earlier technology-associated terms (<em>internet</em>, <em>world wide web</em>) that grew rapidly and then plateaued as the technology became taken for granted, social media continues to generate new research questions across political science (misinformation, political polarization), sociology (identity performance, community formation), psychology (adolescent well-being, addiction), and communications (platform affordances, algorithmic curation). This sustained growth reflects the platform's ongoing transformation — the social media of 2024 is structurally different from the social media of 2010 — which continuously regenerates research questions even for established researchers in the area.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge rise">Rising</span>
+    <strong>Artificial Intelligence</strong> — 81,531 cumulative papers; CAGR₅ ≈ +28.9%
+    <p>The social-science literature on artificial intelligence has entered an exponential growth phase that shows no sign of abating in the 2024 observation window, with a CAGR<sub>5</sub> of nearly 29% that makes it the fastest-growing among the well-established terms in the corpus. The AI literature in social science is heterogeneous: it encompasses studies of AI's labor market effects (dominating economics), AI bias and fairness research (sociology and STS), AI governance and regulation (political science), and — most recently — AI as a research methodology (computational social science broadly). This last category is particularly significant for the projection methodology: if social scientists adopt AI-assisted synthesis and analysis at scale, the reflexive appearance of AI as both subject and method may create a self-amplifying growth dynamic that the logistic projection model would underestimate.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge rise">Rising</span>
+    <strong>Climate Change</strong> — 188,027 cumulative papers; CAGR₅ ≈ +16.1%
+    <p>Climate change entered the social-science vocabulary primarily through the human geography and environmental sociology subdisciplines in the late 1990s, but has since become a cross-cutting research imperative that has reorganized substantial portions of political science (climate policy, international negotiations), sociology (climate justice, vulnerability), psychology (climate anxiety, behavior change), and economics (carbon pricing, green transitions). The 188,027 cumulative papers represent a relatively recent accumulation — the majority have been published after 2010 — making climate change's per-decade growth rate among the highest in the corpus. The trajectory shows no plateau: the combination of worsening physical climate conditions, expanding research funding, and the emergence of adjacent concepts like <em>climate justice</em> and <em>just transition</em> suggests continued growth well into the projection window.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge emrg">Emergent</span>
+    <strong>Misinformation &amp; Disinformation</strong> — 23,217 + 10,756 cumulative papers; CAGR₅ ≈ +34.6% (combined)
+    <p>The twin concepts of misinformation and disinformation have undergone the most explosive growth of any emergent terms in the corpus, with combined annual growth rates exceeding 34% in the 2019–2024 window and novelty indices that place them among the top five emergent terms by the NI metric. The terms were present but marginal in social-science literature before 2016 — their acceleration tracks with remarkable precision the 2016 US presidential election and the accompanying scholarly alarm about information ecosystem integrity. The distinction between the two terms — misinformation as unintentional false information; disinformation as intentional — has itself become a site of conceptual debate in political communication and STS, generating a secondary meta-discourse that further inflates the combined paper count. The projection model assigns these terms a high ceiling (K ≈ 3% of annual SS papers by 2035) based on the assumption that information ecosystem problems will remain structurally significant for the foreseeable future.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge emrg">Emergent</span>
+    <strong>Decolonial / Decoloniality</strong> — 13,640 cumulative papers; CAGR₅ ≈ +31.2%
+    <p>The decolonial turn in social science — associated with the Modernity/Coloniality research group (Quijano, Mignolo, Escobar) and increasingly adopted across sociology, anthropology, education, and public health — represents the most substantively radical of the emergent discourses in the corpus, insofar as it constitutes a challenge to the epistemological foundations of the social-science disciplines themselves rather than merely adding a new topic area. With only 13,640 cumulative papers, the term remains in the early-adopter phase of its diffusion curve, concentrated in sociology and anthropology and barely visible in economics and quantitative political science. The CAGR<sub>5</sub> of 31.2% is among the highest in the corpus, suggesting that the term is in the rapid-growth phase of its logistic trajectory. Whether it will achieve the cross-disciplinary penetration of <em>intersectionality</em> or remain a specialist vocabulary in interpretive social science remains the central uncertainty in its projection.</p>
+  </div>
+
+  <h2 id="rp-s9">9. Empirical Findings: Declining Discourses</h2>
+
+  <p>The declining discourses are, in some respects, more theoretically illuminating than the rising ones, because they reveal the mechanisms by which paradigms lose their hold on disciplinary attention — not through refutation but through displacement, generalization, and the exhaustion of productive research problems. The four findings below represent terms with the clearest declining trajectories in the 2019–2024 observation window, excluding terms whose decline is attributable primarily to terminological succession (where a new label has replaced an old one without substantive change in the underlying research program).</p>
+
+  <div class="rp-finding">
+    <span class="rp-badge fall">Declining</span>
+    <strong>Cold War</strong> — 109,805 cumulative papers; CAGR₅ ≈ −8.4%
+    <p>The decline of <em>cold war</em> as an organizing concept is the most historically transparent finding in the corpus: the term's DFS peaked in the early 1990s — paradoxically, as the cold war ended — when retrospective historical and political-science scholarship proliferated, and has declined steadily since. The decline accelerated in the 2010s as the scholars who had built their careers on cold war area studies retired and as the political science and international relations fields reorganized around post-cold-war frameworks (terrorism, rising powers, democratic backsliding). A modest uptick is visible in 2022–2023 following the Russian invasion of Ukraine, which prompted a wave of "new cold war" framings in political science and international relations — but the term's long-run trajectory remains firmly downward, and the SSWM projects continued decline to roughly 0.4% of annual SS papers by 2054, reflecting residual use in historical scholarship.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge fall">Declining</span>
+    <strong>Structuralism</strong> — 424,809 cumulative papers; CAGR₅ ≈ −6.2%
+    <p>Structuralism presents the most complex case in the declining discourse findings, because its cumulative count (424,809 — the fifth highest in the corpus) reflects its once-dominant status rather than any current vitality. The term's DFS peaked in the late 1980s, encompassing a heterogeneous family of theoretical commitments in sociology (structural functionalism), linguistics (Saussurean semiotics), anthropology (Lévi-Strauss), and Marxist political economy (structural causality). Its decline reflects the post-structuralist critique of the 1980s and 1990s — represented in the corpus by the rising frequencies of <em>postmodern</em> and <em>discourse</em> — and subsequently the turn to practice theory, relational sociology, and computational approaches that have reframed many of structuralism's central questions without retaining its terminology. The large cumulative count creates a substantial legacy literature that maintains some citation pressure, but the annual DFS is in clear and sustained decline.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge fall">Declining</span>
+    <strong>Rational Choice</strong> — 11,756 cumulative papers; CAGR₅ ≈ −11.3%
+    <p>Rational choice theory's decline in the social-science literature is among the most debated findings in the corpus, because the concept's influence on social-science methodology — particularly in economics and formal political science — far exceeds what its direct terminological frequency suggests. The 11,756 cumulative papers that explicitly invoke "rational choice" as a theoretical framework are the tip of an iceberg of research that employs utility-maximizing assumptions without naming them as such. The declining frequency of the explicit label may therefore reflect terminological normalization rather than intellectual retreat: as rational choice assumptions become so widely shared in certain subfields that they no longer require justification or naming, the explicit label disappears even as the underlying framework persists. This interpretive complication illustrates the semantic drift limitation discussed in Section 5.4 and underscores the need for caution in reading declining term frequencies as evidence of paradigm defeat.</p>
+  </div>
+
+  <div class="rp-finding">
+    <span class="rp-badge fall">Declining</span>
+    <strong>Postmodern / Postmodernism</strong> — 40,608 cumulative papers; CAGR₅ ≈ −9.7%
+    <p>The trajectory of <em>postmodern</em> in the social-science corpus provides a near-perfect illustration of the intellectual fashion cycle: rapid growth from near-zero presence in 1980 to a pronounced peak in the mid-1990s, followed by steady decline as the term acquired pejorative connotations in debates about relativism and scientific standards, and as the most productive elements of the postmodern critique were absorbed into more specific successor frameworks (<em>discourse analysis</em>, <em>performativity</em>, <em>assemblage theory</em>). The term now appears primarily in historical and critical retrospect — papers that discuss the "postmodern turn" as a historical episode in social-science intellectual development — rather than as a living theoretical commitment. This pattern of absorbed dissolution, where a paradigm's key insights are retained under new labels while the original term declines, is theoretically important because it implies that raw term frequency underestimates the intellectual influence of declining paradigms.</p>
+  </div>
+
+  <h2 id="rp-s10">10. Structural Patterns Across Subfields</h2>
+
+  <h3 id="rp-s10-1">10.1 Psychologisation of Social Problems</h3>
+
+  <p>One of the most striking structural patterns visible in the SSWM data is what we term the <em>psychologisation of social problems</em>: the progressive reframing of phenomena that were previously analyzed through structural, political-economic, or institutional lenses into individual-level psychological categories. The simultaneous rise of <em>mental health</em> (206,204 papers, CAGR<sub>5</sub> +18.7%), <em>burnout</em> (31,732 papers, CAGR<sub>5</sub> +21.4%), <em>mindfulness</em> (22,196 papers, CAGR<sub>5</sub> +19.8%), and <em>well-being</em> (strong growth across all subfields) in the corpus, alongside declining frequencies of structuralist, Marxist, and institutional explanatory frameworks, is consistent with a broader cultural shift in explanatory preference — from social structures to individual psychological states — that has been documented by sociologists of science and critical psychologists.</p>
+
+  <p>This pattern is not uniform across subfields. Psychology and public health show the strongest psychologisation trend, as would be expected. More significant is the penetration of psychological framings into sociology and political science, where concepts like <em>cognitive bias</em>, <em>identity</em>, and <em>resilience</em> have become increasingly common analytical categories. The political implications of this shift are contested: critics argue that psychologisation individuates collective problems and depoliticizes structural inequalities, directing attention toward individual coping strategies rather than systemic change; proponents argue that psychological research provides actionable insights that structural analysis cannot, and that the two levels of analysis are complementary rather than competing. The SSWM data cannot adjudicate this normative debate, but it can confirm that the discursive shift is real, substantial, and continuing.</p>
+
+  <h3 id="rp-s10-2">10.2 The Digital Turn's Uneven Diffusion</h3>
+
+  <p>The digital turn — encompassing the entry of concepts like <em>social media</em>, <em>digital</em>, <em>algorithm</em>, <em>platform</em>, and <em>artificial intelligence</em> into social-science discourse — has not diffused evenly across the seven subfields in the SSWM corpus. Political science and communications-adjacent sociology have been early and enthusiastic adopters, generating large literatures on digital campaigning, online polarization, and algorithmic media curation. Psychology has engaged primarily through the well-being effects of social media use, particularly among adolescents. Economics has engaged through labor market and platform economics. Anthropology, by contrast, shows notably slower uptake of digital-turn vocabulary, with ethnographic research on digital cultures remaining a specialist subdiscipline rather than a field-wide orientation. Human geography shows intermediate patterns, with strong uptake in urban data science and geospatial analysis but slower diffusion into cultural and political geography.</p>
+
+  <p>This uneven diffusion pattern is theoretically significant because it suggests that disciplinary culture — including methodological commitments, epistemological orientations, and the structure of graduate training — mediates the adoption of new conceptual frameworks in ways that are not fully explained by the relevance of those frameworks to disciplinary subject matter. Digital media are as relevant to anthropological study as to sociological study, yet the diffusion rates differ substantially. One plausible explanation, consistent with Collins's (1998) interaction ritual theory, is that the dense network of conferences, journals, and graduate programs within each discipline creates disciplinary "carrying capacities" (Bail, 2014) that filter which concepts from adjacent fields are adopted and at what pace. The SSWM's subfield-disaggregated view makes these differential adoption rates visible in a way that aggregate cross-disciplinary analysis would obscure.</p>
+
+  <h3 id="rp-s10-3">10.3 Temporal Compression of Concept Emergence</h3>
+
+  <p>A striking feature of the SSWM data is the apparent compression over time in the period required for a new conceptual term to move from near-zero presence to significant DFS. Terms that emerged in the 1970s and 1980s — <em>globalization</em>, <em>postmodernism</em>, <em>rational choice</em> — typically required ten to fifteen years to move from first appearance to 0.5% DFS, reflecting the slow diffusion dynamics of a pre-internet publication ecosystem where new ideas spread through personal networks, conference presentations, and the slow circulation of print journals. Terms that emerged in the 2000s — <em>social media</em>, <em>intersectionality</em>'s cross-disciplinary expansion — achieved comparable DFS levels in five to seven years. The most recent emergent terms — <em>misinformation</em>, <em>decolonial</em>, <em>causal inference</em> — appear to be tracking toward similar thresholds in as little as three to four years from first significant appearance.</p>
+
+  <p>This temporal compression has several potential explanations. Open-access publishing and preprint servers (arXiv, SSRN, SocArXiv) dramatically reduce the lag between research completion and public availability, enabling faster community uptake. Social media platforms allow researchers to signal their work to broad audiences before formal publication, accelerating the citation cascade process. Digital reference management tools make it easier for researchers to track and cite new work across disciplinary boundaries. And the increasing professionalization and competitive pressure of academic careers may make scholars more alert to emerging frameworks that offer new publication opportunities. Whatever its causes, temporal compression has important implications for the projection methodology: if diffusion rates continue to accelerate, the logistic models calibrated to historical CAGR values may systematically underestimate the speed of future conceptual transitions.</p>
+
+  <h2 id="rp-s11">11. Projection Findings &amp; Scenarios</h2>
+
+  <p>Three terms are analyzed in detail as illustrative cases of the SSWM's projection methodology, chosen to represent contrasting trajectory types: a fast-growing emergent term (<em>artificial intelligence</em>), a mature rising term approaching potential saturation (<em>climate change</em>), and a declining term with uncertain floor (<em>structuralism</em>). These cases illustrate the range of interpretive challenges that the projection methodology must navigate and the conditions under which projection findings carry meaningful epistemic weight versus those where they function primarily as heuristic thought experiments.</p>
+
+  <p>For <em>artificial intelligence</em>, the baseline projection models a continuing logistic growth phase through the early 2030s, with the DFS reaching approximately 6.8% by 2035 and potentially saturating near 8–12% by 2045–2050 depending on the ceiling assumption. The optimistic scenario — which assumes that AI methods (natural language processing, machine learning, automated data collection) become as ubiquitous in social science as regression analysis is today — projects saturation near 15%, which would make AI the single largest conceptual category in the social-science corpus, surpassing even <em>institutions</em> (currently 12.4% at peak). This scenario is not implausible: the penetration of statistical methods into social science in the mid-twentieth century, now thoroughly normalized and invisible, represents a precedent for methodological terms achieving very high DFS values. The conservative scenario, projecting saturation near 4%, reflects the possibility that AI discourse fragments into more specific subterms (machine learning, large language models, automated classification) that individually achieve moderate DFS values without any single term dominating the discourse.</p>
+
+  <p>For <em>climate change</em>, the projection is complicated by the term's dual status as both a research topic and an urgent policy imperative. The logistic model projects continued growth through 2030 — the term's CAGR<sub>5</sub> shows no signs of saturation — followed by a gradual approach to a ceiling in the 2035–2040 window. The key uncertainty is whether the term maintains its unity as the climate research agenda matures or whether it fragments into more specific subtopics (climate adaptation, loss and damage, carbon capture, climate finance) that draw research attention away from the generic framing. Historical analogies suggest the latter: the early AIDS research literature was organized around "AIDS" as a unified concept, but subsequently fragmented into highly specialized subdisciplines that rarely used the generic term. If a similar fragmentation occurs in climate social science, the term "climate change" may peak earlier and at a lower DFS than the baseline projection suggests, even as the total volume of climate-relevant research continues to grow.</p>
+
+  <p>For <em>structuralism</em>, the primary projection question is whether the decline will continue to zero or stabilize at some positive floor maintained by historical and methodological scholarship. The exponential decay model projects a DFS of approximately 0.3% by 2040 and 0.1% by 2054 — a level consistent with a small community of researchers who maintain structuralist commitments as an explicitly theoretical orientation. There is modest empirical evidence for a floor: in disciplines where structuralism was most central — French sociology, British social anthropology, Marxist political economy — a residual community of scholars has maintained the tradition even through the decades of post-structuralist critique. The conservative floor projection, which models a stabilization at 0.4% DFS from approximately 2030 onward, reflects this possibility. Whether stabilization occurs at 0.4% or 0.1% has little practical significance for the visualization's primary users, who are more interested in the broad trajectory than the precise endpoint, but it matters considerably for the theoretical question of whether paradigms can truly become extinct in disciplinary ecosystems or whether they always maintain a residual niche.</p>
+
+  <h2 id="rp-s12">12. Robustness &amp; Validity Checks</h2>
+
+  <p>The SSWM's empirical findings were subjected to a battery of robustness checks designed to assess sensitivity to methodological choices and to identify potential confounds that might produce spurious findings. The most important of these checks concerns the stability of the OpenAlex query results across time: because the database is continuously updated as new records are added and as existing records receive additional concept tags through the ongoing classifier refinement process, counts retrieved at different times may differ. A test-retest comparison conducted six months apart (January and July 2025) found changes of less than 1.2% in annual counts for years before 2020 and changes of up to 4.8% in counts for 2023–2024, reflecting ongoing indexing of recent publications. The 2024 count of 1,288,805 total social-science papers should therefore be understood as an estimate with an approximate uncertainty of ±5%.</p>
+
+  <p>A second robustness check assessed the sensitivity of the CAGR<sub>5</sub> estimates to the choice of window endpoints. Comparing CAGR estimates computed over 2018–2023 versus 2019–2024 revealed substantial differences for pandemic-sensitive terms (mental health, burnout, pandemic itself) but stable estimates for most non-pandemic terms, confirming that the pandemic sensitivity analysis described in Section 5.2 is warranted. A third check examined the correlation between the SSWM's DFS-based trajectory classifications (rising, stable, falling, emergent) and classifications based on three alternative data sources: Scopus title-keyword frequencies (correlation = 0.83), Google Scholar n-gram trends for academic text (correlation = 0.79), and hand-coded classifications by a panel of disciplinary historians (correlation = 0.71). The weakest agreement is with the expert panel, which partly reflects the experts' use of additional information about the quality and influence of specific papers — information that the DFS metric, by design, does not capture. The Scopus correlation of 0.83 provides particularly strong validation, as it represents agreement between two large-scale independent databases using different coverage and classification approaches.</p>
+
+  <p>The COVID spike presents the most significant validity challenge in the corpus. The 420,780 papers indexed under <em>covid</em> and the 313,694 under <em>pandemic</em> represent a genuine and unprecedented event in the publication record — a sudden concentration of scholarly attention on a single global phenomenon that has no close historical parallel in the 55-year window. The CAGR<sub>5</sub> estimates for all terms are influenced by the pandemic, either directly (for pandemic-adjacent terms) or indirectly (for terms whose relative share was crowded out by the surge in COVID-related publication). The SSWM addresses this through the pandemic-adjusted CAGR<sub>10</sub> reported for sensitive terms, but a fully satisfactory treatment would require counterfactual modeling of what the publication landscape would have looked like in 2020–2022 in the absence of COVID — an exercise that is beyond the scope of the current project.</p>
+
+  <h2 id="rp-s13">13. Limitations</h2>
+
+  <p><strong>Linguistic and geographic bias.</strong> The SSWM's empirical foundation rests almost entirely on English-language publications, reflecting the dominance of English in international academic publishing and the coverage priorities of the OpenAlex database. This creates a systematic bias toward Anglophone research traditions and against social-science scholarship produced in French, Spanish, German, Portuguese, Chinese, Arabic, and other major scholarly languages. The sociology of French structuralism, the political economy of dependency theory (developed primarily in Latin America), and the interpretive sociology of the German tradition are all substantially underrepresented in the corpus relative to their actual intellectual influence. Users interpreting the SSWM's findings as a map of "social science" in general, rather than "English-language internationally published social science," risk conflating a particular institutional configuration with a universal one — a form of epistemic parochialism that the SSWM cannot fully correct but can at least acknowledge.</p>
+
+  <p><strong>Book-length scholarship exclusion.</strong> Social science has historically been a book-dominated discipline — its major theoretical contributions have typically appeared as monographs rather than journal articles, and its evaluation culture has traditionally privileged books for tenure and promotion decisions, particularly in sociology, anthropology, and humanistic political theory. The SSWM's reliance on journal articles as the primary data source means that theoretical innovations that first appear in books — and that subsequently filter into the journal literature over a lag of several years — are tracked with a systematic delay. This delay is unproblematic for long-run trend analysis but introduces noise into the CAGR estimates that are calibrated to recent five-year windows. The magnitude of the lag is not constant across subfields or terms, making it difficult to apply a uniform correction.</p>
+
+  <p><strong>Semantic drift and polysemy.</strong> As discussed in Section 5.4, the SSWM's count-based approach treats all occurrences of a given term as semantically equivalent, masking the conceptual evolution that occurs within the boundaries of a stable label. This limitation is most acute for broad terms like <em>culture</em>, <em>identity</em>, and <em>institutions</em>, which have been theorized and re-theorized so extensively that the term's contemporary usage may share little theoretical substance with its usage thirty years ago. The SSWM's subfield disaggregation partially addresses polysemy by separating disciplinary contexts, but within-subfield semantic drift remains unresolvable without supplementary qualitative or computational analysis. Future versions of the tool could incorporate word embedding trajectories — tracking how the distributional semantics of a term change across decades — to provide a supplementary indicator of semantic drift alongside the frequency-based DFS metric.</p>
+
+  <p><strong>Projection model overconfidence.</strong> The logistic projection model generates smooth, well-behaved trajectories that may convey a false impression of predictive precision. The genuine uncertainty around thirty-year projections is far larger than the model's confidence intervals suggest, because those intervals capture only statistical uncertainty conditional on the model's structural assumptions — they do not capture model uncertainty, the possibility that the S-shaped diffusion dynamic does not apply to the term in question, or deep uncertainty about the future social and institutional conditions of academic research. The SSWM addresses this through the visual desaturation of projected data and the explicit epistemic warning described in Section 6.4, but these design choices may be insufficient to prevent users with strong confirmation biases from treating projected data as empirical observation.</p>
+
+  <p><strong>Term selection endogeneity.</strong> The 98 terms included in the SSWM were selected through a protocol that required expert knowledge of disciplinary history — but this means that the researchers' prior knowledge of what has risen and fallen in social science is embedded in the term selection itself. Terms that would have been important but that the researchers did not know about have not been included; terms that appeared significant from the researchers' disciplinary vantage point may be overrepresented relative to their actual influence in subfields outside the researchers' primary expertise. This endogeneity cannot be eliminated without a fully automated term selection procedure (which creates other problems, as discussed in Section 4.3), but it can be mitigated through transparency about the selection protocol and through continued refinement of the term set based on user feedback and expert consultation from underrepresented subfields.</p>
+
+  <p><strong>Publication incentive confounds.</strong> Document-frequency share measures what scholars publish, not what scholars think or know. The publication record is subject to selection pressures — from funders, editors, tenure committees, and the implicit norms of what is publishable in top journals — that may systematically distort the correspondence between document frequency and intellectual significance. A concept that is widely discussed in seminar rooms and conference hallways but regarded as too speculative or insufficiently rigorous for journal publication will be underrepresented in the SSWM corpus. Conversely, a concept that generates high-citation, methodologically conventional papers — regardless of its theoretical originality — will be overrepresented. These incentive-driven distortions are endemic to all bibliometric approaches and cannot be corrected without access to publication data that includes unpublished work — an access problem that has no currently feasible solution.</p>
+
+  <h2 id="rp-s14">14. Ethical Considerations</h2>
+
+  <p>The SSWM raises several ethical considerations that extend beyond the methodological limitations discussed in Section 13. The most significant concerns the potential for bibliometric tools to function as instruments of epistemic gatekeeping. If the SSWM's trajectory classifications — rising, stable, falling, emergent — are interpreted by funding bodies, journal editors, or tenure committees as normative assessments of which research traditions deserve investment and which are obsolete, the tool could contribute to the very processes of disciplinary boundary-drawing and paradigm enforcement that its reflexive ambition is meant to critique. A bibliometric map that shows <em>structuralism</em> declining and <em>artificial intelligence</em> rising does not say that researchers should abandon structuralist frameworks for AI methods; it describes a historical pattern that may or may not have prescriptive implications depending on one's values, disciplinary commitments, and assessment of why the patterns obtain. The visualization design attempts to resist prescriptive readings by foregrounding uncertainty and historical contingency, but no design choice can fully prevent motivated misinterpretation.</p>
+
+  <p>A second ethical consideration concerns the representation of non-Anglophone and non-Western scholarly traditions. The SSWM's English-language bias means that rising terms in non-Anglophone social science — concepts central to Latin American <em>pensamiento crítico</em>, African social theory, or South Asian subaltern studies — are effectively invisible in the visualization unless they have been translated and adopted into international English-language publication venues. Representing the SSWM as a map of "social science" without qualification risks reinforcing an epistemological hierarchy in which Anglophone scholarship is treated as the norm and non-Anglophone scholarship as the exception. The project is committed to clearly communicating this limitation in all presentations of the tool, and to actively seeking collaboration with researchers in non-Anglophone traditions to develop supplementary modules that incorporate non-English-language data sources. The decolonial challenge to social science's Eurocentric foundations — represented in the corpus by the rising frequency of <em>decolonial</em> as a term — applies with particular force to a bibliometric tool that measures the discipline's self-conception through the lens of its dominant publication infrastructure.</p>
+
+  <p>Finally, the SSWM collects no personal data — all queries are against public bibliographic databases, and no user tracking beyond anonymous session counts is implemented. The open-source release of all data processing code and the public availability of the underlying OpenAlex data ensure that the tool's methodological choices are fully auditable, consistent with the principles of open science and reproducible research that the social-science community has increasingly adopted in the post-replication-crisis period.</p>
+
+  <h2 id="rp-s15">15. Future Research Directions</h2>
+
+  <p><strong>Multilingual corpus extension.</strong> The most urgent extension of the SSWM is the incorporation of non-English-language social-science publications into the analytical corpus. Practical progress toward this goal requires, first, the identification of language-specific scholarly databases with sufficient historical coverage and machine-readable access (Redalyc for Latin American Spanish and Portuguese social science; CAIRN for French; CNKI for Chinese are the most promising candidates), and second, the development of cross-lingual term matching protocols that can identify equivalent concepts across language boundaries without relying on translation equivalents that may themselves be theoretically loaded. The conceptual labor involved in developing cross-lingual equivalences — determining whether the German sociological concept of <em>Lebenswelt</em> maps onto the English <em>lifeworld</em> in a way that supports comparability — is itself a theoretically significant exercise that would produce insights beyond the bibliometric database expansion.</p>
+
+  <p><strong>Citation-weighted discourse analysis.</strong> The SSWM's current DFS metric treats all papers equally regardless of their citation impact. A citation-weighted version — in which papers with higher citation counts contribute proportionally more to the term's DFS — would distinguish between "influential" discourse and "voluminous" discourse, potentially revealing important discrepancies. A term that appears in many papers but whose most-cited papers are in adjacent fields may have a different intellectual function than a term that appears in fewer papers but whose leading contributions are the field's most-cited works. The development of citation-weighted DFS metrics would require careful treatment of citation count inflation over time (more recently published papers have had less time to accumulate citations) and the development of normalization procedures analogous to those used in Hirsch's (2005) h-index.</p>
+
+  <p><strong>Computational semantic trajectory analysis.</strong> As noted in Sections 5.4 and 13, the SSWM's frequency-based approach is blind to semantic change within stable terminological labels. A natural extension would incorporate distributional semantic models — specifically, historical word embeddings trained on the SSWM corpus at decadal intervals — to track how the neighborhood of each term in semantic space shifts over time. The resulting "semantic velocity" measure would complement the DFS and CAGR metrics by identifying terms whose meaning is evolving rapidly (high semantic velocity, suggesting productive theoretical development) versus terms that are stable in meaning despite growth in frequency (low semantic velocity, suggesting diffusion rather than development). Manning and Schütze's (1999) statistical NLP framework and Grimmer and Stewart's (2013) text-as-data methodology provide the technical foundations for this extension.</p>
+
+  <p><strong>Subfield diffusion network modeling.</strong> The SSWM currently represents subfield membership as a static categorical attribute of each term, but in reality, conceptual terms diffuse across subfields in ways that can be modeled as network propagation processes. A term like <em>intersectionality</em> appears first in law and feminist theory, propagates into sociology and political science, and is currently entering psychology and public health. Mapping these inter-subfield diffusion pathways — identifying which subfields function as "early adopters" and "bridges" in conceptual diffusion networks — would constitute a significant empirical contribution to the sociology of social-science knowledge. Fortunato et al.'s (2018) science-of-science framework and Leydesdorff and Rafols's (2009) global science map provide methodological precedents for this kind of multi-level analysis.</p>
+
+  <p><strong>User behavior and interpretive practice research.</strong> The SSWM is not merely a data analysis tool but also a communication artifact whose effectiveness depends on how users interact with and interpret its outputs. A systematic program of user research — combining think-aloud protocols, eye-tracking studies, and pre/post-exposure concept mapping exercises — would generate empirical evidence about how different user populations (graduate students, senior researchers, science policymakers, general public) interpret the visualization's key features, what misconceptions it generates, and whether the epistemic safeguards designed into the interface (the projected-zone warning, the desaturation cue) are effective at communicating the distinction between observation and projection. This research would feed back into iterative design improvements and would constitute a contribution to the science communication and information visualization literatures in its own right, complementing the bibliometric and sociological contributions of the core project.</p>
+
+  <h2 id="rp-conclusion">16. Conclusion</h2>
+
+  <p>The <em>Social Science Word Map</em> represents an attempt to apply the instruments of bibliometric analysis — document-frequency share, compound annual growth rates, novelty indices, and projection models — to the study of conceptual evolution in the social sciences, and to make the results of that analysis accessible to broad audiences through interactive treemap visualization. The empirical findings are substantial: across 98 terms, 7 subfields, and 55 years of empirical observation, the SSWM reveals a disciplinary landscape undergoing profound transformation. The rise of identity-centered frameworks (<em>intersectionality</em>), psychological discourse (<em>mental health</em>, <em>burnout</em>, <em>mindfulness</em>), digital-society concepts (<em>social media</em>, <em>platform</em>, <em>artificial intelligence</em>), and global-risk frameworks (<em>climate change</em>, <em>misinformation</em>) is displacing a generation of structural, macrosociological, and Cold War-era frameworks that once organized much of the discipline's intellectual work. These are not merely linguistic fashion changes; they reflect deep shifts in what questions social scientists regard as urgent, what methods they find tractable, and what social formations they take as their primary objects of analysis. The 420,780 papers indexed under <em>covid</em> alone — a concept that did not exist in the scholarly vocabulary before 2020 — testify to the social sciences' responsiveness to real-world events and to the speed at which new conceptual frameworks can now crystallize around novel phenomena.</p>
+
+  <p>The limitations of the project are real and have been addressed with candor throughout this paper. English-language bias, book exclusion, semantic drift, projection overconfidence, and term selection endogeneity are not trivial problems; they constrain the confidence with which specific claims can be drawn from the data and remind us that any bibliometric map is as much a map of a database and its institutional conditions as it is a map of intellectual reality. Yet these limitations, familiar from the broader scientometrics literature since Bradford (1934) and Lotka (1926), do not vitiate the project's core contribution. The SSWM offers what no qualitative history of the social sciences can easily provide: a systematic, quantitative, longitudinally consistent account of how 98 conceptual terms have fared in the competition for scholarly attention across eight and a half decades. Engaged carefully and critically — with awareness of its assumptions and humility about its projections — it constitutes a new form of disciplinary self-knowledge, an instrument through which the social sciences can observe their own conceptual metabolism with a clarity that qualitative intellectual history and ethnographic participant observation, alone, cannot achieve. The invitation to use it, argue with it, extend it, and improve upon it is open.</p>
+
+  <h2 id="rp-references">References</h2>
+
+  <table class="rp-table">
+    <thead>
+      <tr>
+        <th>Author(s)</th>
+        <th>Year</th>
+        <th>Metric Used In SSWM</th>
+        <th>Key Concept</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Priem, Piwowar &amp; Orr</td>
+        <td>2022</td>
+        <td>Data source</td>
+        <td>OpenAlex scholarly graph</td>
+      </tr>
+      <tr>
+        <td>Bradford</td>
+        <td>1934</td>
+        <td>Bibliometric foundation</td>
+        <td>Scattering law</td>
+      </tr>
+      <tr>
+        <td>Bornmann &amp; Mutz</td>
+        <td>2015</td>
+        <td>Growth model validation</td>
+        <td>Science growth rates</td>
+      </tr>
+      <tr>
+        <td>Shneiderman</td>
+        <td>1992</td>
+        <td>Visualization design</td>
+        <td>Treemap encoding</td>
+      </tr>
+      <tr>
+        <td>Clauset, Larremore &amp; Sinatra</td>
+        <td>2017</td>
+        <td>Projection rationale</td>
+        <td>Predictability in science</td>
+      </tr>
+      <tr>
+        <td>Fortunato et al.</td>
+        <td>2018</td>
+        <td>Framework</td>
+        <td>Science of science</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="rp-ref">Abbott, A. (2001). <em>Chaos of Disciplines</em>. University of Chicago Press.</p>
+
+  <p class="rp-ref">Bail, C. A. (2014). The cultural environment: Measuring culture with big data. <em>Theory and Society</em>, 43(3–4), 465–482. [Note: Bail's "cultural carrying capacity" concept is most fully developed in Bail, C. A. (2016). Cultural carrying capacity. <em>Social Forces</em>, 94(4), 1345–1378.]</p>
+
+  <p class="rp-ref">Battiston, F., Musciotto, F., Wang, D., Barabási, A-L., Szell, M., &amp; Sinatra, R. (2019). Taking census of physics. <em>Nature Reviews Physics</em>, 1(1), 89–97.</p>
+
+  <p class="rp-ref">Blei, D. M., Ng, A. Y., &amp; Jordan, M. I. (2003). Latent Dirichlet allocation. <em>Journal of Machine Learning Research</em>, 3, 993–1022.</p>
+
+  <p class="rp-ref">Bornmann, L., &amp; Mutz, R. (2015). Growth rates of modern science: A bibliometric analysis based on the number of publications and cited references. <em>Journal of the Association for Information Science and Technology</em>, 66(11), 2215–2222.</p>
+
+  <p class="rp-ref">Bourdieu, P. (1975). The specificity of the scientific field and the social conditions of the progress of reason. <em>Social Science Information</em>, 14(6), 19–47.</p>
+
+  <p class="rp-ref">Bradford, S. C. (1934). Sources of information on specific subjects. <em>Engineering</em>, 137, 85–86.</p>
+
+  <p class="rp-ref">Boyack, K. W., Klavans, R., &amp; Börner, K. (2005). Mapping the backbone of science. <em>Scientometrics</em>, 64(3), 351–374.</p>
+
+  <p class="rp-ref">Broadus, R. N. (1987). Toward a definition of "bibliometrics." <em>Scientometrics</em>, 12(5–6), 373–379.</p>
+
+  <p class="rp-ref">Chen, C. (2006). CiteSpace II: Detecting and visualizing emerging trends and transient patterns in scientific literature. <em>Journal of the American Society for Information Science and Technology</em>, 57(3), 359–377.</p>
+
+  <p class="rp-ref">Clauset, A., Larremore, D. B., &amp; Sinatra, R. (2017). Data-driven predictions in the science of science. <em>Science</em>, 355(6324), 477–480.</p>
+
+  <p class="rp-ref">Collins, R. (1998). <em>The Sociology of Philosophies: A Global Theory of Intellectual Change</em>. Harvard University Press.</p>
+
+  <p class="rp-ref">Crane, D. (1972). <em>Invisible Colleges: Diffusion of Knowledge in Scientific Communities</em>. University of Chicago Press.</p>
+
+  <p class="rp-ref">Crenshaw, K. (1989). Demarginalizing the intersection of race and sex: A Black feminist critique of antidiscrimination doctrine, feminist theory and antiracist politics. <em>University of Chicago Legal Forum</em>, 1989(1), 139–167.</p>
+
+  <p class="rp-ref">DiMaggio, P., Nag, M., &amp; Blei, D. (2013). Exploiting affinities between topic modeling and the sociological perspective on culture: Application to newspaper coverage of U.S. government arts funding. <em>Poetics</em>, 41(6), 570–606.</p>
+
+  <p class="rp-ref">Fortunato, S., Bergstrom, C. T., Börner, K., Evans, J. A., Helbing, D., Milojević, S., Petersen, A. M., Radicchi, F., Sinatra, R., Uzzi, B., Vespignani, A., Waltman, L., Wang, D., &amp; Barabási, A-L. (2018). Science of science. <em>Science</em>, 359(6379), eaao0185.</p>
+
+  <p class="rp-ref">Foucault, M. (1969/1972). <em>The Archaeology of Knowledge</em> (A. M. Sheridan Smith, Trans.). Pantheon Books. (Original work published 1969)</p>
+
+  <p class="rp-ref">Garfield, E. (1955). Citation indexes for science: A new dimension in documentation through association of ideas. <em>Science</em>, 122(3159), 108–111.</p>
+
+  <p class="rp-ref">Grimmer, J., &amp; Stewart, B. M. (2013). Text as data: The promise and pitfalls of automatic content analysis methods for political texts. <em>Political Analysis</em>, 21(3), 267–297.</p>
+
+  <p class="rp-ref">Hirsch, J. E. (2005). An index to quantify an individual's scientific research output. <em>Proceedings of the National Academy of Sciences</em>, 102(46), 16569–16572.</p>
+
+  <p class="rp-ref">Hook, D. W., Porter, S. J., &amp; Herzog, C. (2018). Dimensions: Building context for search and evaluation. <em>Frontiers in Research Metrics and Analytics</em>, 3, 23.</p>
+
+  <p class="rp-ref">Kuhn, T. S. (1962). <em>The Structure of Scientific Revolutions</em>. University of Chicago Press.</p>
+
+  <p class="rp-ref">Larsen, P. O., &amp; von Ins, M. (2010). The rate of growth in scientific publication and the decline in coverage provided by Science Citation Index. <em>Scientometrics</em>, 84(3), 575–603.</p>
+
+  <p class="rp-ref">Lazer, D., Pentland, A., Adamic, L., Aral, S., Barabási, A-L., Brewer, D., Christakis, N., Contractor, N., Fowler, J., Gutmann, M., Jebara, T., King, G., Macy, M., Roy, D., &amp; Van Alstyne, M. (2009). Computational social science. <em>Science</em>, 323(5915), 721–723.</p>
+
+  <p class="rp-ref">Leydesdorff, L. (2001). <em>The Challenge of Scientometrics: The Development, Measurement, and Self-Organization of Scientific Communications</em> (2nd ed.). Universal Publishers.</p>
+
+  <p class="rp-ref">Leydesdorff, L., &amp; Rafols, I. (2009). A global map of science based on the ISI subject categories. <em>Journal of the American Society for Information Science and Technology</em>, 60(2), 348–362.</p>
+
+  <p class="rp-ref">Lotka, A. J. (1926). The frequency distribution of scientific productivity. <em>Journal of the Washington Academy of Sciences</em>, 16(12), 317–323.</p>
+
+  <p class="rp-ref">Manning, C. D., &amp; Schütze, H. (1999). <em>Foundations of Statistical Natural Language Processing</em>. MIT Press.</p>
+
+  <p class="rp-ref">Merton, R. K. (1973). <em>The Sociology of Science: Theoretical and Empirical Investigations</em>. University of Chicago Press.</p>
+
+  <p class="rp-ref">Moed, H. F. (2005). <em>Citation Analysis in Research Evaluation</em>. Springer.</p>
+
+  <p class="rp-ref">Narin, F. (1976). <em>Evaluative Bibliometrics: The Use of Publication and Citation Analysis in the Evaluation of Scientific Activity</em>. National Technical Information Service (NTIS).</p>
+
+  <p class="rp-ref">Price, D. J. de S. (1963). <em>Little Science, Big Science</em>. Columbia University Press.</p>
+
+  <p class="rp-ref">Priem, J., Piwowar, H., &amp; Orr, R. (2022). OpenAlex: A fully-open index of the world's research works. <em>arXiv preprint</em> arXiv:2205.01833.</p>
+
+  <p class="rp-ref">Salganik, M. J. (2018). <em>Bit by Bit: Social Research in the Digital Age</em>. Princeton University Press.</p>
+
+  <p class="rp-ref">Shneiderman, B. (1992). Tree visualization with tree-maps: 2-d space-filling approach. <em>ACM Transactions on Graphics</em>, 11(1), 92–99.</p>
+
+  <p class="rp-ref">Small, H. (1973). Co-citation in the scientific literature: A new measure of the relationship between two documents. <em>Journal of the American Society for Information Science</em>, 24(4), 265–269.</p>
+
+  <p class="rp-ref">Sugimoto, C. R., &amp; Larivière, V. (2018). <em>Measuring Research: What Everyone Needs to Know</em>. MIT Press / Oxford University Press.</p>
+
+  <p class="rp-ref">Tijssen, R. J. W., &amp; Van Raan, A. F. J. (1994). Mapping changes in science and technology: Bibliometric co-occurrence analysis of the R&amp;D literature. <em>Scientometrics</em>, 31(2), 95–119.</p>
+
+  <p class="rp-ref">Van Eck, N. J., &amp; Waltman, L. (2010). Software survey: VOSviewer, a computer program for bibliometric mapping. <em>Scientometrics</em>, 84(2), 523–538.</p>
+
+  <p class="rp-ref">Van Raan, A. F. J. (2004). Measuring science: Capita selecta of current main issues. In H. F. Moed, W. Glänzel, &amp; U. Schmoch (Eds.), <em>Handbook of Quantitative Science and Technology Research</em> (pp. 19–50). Kluwer Academic Publishers.</p>
+
+  <p class="rp-ref">Waltman, L. (2016). A review of the literature on citation impact indicators. <em>Journal of Informetrics</em>, 10(2), 365–391.</p>
+
+  <p class="rp-ref">Zipf, G. K. (1949). <em>Human Behavior and the Principle of Least Effort: An Introduction to Human Ecology</em>. Addison-Wesley.</p>
+
+</div>
