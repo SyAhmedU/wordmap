@@ -162,6 +162,28 @@
   }
   .play:hover { background: var(--bg-3); border-color: var(--accent); }
   .play svg { fill: var(--text); width: 14px; height: 14px; }
+  .speed {
+    min-width: 38px; height: 32px; padding: 0 10px; border-radius: 999px;
+    background: var(--bg-2); border: 1px solid var(--line);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    font-size: 12px; font-weight: 700; color: var(--text-dim);
+    cursor: pointer; user-select: none; letter-spacing: -.02em;
+    transition: all .14s ease; flex: 0 0 auto;
+  }
+  .speed:hover { background: var(--bg-3); border-color: var(--accent); color: var(--text); }
+  .speed.active { color: var(--accent); border-color: var(--accent); }
+  .kbd-hint {
+    font-size: 10px; color: var(--text-faint); letter-spacing: .08em;
+    text-transform: uppercase; flex: 0 0 auto;
+  }
+  .kbd-hint kbd {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-bottom-width: 2px; border-radius: 4px;
+    padding: 1px 5px; font-size: 10px; font-family: inherit;
+    color: var(--text-dim); margin: 0 2px;
+  }
+  @media (max-width: 880px) { .kbd-hint { display: none; } }
 
   .year-label {
     font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1;
@@ -834,9 +856,10 @@
 
   <!-- TIMELINE -->
   <div class="timeline">
-    <div class="play" id="play" title="Play / Pause">
+    <div class="play" id="play" title="Play / Pause (Space)">
       <svg viewBox="0 0 12 14"><path id="play-icon" d="M0 0 L12 7 L0 14 Z"/></svg>
     </div>
+    <div class="speed" id="speed" title="Animation speed — click to cycle">1×</div>
     <div>
       <div class="year-label" id="year-label">2025</div>
       <div class="year-tag" id="year-tag">NOW</div>
@@ -848,6 +871,7 @@
       <div class="scrubber-handle" id="scrubber-handle"></div>
     </div>
     <div id="mode-tag" class="disruption-tag">⚡ Discourse Tracker</div>
+    <div class="kbd-hint" title="Keyboard shortcuts"><kbd>←</kbd><kbd>→</kbd> year · <kbd>Space</kbd> play · <kbd>Home</kbd>/<kbd>End</kbd> jump</div>
   </div>
 
   <!-- STATS -->
@@ -1372,7 +1396,10 @@ const state = {
   selectedTerm: null,
   playing: false,
   playTimer: null,
+  speed: 1,              // 0.5, 1, 2, 4 — multiplies tick rate
 };
+const SPEEDS = [0.5, 1, 2, 4];
+const BASE_TICK_MS = 380;
 
 const FMT = {
   pct: v => (v * 100).toFixed(2) + '%',
@@ -1912,11 +1939,59 @@ function togglePlay() {
       state.year += 1;
       if (state.year > state.data.meta.year_max) state.year = state.data.meta.year_min;
       applyAll();
-    }, 380);
+    }, Math.round(BASE_TICK_MS / state.speed));
   } else {
     icon.setAttribute('d', 'M0 0 L12 7 L0 14 Z');
   }
 }
+
+function cycleSpeed() {
+  const i = SPEEDS.indexOf(state.speed);
+  state.speed = SPEEDS[(i + 1) % SPEEDS.length];
+  const btn = document.getElementById('speed');
+  btn.textContent = (state.speed === 0.5 ? '½' : state.speed) + '×';
+  btn.classList.toggle('active', state.speed !== 1);
+  if (state.playing) {
+    // restart timer with new rate without flipping play state
+    clearInterval(state.playTimer);
+    state.playTimer = setInterval(() => {
+      state.year += 1;
+      if (state.year > state.data.meta.year_max) state.year = state.data.meta.year_min;
+      applyAll();
+    }, Math.round(BASE_TICK_MS / state.speed));
+  }
+}
+document.getElementById('speed').addEventListener('click', cycleSpeed);
+
+// ── Keyboard shortcuts ───────────────────────────────────────────────────────
+window.addEventListener('keydown', e => {
+  // ignore when typing into inputs or when the research-paper overlay is open
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+  if (document.getElementById('rp-overlay')?.classList.contains('open')) return;
+  if (!state.data) return;
+  const meta = state.data.meta;
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    state.year = Math.min(state.year + 1, meta.year_max);
+    applyAll();
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    state.year = Math.max(state.year - 1, meta.year_min);
+    applyAll();
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    state.year = meta.year_min;
+    applyAll();
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    state.year = meta.year_max;
+    applyAll();
+  } else if (e.code === 'Space') {
+    e.preventDefault();
+    togglePlay();
+  }
+});
 
 // ── Research paper overlay ────────────────────────────────────────────────────
 document.getElementById('btn-research').addEventListener('click', () => {
