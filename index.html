@@ -249,14 +249,17 @@
     cursor: pointer;
     transition: opacity .15s ease;
   }
-  .cell rect { stroke: var(--bg); stroke-width: 1; }
-  .cell:hover rect { stroke: #fff; stroke-width: 2; }
+  .cell rect { stroke: rgba(14,14,24,.06); stroke-width: 1; }
+  .cell:hover rect { stroke: #0E0E18; stroke-width: 2; }
   .cell.dim { opacity: .25; }
   .cell text {
+    paint-order: stroke fill;
+    stroke: rgba(255,255,255,.85);
+    stroke-width: 3px;
+    stroke-linejoin: round;
     pointer-events: none;
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
-    fill: var(--text);
-    text-shadow: 0 0 4px rgba(0,0,0,.5);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    fill: #0E0E18;
   }
   .cell .term-name { font-weight: 600; font-size: 13px; }
   .cell .term-val { font-size: 11px; opacity: .85; }
@@ -1492,20 +1495,21 @@ function updateLegend() {
 
 // ---------- Color scale ----------
 function colorFor(v, metric) {
+  // Low-end colors are warm cream/sand so cells blend with the
+  // storytale canvas; high-end stays vivid.
   if (metric === 'g') {
     // diverging red→green centered at 0
-    // domain effectively [-0.5, +2.0] for CAGR
     const t = Math.max(-1, Math.min(1, v / 1.0));
-    if (t < 0) return d3.interpolateRgb('#3a3138', '#ef4444')(-t);
-    return d3.interpolateRgb('#3a3138', '#22c55e')(t);
+    if (t < 0) return d3.interpolateRgb('#F3EEE3', '#F14575')(-t);
+    return d3.interpolateRgb('#F3EEE3', '#22C58D')(t);
   }
   if (metric === 's' || metric === 'c') {
     const ref = metric === 's' ? 0.08 : 200;
     const t = Math.min(1, v / ref);
-    return d3.interpolateRgb('#1a2235', '#5b8def')(Math.sqrt(t));
+    return d3.interpolateRgb('#F3EEE3', '#9270F4')(Math.sqrt(t));
   }
   if (metric === 'n') {
-    return d3.interpolateRgb('#1a2235', '#f59e0b')(Math.min(1, v / 0.6));
+    return d3.interpolateRgb('#F3EEE3', '#F17F3C')(Math.min(1, v / 0.6));
   }
   if (metric === 'o') {
     return d3.interpolateRgb('#1a2235', '#a855f7')(Math.sqrt(Math.min(1, v / 0.3)));
