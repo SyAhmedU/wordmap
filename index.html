@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -8,8 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script>(function(){try{var t=localStorage.getItem('syed-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <style>
-  :root {
+  :root, [data-theme="light"] {
     --bg: #FBF7EF;
     --bg-2: #FFFFFF;
     --bg-3: #F3EEE3;
@@ -26,15 +27,35 @@
     --pill-active: #F14575;
     --shadow: 0 10px 30px -14px rgba(20,12,40,.12), 0 2px 6px rgba(20,12,40,.04);
     --grad-warm: linear-gradient(135deg,#FF9656 0%,#F14575 55%,#9270F4 100%);
+    --cell-low: #F3EEE3;
+    --cell-text-fill: #0E0E18;
+    --cell-text-halo: rgba(255,255,255,.85);
     /* Journal palette (research paper) */
-    --jp-page:   #f7f5f0;
-    --jp-bg:     #ffffff;
-    --jp-sidebar:#efece5;
-    --jp-body:   #1a1918;
-    --jp-muted:  #5c5752;
-    --jp-faint:  #9a948c;
-    --jp-border: #ddd8ce;
-    --jp-active: #e3ddd4;
+    --jp-page:#f7f5f0; --jp-bg:#fff; --jp-sidebar:#efece5; --jp-body:#1a1918;
+    --jp-muted:#5c5752; --jp-faint:#9a948c; --jp-border:#ddd8ce; --jp-active:#e3ddd4;
+  }
+  [data-theme="dark"] {
+    --bg: #0A0A12;
+    --bg-2: #11111C;
+    --bg-3: #161624;
+    --line: rgba(255,255,255,.08);
+    --text: #F4F2EC;
+    --text-dim: #C9C7C0;
+    --text-faint: #8B8A93;
+    --accent: #F47FBE;
+    --accent-2: #A78BFA;
+    --good: #34D399;
+    --bad: #F47FBE;
+    --warn: #FFB75E;
+    --pill: rgba(255,255,255,.06);
+    --pill-active: #F47FBE;
+    --shadow: 0 10px 30px -14px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.30);
+    --cell-low: #1A1A28;
+    --cell-text-fill: #F4F2EC;
+    --cell-text-halo: rgba(0,0,0,.55);
+    /* Journal palette stays cream for the research paper view */
+    --jp-page:#f7f5f0; --jp-bg:#fff; --jp-sidebar:#efece5; --jp-body:#1a1918;
+    --jp-muted:#5c5752; --jp-faint:#9a948c; --jp-border:#ddd8ce; --jp-active:#e3ddd4;
   }
 
   * { box-sizing: border-box; }
@@ -254,12 +275,12 @@
   .cell.dim { opacity: .25; }
   .cell text {
     paint-order: stroke fill;
-    stroke: rgba(255,255,255,.85);
+    stroke: var(--cell-text-halo);
     stroke-width: 3px;
     stroke-linejoin: round;
     pointer-events: none;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    fill: #0E0E18;
+    fill: var(--cell-text-fill);
   }
   .cell .term-name { font-weight: 600; font-size: 13px; }
   .cell .term-val { font-size: 11px; opacity: .85; }
@@ -710,19 +731,24 @@
   .badge .b-val  { font-size: 11px; color: var(--good); margin-top: 2px; }
 </style>
 <style>
-.syed-bar{position:sticky;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:0 18px;height:48px;background:color-mix(in srgb,#fff 80%,transparent);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border-bottom:1px solid rgba(14,14,24,.08);font-family:'Plus Jakarta Sans','Inter',system-ui,sans-serif;flex-shrink:0}
+.syed-bar{position:sticky;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:0 18px;height:48px;background:color-mix(in srgb,var(--bg-2) 80%,transparent);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border-bottom:1px solid var(--line);font-family:'Plus Jakarta Sans','Inter',system-ui,sans-serif;flex-shrink:0}
 .syed-bar-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;transition:opacity .15s}
 .syed-bar-logo:hover{opacity:.78}
-.syed-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#FF9656 0%,#F14575 55%,#9270F4 100%);display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 4px 14px -4px rgba(241,69,117,.55);animation:syed-glow 5s ease-in-out infinite}
+.syed-mark{width:28px;height:28px;border-radius:8px;background:var(--grad-warm);display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 4px 14px -4px rgba(241,69,117,.55);animation:syed-glow 5s ease-in-out infinite}
 @keyframes syed-glow{0%,100%{box-shadow:0 4px 14px -4px rgba(241,69,117,.45)}50%{box-shadow:0 6px 22px -4px rgba(146,112,244,.55)}}
-.syed-name{font-size:.9rem;font-weight:800;color:#0E0E18;letter-spacing:-.02em}
-.syed-divider{width:1px;height:16px;background:rgba(14,14,24,.10);margin:0 3px;flex-shrink:0}
-.syed-project{font-size:.74rem;color:#6F6F7E;font-weight:500;letter-spacing:.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.syed-name{font-size:.9rem;font-weight:800;color:var(--text);letter-spacing:-.02em}
+.syed-divider{width:1px;height:16px;background:var(--line);margin:0 3px;flex-shrink:0}
+.syed-project{font-size:.74rem;color:var(--text-faint);font-weight:500;letter-spacing:.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
 .syed-links{display:flex;align-items:center;margin-left:auto;gap:2px;flex-shrink:0}
-.syed-link{font-size:.74rem;font-weight:600;color:#6F6F7E;text-decoration:none;padding:5px 11px;border-radius:999px;transition:color .15s,background .15s;white-space:nowrap}
-.syed-link:hover{color:#0E0E18;background:rgba(14,14,24,.05)}
-.syed-link-all{font-weight:700;color:#fff !important;background:linear-gradient(135deg,#FF9656 0%,#F14575 55%,#9270F4 100%);padding:5px 13px;border-radius:999px;box-shadow:0 6px 16px -6px rgba(241,69,117,.55)}
+.syed-link{font-size:.74rem;font-weight:600;color:var(--text-faint);text-decoration:none;padding:5px 11px;border-radius:999px;transition:color .15s,background .15s;white-space:nowrap}
+.syed-link:hover{color:var(--text);background:var(--bg-3)}
+.syed-link-all{font-weight:700;color:#fff !important;background:var(--grad-warm);padding:5px 13px;border-radius:999px;box-shadow:0 6px 16px -6px rgba(241,69,117,.55)}
 .syed-link-all:hover{opacity:.92}
+.theme-toggle{width:34px;height:34px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;background:var(--bg-3);border:1px solid var(--line);color:var(--text-dim);cursor:pointer;font-size:1rem;transition:background .15s,color .15s,transform .2s;margin-left:4px;flex-shrink:0}
+.theme-toggle:hover{color:var(--text);transform:rotate(15deg)}
+.theme-toggle .sun,.theme-toggle .moon{display:none}
+[data-theme="light"] .theme-toggle .moon{display:inline}
+[data-theme="dark"] .theme-toggle .sun{display:inline}
 @media(max-width:640px){.syed-links{display:none}}
 </style>
 </head>
@@ -737,6 +763,9 @@
     <a class="syed-link" href="https://scalescope.vercel.app" target="_blank" rel="noopener">ScaleScope</a>
     <a class="syed-link syed-link-all" href="https://syahmedu.github.io/nexus/" target="_blank" rel="noopener">All Projects →</a>
   </nav>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark">
+    <span class="sun">☀️</span><span class="moon">🌙</span>
+  </button>
 </div>
 <div class="app">
 
@@ -1494,22 +1523,25 @@ function updateLegend() {
 }
 
 // ---------- Color scale ----------
+function cellLow() {
+  // Theme-aware low end of every color scale (cream in light, deep ink in dark)
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? '#1A1A28' : '#F3EEE3';
+}
 function colorFor(v, metric) {
-  // Low-end colors are warm cream/sand so cells blend with the
-  // storytale canvas; high-end stays vivid.
+  const lo = cellLow();
   if (metric === 'g') {
     // diverging red→green centered at 0
     const t = Math.max(-1, Math.min(1, v / 1.0));
-    if (t < 0) return d3.interpolateRgb('#F3EEE3', '#F14575')(-t);
-    return d3.interpolateRgb('#F3EEE3', '#22C58D')(t);
+    if (t < 0) return d3.interpolateRgb(lo, '#F14575')(-t);
+    return d3.interpolateRgb(lo, '#22C58D')(t);
   }
   if (metric === 's' || metric === 'c') {
     const ref = metric === 's' ? 0.08 : 200;
     const t = Math.min(1, v / ref);
-    return d3.interpolateRgb('#F3EEE3', '#9270F4')(Math.sqrt(t));
+    return d3.interpolateRgb(lo, '#9270F4')(Math.sqrt(t));
   }
   if (metric === 'n') {
-    return d3.interpolateRgb('#F3EEE3', '#F17F3C')(Math.min(1, v / 0.6));
+    return d3.interpolateRgb(lo, '#F17F3C')(Math.min(1, v / 0.6));
   }
   if (metric === 'o') {
     return d3.interpolateRgb('#1a2235', '#a855f7')(Math.sqrt(Math.min(1, v / 0.3)));
@@ -1846,6 +1878,15 @@ function bindEvents() {
   window.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
   // Play/pause
   document.getElementById('play').addEventListener('click', togglePlay);
+  // Theme toggle
+  var __tt = document.getElementById('themeToggle');
+  if (__tt) __tt.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('syed-theme', next); } catch(e) {}
+    renderTreemap();
+  });
   // Resize
   window.addEventListener('resize', () => { renderTreemap(); refreshPanelIfOpen(); });
   // Hash navigation (back button)
