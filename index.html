@@ -2665,6 +2665,37 @@ Return JSON:
   $('wm-gen-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('wm-gen-go').click(); }
   });
+
+  // ── Hand-off receiver: ?brief=<topic> from the hub Quick Start auto-opens
+  // the modal, pre-fills the input, and triggers Generate once the data is
+  // loaded — so users land in a populated brief, not a blank treemap.
+  function maybeAutoBrief() {
+    try {
+      const params = new URLSearchParams(location.search);
+      const topic = params.get('brief');
+      if (!topic) return;
+      // Strip the param from the URL so reloads don't re-trigger.
+      const cleaned = location.pathname + (location.hash || '');
+      history.replaceState(null, '', cleaned);
+      const input = $('wm-gen-input');
+      input.value = topic;
+      openModal();
+      // Wait for data to be loaded before generating.
+      const tryGo = () => {
+        if (typeof state !== 'undefined' && state.data && Array.isArray(state.data.terms)) {
+          $('wm-gen-go').click();
+        } else {
+          setTimeout(tryGo, 200);
+        }
+      };
+      setTimeout(tryGo, 400);
+    } catch (e) { /* ignore */ }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeAutoBrief);
+  } else {
+    maybeAutoBrief();
+  }
 })();
 </script>
 
