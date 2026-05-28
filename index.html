@@ -2498,6 +2498,176 @@ function refreshPanelIfOpen() {
 
 boot();
 </script>
+<!-- ─── Research Suite — Generate brief (calls ResearchFlow's shared /api/generate) ─── -->
+<style>
+#wm-gen-btn {
+  position: fixed; top: 56px; left: 14px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 999px; border: 0; cursor: pointer;
+  background: linear-gradient(135deg, #FF9656 0%, #F14575 55%, #9270F4 100%);
+  color: #fff; font-weight: 700; font-size: .76rem; letter-spacing: .01em;
+  font-family: 'Plus Jakarta Sans','Inter',system-ui,sans-serif;
+  box-shadow: 0 8px 20px -8px rgba(241,69,117,.55);
+  transition: transform .15s, box-shadow .15s, filter .15s;
+}
+#wm-gen-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -10px rgba(241,69,117,.65); filter: brightness(1.05); }
+#wm-gen-modal { position: fixed; inset: 0; z-index: 200; background: rgba(15,12,28,.55); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 18px; animation: wm-gen-fade .2s ease; }
+#wm-gen-modal[hidden] { display: none; }
+@keyframes wm-gen-fade { from { opacity: 0; } }
+.wm-gen-card { position: relative; width: 100%; max-width: 560px; max-height: 86vh; overflow-y: auto; background: var(--bg-2, #fff); color: var(--text, #1a1626); border: 1px solid var(--line, rgba(0,0,0,.1)); border-radius: 18px; padding: 26px 28px; box-shadow: 0 24px 60px -28px rgba(33,27,46,.55); font-family: 'Plus Jakarta Sans','Inter',system-ui,sans-serif; }
+.wm-gen-close { position: absolute; top: 12px; right: 14px; background: none; border: 0; font-size: 1.4rem; color: var(--text-faint, #8B8498); cursor: pointer; line-height: 1; }
+.wm-gen-close:hover { color: var(--text, #1a1626); }
+.wm-gen-card h3 { margin: 0 0 4px; font-size: 1.22rem; font-weight: 700; letter-spacing: -.015em; }
+.wm-gen-sub { margin: 0 0 16px; color: var(--text-faint, #6F6F7E); font-size: .88rem; line-height: 1.5; }
+.wm-gen-card textarea { width: 100%; min-height: 84px; padding: 11px 13px; border: 1px solid var(--line, rgba(0,0,0,.15)); border-radius: 10px; background: var(--bg, #fff); color: var(--text, #1a1626); font-family: inherit; font-size: .94rem; line-height: 1.5; outline: none; resize: vertical; box-sizing: border-box; transition: border-color .15s; }
+.wm-gen-card textarea:focus { border-color: #F14575; box-shadow: 0 0 0 3px rgba(241,69,117,.15); }
+.wm-gen-row { display: flex; justify-content: flex-end; margin-top: 12px; }
+.wm-gen-action { background: linear-gradient(135deg, #FF9656, #F14575 55%, #9270F4); color: #fff; border: 0; border-radius: 10px; padding: 10px 18px; font-family: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; box-shadow: 0 8px 18px -8px rgba(241,69,117,.55); transition: transform .15s; }
+.wm-gen-action:hover { transform: translateY(-1px); }
+.wm-gen-action:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+#wm-gen-result { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line, rgba(0,0,0,.08)); }
+#wm-gen-result[hidden] { display: none; }
+.wm-gen-brief { font-size: .94rem; line-height: 1.55; color: var(--text, #1a1626); margin: 0 0 14px; padding: 12px 14px; background: linear-gradient(135deg, rgba(255,150,86,.07), rgba(146,112,244,.07)); border-left: 3px solid #F14575; border-radius: 0 8px 8px 0; }
+.wm-gen-section-title { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--text-faint, #6F6F7E); margin: 14px 0 8px; }
+.wm-gen-pick { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line-soft, rgba(0,0,0,.06)); }
+.wm-gen-pick:last-child { border-bottom: 0; }
+.wm-gen-pick-btn { background: rgba(241,69,117,.1); color: #F14575; border: 1px solid rgba(241,69,117,.3); border-radius: 999px; padding: 4px 12px; font-family: inherit; font-weight: 700; font-size: .8rem; cursor: pointer; transition: .15s; white-space: nowrap; }
+.wm-gen-pick-btn:hover { background: linear-gradient(135deg, #FF9656, #F14575 55%, #9270F4); color: #fff; border-color: transparent; }
+.wm-gen-combo { font-weight: 700; font-size: .82rem; color: var(--text, #1a1626); }
+.wm-gen-why { color: var(--text-faint, #6F6F7E); font-size: .84rem; line-height: 1.45; }
+.wm-gen-err { color: #F14575; font-size: .86rem; padding: 10px 12px; background: rgba(241,69,117,.08); border: 1px solid rgba(241,69,117,.25); border-radius: 8px; }
+@media (max-width: 640px) {
+  #wm-gen-btn { font-size: .7rem; padding: 6px 12px; }
+}
+</style>
+<button id="wm-gen-btn" type="button" title="Describe a topic; AI suggests terms to explore + white-space pockets">✨ Generate brief</button>
+<div id="wm-gen-modal" hidden role="dialog" aria-modal="true" aria-labelledby="wm-gen-title">
+  <div class="wm-gen-card">
+    <button class="wm-gen-close" id="wm-gen-close" aria-label="Close">×</button>
+    <h3 id="wm-gen-title">✨ Where should I look?</h3>
+    <p class="wm-gen-sub">Describe what you're studying — the AI will pick a handful of terms from Wordmap's 98 to dig into, with one-line "why" notes and white-space pockets where two terms together name an under-explored area.</p>
+    <textarea id="wm-gen-input" placeholder="e.g. I'm interested in how AI is changing knowledge work and what that means for organizational identity and learning"></textarea>
+    <div class="wm-gen-row">
+      <button class="wm-gen-action" id="wm-gen-go" type="button">✨ Generate</button>
+    </div>
+    <div id="wm-gen-result" hidden></div>
+  </div>
+</div>
+<script>
+(function(){
+  const RF_URL = 'https://researchflow-syahmedus-projects.vercel.app/api/generate';
+  const $ = (id) => document.getElementById(id);
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function openModal() { $('wm-gen-modal').hidden = false; setTimeout(()=>$('wm-gen-input').focus(), 50); }
+  function closeModal() { $('wm-gen-modal').hidden = true; }
+
+  $('wm-gen-btn').addEventListener('click', openModal);
+  $('wm-gen-close').addEventListener('click', closeModal);
+  $('wm-gen-modal').addEventListener('click', (e) => { if (e.target === $('wm-gen-modal')) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('wm-gen-modal').hidden) closeModal(); });
+
+  function activateTerm(term) {
+    try {
+      if (typeof state === 'undefined' || !state.data) return;
+      const t = state.data.terms.find(x => x.term === term);
+      if (!t) return;
+      const gm = state.data.meta?.groups?.find(g => g.id === t.group);
+      state.selectedTerm = t.term;
+      if (typeof writeHash === 'function') writeHash();
+      if (typeof updateBadge === 'function') updateBadge();
+      if (typeof d3 !== 'undefined') d3.selectAll('g.cell').classed('dim', x => x.data.term !== state.selectedTerm);
+      if (typeof openPanel === 'function') openPanel(t, gm ? gm.color : '#888', gm ? gm.label : t.group);
+      closeModal();
+    } catch (err) { console.warn('[wm-gen] activate failed:', err); }
+  }
+
+  function renderResult(r) {
+    let html = '';
+    if (r && r.brief) html += `<p class="wm-gen-brief">${esc(r.brief)}</p>`;
+    if (r && Array.isArray(r.picks) && r.picks.length) {
+      html += '<div class="wm-gen-section-title">Terms to explore</div>';
+      for (const p of r.picks) {
+        if (!p || !p.term) continue;
+        html += `<div class="wm-gen-pick"><button class="wm-gen-pick-btn" data-term="${esc(p.term)}" type="button">${esc(p.term)}</button><span class="wm-gen-why">${esc(p.why || '')}</span></div>`;
+      }
+    }
+    if (r && Array.isArray(r.whitespace) && r.whitespace.length) {
+      html += '<div class="wm-gen-section-title">White-space pockets</div>';
+      for (const w of r.whitespace) {
+        if (!w || !w.combo) continue;
+        html += `<div class="wm-gen-pick"><span class="wm-gen-combo">${esc(w.combo)}</span><span class="wm-gen-why">${esc(w.why || '')}</span></div>`;
+      }
+    }
+    if (!html) html = '<div class="wm-gen-err">The AI returned no usable picks. Try a more specific description.</div>';
+    const el = $('wm-gen-result');
+    el.innerHTML = html;
+    el.hidden = false;
+    el.querySelectorAll('.wm-gen-pick-btn').forEach(b => b.addEventListener('click', () => activateTerm(b.dataset.term)));
+  }
+
+  $('wm-gen-go').addEventListener('click', async () => {
+    const text = ($('wm-gen-input').value || '').trim();
+    if (!text) { $('wm-gen-input').focus(); return; }
+    if (typeof state === 'undefined' || !state.data || !Array.isArray(state.data.terms)) {
+      $('wm-gen-result').innerHTML = '<div class="wm-gen-err">Wordmap data hasn\'t loaded yet — give it a moment and retry.</div>';
+      $('wm-gen-result').hidden = false;
+      return;
+    }
+    const termList = state.data.terms.map(t => t.term).join(', ');
+    const prompt =
+`A researcher is exploring Wordmap (a visualisation of 98 social-science / management terms tracked across 50+ years of OpenAlex publications).
+
+The researcher's interest:
+"""${text}"""
+
+Available terms (use these EXACT names):
+${termList}
+
+Recommend 5-8 terms from the list above that best match the interest, plus 1-3 'white-space' pockets where two of those terms together name an under-explored research area.
+
+Return JSON:
+{
+  "brief": "2-3 sentence summary of the literature landscape this researcher is touching, framed for them",
+  "picks": [ { "term": "exact term name from the list", "why": "one sentence connecting it to their interest" } ],
+  "whitespace": [ { "combo": "Term A × Term B", "why": "one sentence on why their combination is under-explored" } ]
+}`;
+    const btn = $('wm-gen-go');
+    const original = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Generating…';
+    $('wm-gen-result').hidden = true;
+    try {
+      const r = await fetch(RF_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, schema_hint: 'Wordmap exploration brief', temperature: 0.5 }),
+      });
+      if (!r.ok) {
+        let detail = '';
+        try { detail = (await r.json()).detail || ''; } catch (_) {}
+        if (r.status === 503 || /GROQ_API_KEY/i.test(detail)) {
+          $('wm-gen-result').innerHTML = '<div class="wm-gen-err">AI not configured on the server yet (ResearchFlow needs GROQ_API_KEY).</div>';
+          $('wm-gen-result').hidden = false; return;
+        }
+        throw new Error(detail || `HTTP ${r.status}`);
+      }
+      const { result } = await r.json();
+      renderResult(result);
+    } catch (err) {
+      $('wm-gen-result').innerHTML = `<div class="wm-gen-err">Could not generate: ${esc(err.message || String(err))}</div>`;
+      $('wm-gen-result').hidden = false;
+    } finally {
+      btn.disabled = false; btn.textContent = original;
+    }
+  });
+
+  // Enter (no shift) submits
+  $('wm-gen-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('wm-gen-go').click(); }
+  });
+})();
+</script>
+
 <!-- ─── Research Suite — active-project pill (read-only; same-origin localStorage from the hub) ─── -->
 <style>
 #ts-active-pill {
