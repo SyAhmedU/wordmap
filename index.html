@@ -2699,6 +2699,34 @@ Return JSON:
 })();
 </script>
 
+<!-- ─── Wobble: spring clicks + soft breathing, shared suite vibe ─── -->
+<style>
+/* Springy click physics on common interactive elements. */
+.syed-link, .panel-papers-link, #wm-gen-btn, .wm-gen-action, .wm-gen-pick-btn,
+.theme-toggle, button.btn, .btn, .btn-primary, .btn-secondary, .btn-ghost,
+.panel-rel-item, .panel-close, .lnk, a.syed-link {
+  transition: transform .55s cubic-bezier(.34, 1.5, .6, 1),
+              box-shadow .35s cubic-bezier(.22, 1, .36, 1),
+              border-color .25s ease-out, opacity .2s ease, color .2s ease, background .2s ease;
+}
+#wm-gen-btn:active, .wm-gen-action:active, .wm-gen-pick-btn:active,
+.theme-toggle:active, .syed-link:active, .panel-close:active {
+  transform: scale(.96) translateY(1px); transition-duration: .14s;
+}
+/* Active project pill softly bobs */
+#ts-active-pill { animation: ts-bob 6s ease-in-out infinite; }
+@keyframes ts-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+/* Generate-button breath (subtle pulse on the orange-magenta gradient) */
+#wm-gen-btn { animation: gen-breath 5s ease-in-out infinite; will-change: box-shadow; }
+@keyframes gen-breath {
+  0%,100% { box-shadow: 0 8px 20px -8px rgba(241,69,117,.55); }
+  50%     { box-shadow: 0 12px 28px -10px rgba(146,112,244,.65); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }
+}
+</style>
+
 <!-- ─── Research Suite — active-project pill (read-only; same-origin localStorage from the hub) ─── -->
 <style>
 #ts-active-pill {
