@@ -19,6 +19,23 @@
 <meta name="twitter:title" content="WordMap — Social Science Research, Mapped">
 <meta name="twitter:description" content="98 social-science terms, 1970→2054. Scrub through years, find emerging concepts.">
 <meta name="twitter:image" content="https://syahmedu.github.io/wordmap/og.svg">
+<meta name="twitter:image:alt" content="WordMap — a treemap of social-science research terms over time.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Syed Ahmed">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "WordMap — Social Science Research Terms, 1970–2054",
+  "description": "Document-frequency, growth, and novelty time-series for 98 social-science research terms, derived from the OpenAlex corpus (real data through 2024, logistic projection beyond), visualised as an interactive treemap.",
+  "url": "https://syahmedu.github.io/wordmap/",
+  "inLanguage": "en",
+  "keywords": ["social science", "research trends", "bibliometrics", "OpenAlex", "emerging concepts"],
+  "isAccessibleForFree": true,
+  "creator": { "@type": "Person", "name": "Syed Ahmed", "url": "https://syahmedu.github.io/nexus/" },
+  "temporalCoverage": "1970/2054"
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23F14575'/><text x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800' font-size='19' fill='white'>S</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -353,6 +370,24 @@
 
   /* APP LAYOUT */
   .app { display: flex; flex-direction: column; height: 100vh; }
+  /* ── Accessibility (WCAG 2.2 AA) ── */
+  a:focus-visible, button:focus-visible, input:focus-visible,
+  [tabindex]:focus-visible, [data-metric]:focus-visible, [data-scope]:focus-visible {
+    outline: 3px solid var(--accent-2); outline-offset: 2px; border-radius: 6px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+  .skip-link {
+    position: fixed; top: 10px; left: 10px; z-index: 10000;
+    transform: translateY(-160%); transition: transform .2s ease;
+    background: var(--text); color: var(--bg);
+    padding: 10px 16px; border-radius: 10px; font-weight: 700; text-decoration: none;
+    box-shadow: var(--shadow);
+  }
+  .skip-link:focus { transform: translateY(0); outline: 3px solid var(--accent-2); outline-offset: 2px; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
 
   /* Footer */
   .footer {
@@ -814,6 +849,7 @@ html,body{ overflow-x:clip; }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 <div class="syed-bar">
   <a class="syed-bar-logo" href="https://syahmedu.github.io/nexus/" target="_blank" rel="noopener"><span class="syed-mark">S</span><span class="syed-name">Syed</span></a>
   <span class="syed-divider"></span>
@@ -834,7 +870,7 @@ html,body{ overflow-x:clip; }
     <span class="sun">☀️</span><span class="moon">🌙</span>
   </button>
 </div>
-<div class="app">
+<main class="app" id="main-content" tabindex="-1">
 
   <!-- HEADER -->
   <header class="top">
@@ -1425,7 +1461,7 @@ html,body{ overflow-x:clip; }
     <span style="margin-left:auto">URL state: <code id="url-hint">#m=g&y=2025</code></span>
   </div>
 
-</div>
+</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="data.js?v=3"></script>
