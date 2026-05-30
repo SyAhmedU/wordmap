@@ -1729,26 +1729,26 @@ function renderTreemap() {
     .paddingOuter(2)
     .round(true)(root);
 
-  // Clear & redraw
-  svg.selectAll('*').remove();
+  // Keyed enter/update/exit join with transitions, so scrubbing years and
+  // switching metrics MORPH the cells smoothly instead of destroying and
+  // rebuilding the whole tree every tick (which is what made it snap).
+  const DUR = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 260;
+  const ease = d3.easeCubicInOut;
 
-  // Group labels (parent rectangles)
-  const groups = svg.selectAll('g.group')
-    .data(root.children || [])
-    .join('g')
-    .attr('class', 'group')
+  // ── Group headers (parent rectangles) ──
+  const groups = svg.selectAll('g.group').data(root.children || [], d => d.data.name);
+  groups.exit().remove();
+  const groupsEnter = groups.enter().append('g').attr('class', 'group')
     .attr('transform', d => `translate(${d.x0},${d.y0})`);
+  groupsEnter.append('text').attr('class', 'group-label').attr('x', 6).attr('y', 14);
+  const groupsAll = groupsEnter.merge(groups);
+  groupsAll.transition().duration(DUR).ease(ease).attr('transform', d => `translate(${d.x0},${d.y0})`);
+  groupsAll.select('text.group-label').attr('fill', d => d.data.color).text(d => d.data.name);
 
-  groups.append('text')
-    .attr('class', 'group-label')
-    .attr('x', 6).attr('y', 14)
-    .attr('fill', d => d.data.color)
-    .text(d => d.data.name);
-
-  // Term cells
-  const cells = svg.selectAll('g.cell')
-    .data(root.leaves())
-    .join('g')
+  // ── Term cells ──
+  const cells = svg.selectAll('g.cell').data(root.leaves(), d => d.data.term);
+  cells.exit().remove();
+  const cellsEnter = cells.enter().append('g')
     .attr('class', 'cell')
     .attr('transform', d => `translate(${d.x0},${d.y0})`)
     .on('mouseenter', (e, d) => showTip(e, d))
@@ -1761,48 +1761,42 @@ function renderTreemap() {
       openPanel(d.data.ref, d.data.groupColor, d.data.groupLabel);
       d3.selectAll('g.cell').classed('dim', x => x.data.term !== state.selectedTerm);
     });
+  cellsEnter.append('rect').attr('rx', 2)
+    .attr('width', d => Math.max(0, d.x1 - d.x0))
+    .attr('height', d => Math.max(0, d.y1 - d.y0));
+  cellsEnter.append('text').attr('class', 'term-name').attr('x', 6).attr('y', 16);
+  cellsEnter.append('text').attr('class', 'term-val').attr('x', 6).attr('y', 30);
+  cellsEnter.append('text').attr('class', 'term-count').attr('x', 6);
 
-  cells.append('rect')
+  const cellsAll = cellsEnter.merge(cells);
+  cellsAll.transition().duration(DUR).ease(ease).attr('transform', d => `translate(${d.x0},${d.y0})`);
+  cellsAll.select('rect').transition().duration(DUR).ease(ease)
     .attr('width', d => Math.max(0, d.x1 - d.x0))
     .attr('height', d => Math.max(0, d.y1 - d.y0))
-    .attr('fill', d => colorFor(d.data.colorVal, state.metric))
-    .attr('rx', 2);
+    .attr('fill', d => colorFor(d.data.colorVal, state.metric));
 
-  // Term name
-  cells.append('text')
-    .attr('class', 'term-name')
-    .attr('x', 6).attr('y', 16)
+  // Labels recompute each render (text depends on the current cell size).
+  cellsAll.select('text.term-name')
     .text(d => d.data.term)
     .each(function(d) {
-      const w = d.x1 - d.x0;
-      const h = d.y1 - d.y0;
+      const w = d.x1 - d.x0, h = d.y1 - d.y0;
       if (w < 40 || h < 22) { this.textContent = ''; return; }
       const charBudget = Math.floor((w - 10) / 7); // ~7px per char
       if (this.textContent.length > charBudget) {
         this.textContent = this.textContent.slice(0, Math.max(1, charBudget - 1)) + '…';
       }
     });
-
-  // Term value (the colored metric)
-  cells.append('text')
-    .attr('class', 'term-val')
-    .attr('x', 6).attr('y', 30)
+  cellsAll.select('text.term-val')
     .text(d => formatMetric(d.data.colorVal, state.metric))
     .each(function(d) {
-      const w = d.x1 - d.x0;
-      const h = d.y1 - d.y0;
+      const w = d.x1 - d.x0, h = d.y1 - d.y0;
       if (w < 60 || h < 38) this.textContent = '';
     });
-
-  // Article count (small footnote)
-  cells.append('text')
-    .attr('class', 'term-count')
-    .attr('x', 6)
+  cellsAll.select('text.term-count')
     .attr('y', d => Math.max(0, d.y1 - d.y0) - 6)
     .text(d => d.data.vals.c + ' articles')
     .each(function(d) {
-      const w = d.x1 - d.x0;
-      const h = d.y1 - d.y0;
+      const w = d.x1 - d.x0, h = d.y1 - d.y0;
       if (w < 80 || h < 56) this.textContent = '';
     });
 
