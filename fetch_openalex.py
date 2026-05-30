@@ -43,7 +43,7 @@ GROUPS = [
     {"id": "psychology",        "label": "Psychology",        "color": "#a78bfa"},
     {"id": "anthropology",      "label": "Anthropology",      "color": "#f59e0b"},
     {"id": "communication",     "label": "Communication",     "color": "#06b6d4"},
-    {"id": "methods",           "label": "Methods",           "color": "#94a3b8"},
+    {"id": "methods",           "label": "Emerging & Computational",           "color": "#94a3b8"},
 ]
 
 # ── Terms ─────────────────────────────────────────────────────────────────────
@@ -136,19 +136,10 @@ TERMS = [
     ("propaganda",            "propaganda",               "communication"),
     ("twitter",               "twitter",                  "communication"),
     # METHODS
-    ("qualitative",           "qualitative research",     "methods"),
-    ("quantitative",          "quantitative research",    "methods"),
-    ("regression",            "regression analysis",      "methods"),
-    ("survey",                "survey",                   "methods"),
-    ("interview",             "interview",                "methods"),
-    ("case study",            "case study",               "methods"),
-    ("meta-analysis",         "meta-analysis",            "methods"),
     ("machine learning",      "machine learning",         "methods"),
     ("big data",              "big data",                 "methods"),
     ("text analysis",         "text analysis",            "methods"),
-    ("longitudinal",          "longitudinal",             "methods"),
     ("causal inference",      "causal inference",         "methods"),
-    ("experimental",          "experimental",             "methods"),
     ("covid",                 "covid",                    "methods"),
     ("pandemic",              "pandemic",                 "methods"),
     ("climate change",        "climate change",           "methods"),

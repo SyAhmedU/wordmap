@@ -55,7 +55,7 @@ GROUPS = [
     {"id": "psychology",        "label": "Psychology",        "color": "#a78bfa"},
     {"id": "anthropology",      "label": "Anthropology",      "color": "#f59e0b"},
     {"id": "communication",     "label": "Communication",     "color": "#06b6d4"},
-    {"id": "methods",           "label": "Methods",           "color": "#94a3b8"},
+    {"id": "methods",           "label": "Emerging & Computational",           "color": "#94a3b8"},
 ]
 
 
@@ -203,19 +203,10 @@ SEEDS = [
     ("twitter",               "communication", "emergent", 2017, 6, 0.0,  0.028),
 
     # METHODS / CROSS-CUTTING
-    ("qualitative",           "methods", "rise", 2010, 25, 0.005,  0.060),
-    ("quantitative",          "methods", "flat", 2000, 30, 0.025,  0.040),
-    ("regression",            "methods", "flat", 2000, 30, 0.018,  0.030),
-    ("survey",                "methods", "flat", 2000, 35, 0.020,  0.030),
-    ("interview",             "methods", "rise", 2010, 22, 0.012,  0.040),
-    ("case study",            "methods", "flat", 2000, 30, 0.012,  0.022),
-    ("meta-analysis",         "methods", "rise", 2015, 18, 0.0005, 0.038),
     ("machine learning",      "methods", "late", 2020, 7,  0.0001, 0.030),
     ("big data",              "methods", "late", 2018, 8,  0.0001, 0.025),
     ("text analysis",         "methods", "rise", 2018, 15, 0.0005, 0.022),
-    ("longitudinal",          "methods", "rise", 2008, 22, 0.005,  0.025),
     ("causal",                "methods", "rise", 2015, 15, 0.003,  0.035),
-    ("experimental",          "methods", "rise", 2008, 20, 0.008,  0.028),
     ("ethnographic",          "methods", "rise", 2010, 22, 0.004,  0.025),
     ("covid",                 "methods", "emergent", 2021, 4, 0.0,  0.038),
     ("pandemic",              "methods", "emergent", 2021, 4, 0.0,  0.034),
