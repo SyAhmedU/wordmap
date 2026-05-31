@@ -2814,6 +2814,17 @@ Return JSON:
 #ts-active-pill .ts-dot { color: #F14575; font-size: 1rem; line-height: 1; }
 #ts-active-pill .ts-name { font-weight: 800; }
 #ts-active-pill .ts-arrow { opacity: .7; margin-left: 2px; }
+
+/* Respect prefers-reduced-motion — neutralise incidental transitions/animations.
+   The year player is user-initiated, so it stays; this only calms passive motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 </style>
 <a id="ts-active-pill" href="https://syahmedu.github.io/research-suite/" title="Open your active project on Throughline (the suite hub)" rel="noopener">
   <span class="ts-dot">●</span> <span class="ts-name" id="ts-active-pill-name">project</span> <span class="ts-arrow">↗</span>
