@@ -894,6 +894,8 @@ html,body{ overflow-x:clip; }
     </div>
     <button class="ws-trigger" id="btn-whitespace">&#x26F6; White Space</button>
     <button id="btn-research" style="padding:7px 12px;border-radius:8px;background:#1a2235;border:1px solid #243049;color:#8d99b3;font-size:12px;cursor:pointer;transition:all .12s;" onmouseover="this.style.color='#e8edf7'" onmouseout="this.style.color='#8d99b3'">&#x1F4C4; Research</button>
+    <button id="btn-export-csv" onclick="exportDataCsv()" title="Download the current year's term metrics as CSV" style="padding:7px 12px;border-radius:8px;background:#1a2235;border:1px solid #243049;color:#8d99b3;font-size:12px;cursor:pointer;transition:all .12s;" onmouseover="this.style.color='#e8edf7'" onmouseout="this.style.color='#8d99b3'">&#x2B07; CSV</button>
+    <button id="btn-export-json" onclick="exportDataJson()" title="Download the full dataset as JSON (citable snapshot / backup)" style="padding:7px 12px;border-radius:8px;background:#1a2235;border:1px solid #243049;color:#8d99b3;font-size:12px;cursor:pointer;transition:all .12s;" onmouseover="this.style.color='#e8edf7'" onmouseout="this.style.color='#8d99b3'">&#x2B07; JSON</button>
   </header>
 
   <!-- VIEW BY -->
@@ -1660,6 +1662,32 @@ function colorFor(v, metric) {
     return d3.interpolateRgb('#1a2235', '#a855f7')(Math.sqrt(Math.min(1, v / 0.3)));
   }
   return '#888';
+}
+
+// ---------- Export (citable data snapshot / backup) ----------
+function _wmDownload(name, text, mime) {
+  const blob = new Blob([text], { type: mime + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function exportDataJson() {
+  if (!state.data) return;
+  _wmDownload(`wordmap-data-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(state.data, null, 2), 'application/json');
+}
+function exportDataCsv() {
+  if (!state.data) return;
+  const y = String(state.year);
+  const esc = s => /[",\n]/.test(String(s)) ? '"' + String(s).replace(/"/g, '""') + '"' : String(s);
+  const rows = [['term', 'subfield', 'year', 'share_s', 'cagr_g', 'novelty_n', 'count_c']];
+  for (const t of state.data.terms) {
+    const v = t.by_year[y];
+    if (!v) continue;
+    rows.push([t.term, t.group, y, v.s, v.g, v.n, v.c]);
+  }
+  _wmDownload(`wordmap-${y}.csv`, rows.map(r => r.map(esc).join(',')).join('\r\n'), 'text/csv');
 }
 
 // ---------- Build hierarchy for treemap ----------
